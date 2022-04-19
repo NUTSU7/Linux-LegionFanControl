@@ -5,8 +5,6 @@
 
 #define LegionControllerVer "V0.3"
 
-uint8_t getPowerMode(void);
-
 struct DEVICE_DATA
 {
     //varible meanings- F-Fan  S-Speed T-Temp
@@ -15,10 +13,10 @@ struct DEVICE_DATA
     uint16_t FSBase_R;
     uint16_t FSCurrent_L;
     uint16_t FSCurrent_R;
-    uint16_t FTBase_L; // CPU temp
-    uint16_t FTBase_R; //GPU temp
-    uint16_t FTCurrent_L;
-    uint16_t FTCurrent_R;
+    uint16_t FTBase_L; 
+    uint16_t FTBase_R; 
+    uint16_t FTCurrent_L; // CPU temp
+    uint16_t FTCurrent_R; // GPU temp
     uint8_t N_Fan_Point[3];
     uint8_t FSMultiplier;
     uint8_t powerMode;
@@ -78,11 +76,11 @@ static ssize_t sysfs_show(struct kobject *kobj,
     }
     if (attr == &FTCurrent_L)
     {
-        //return sprintf(buf, "%d\n", *(virt + dev_data->FTCurrent_L) * dev_data);
+        return sprintf(buf, "%d C\n", *(virt + dev_data->FTCurrent_L));
     }
     if (attr == &FTCurrent_R)
     {
-        //return sprintf(buf, "%d\n", *(virt + dev_data->FTCurrent_R) * dev_data);
+        return sprintf(buf, "%d C\n", *(virt + dev_data->FTCurrent_R));
     }
 
     if (attr == &powerMode)
@@ -140,7 +138,7 @@ int init_module(void)
     error = sysfs_create_file(LegionController, &FTCurrent_L.attr);
     if (error)
     {
-        pr_debug("failed to create the foo file in /sys/kernel/FTCurrent_R \n");
+        pr_debug("failed to create the foo file in /sys/kernel/FTCurrent_L \n");
     }
     error = sysfs_create_file(LegionController, &FTCurrent_R.attr);
     if (error)
