@@ -21,7 +21,6 @@ struct DEVICE_DATA
     uint16_t FTCurrent_R;
     uint8_t N_Fan_Point[3];
     uint8_t FSMultiplier;
-    //uint8_t powerMode;
 };
 
 struct DEVICE_DATA GKCN =
@@ -35,7 +34,6 @@ struct DEVICE_DATA GKCN =
         .FSMultiplier = 100,
         .FTCurrent_L = 0x18,
         .FTCurrent_R = 0x19,
-        //.powerMode = 0x10,
 
 };
 
