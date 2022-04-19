@@ -1,0 +1,7 @@
+Current Fan Speeds:
+Left- 0xE0
+Right- 0xE1
+
+Current temps: 
+CPU(Left)- 0x18
+GPU(right)- 0x19
