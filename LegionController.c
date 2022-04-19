@@ -21,7 +21,7 @@ struct DEVICE_DATA
     uint16_t FTCurrent_R;
     uint8_t N_Fan_Point[3];
     uint8_t FSMultiplier;
-    //uint8_t powerMode;
+    uint8_t powerMode;
 };
 
 struct DEVICE_DATA GKCN =
@@ -35,7 +35,7 @@ struct DEVICE_DATA GKCN =
         .FSMultiplier = 100,
         .FTCurrent_L = 0x18,
         .FTCurrent_R = 0x19,
-        //.powerMode = 0x10,
+        .powerMode = 0x10,
 
 };
 
@@ -87,7 +87,7 @@ static ssize_t sysfs_show(struct kobject *kobj,
 
     if (attr == &powerMode)
     {
-        switch (getPowerMode())
+        switch (*(virt + dev_data->powerMode))
         {
         case 12:
             return sprintf(buf, "%s\n", "performance");
@@ -100,22 +100,6 @@ static ssize_t sysfs_show(struct kobject *kobj,
             break;
         }
     }
-        /* if (attr == &No_of_FanPoint)
-    {
-        switch (getPowerMode())
-        {
-        case 0:
-            return sprintf(buf, "%d\n", dev_data->N_Fan_Point[3]);
-        case 1:
-            return sprintf(buf, "%d\n",  dev_data->N_Fan_Point[1]);
-        case 2:
-            return sprintf(buf, "%d\n",  dev_data->N_Fan_Point[0]);
-
-        default:
-            break;
-        }
-    } */
-
     return 0;
 }
 
@@ -168,20 +152,13 @@ int init_module(void)
     {
         pr_debug("failed to create the foo file in /sys/kernel/powerMode \n");
     }
-    /* error = sysfs_create_file(LegionController, &No_of_FanPoint.attr);
-    if (error)
-    {
-        pr_debug("failed to create the foo file in /sys/kernel/no_fan_point \n");
-    } */
+
         pr_info("Creating hwmon binding");
 
     /* A non 0 return means init_module failed; module can't be loaded. */
     return 0;
 }
 
-uint8_t getPowerMode(){
-    return virt[0x10];
-}
 
 void cleanup_module(void)
 
