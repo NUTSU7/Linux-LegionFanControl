@@ -21,6 +21,7 @@ struct DEVICE_DATA
     uint16_t FTCurrent_R;
     uint8_t N_Fan_Point[3];
     uint8_t FSMultiplier;
+    //uint8_t powerMode;
 };
 
 struct DEVICE_DATA GKCN =
@@ -34,6 +35,7 @@ struct DEVICE_DATA GKCN =
         .FSMultiplier = 100,
         .FTCurrent_L = 0x18,
         .FTCurrent_R = 0x19,
+        //.powerMode = 0x10,
 
 };
 
@@ -46,6 +48,8 @@ static struct kobject *LegionController;
 static ssize_t sysfs_show(struct kobject *kobj,
                           struct kobj_attribute *attr, char *buf);
 
+struct kobj_attribute FSBase_L = __ATTR(FSBase_L, 0444, sysfs_show, NULL);
+struct kobj_attribute FSBase_R = __ATTR(FSBase_R, 0444, sysfs_show, NULL);
 struct kobj_attribute FSCurrent_L = __ATTR(FSCurrent_L, 0444, sysfs_show, NULL);
 struct kobj_attribute FSCurrent_R = __ATTR(FSCurrent_R, 0444, sysfs_show, NULL);
 struct kobj_attribute FTCurrent_L = __ATTR(FTCurrent_L, 0444, sysfs_show, NULL);
@@ -56,6 +60,14 @@ struct kobj_attribute powerMode = __ATTR(powerMode, 0444, sysfs_show, NULL);
 static ssize_t sysfs_show(struct kobject *kobj,
                           struct kobj_attribute *attr, char *buf)
 {
+    if (attr == &FSBase_L)
+    {
+        return sprintf(buf, "%d\n", *(virt + dev_data->FSBase_L) * dev_data->FSMultiplier);
+    }
+    if (attr == &FSBase_R)
+    {
+        return sprintf(buf, "%d\n", *(virt + dev_data->FSBase_R) * dev_data->FSMultiplier);
+    }
     if (attr == &FSCurrent_L)
     {
         return sprintf(buf, "%d\n", *(virt + dev_data->FSCurrent_L) * dev_data->FSMultiplier);
@@ -121,6 +133,16 @@ int init_module(void)
     if (!LegionController)
         return -ENOMEM;
 
+    error = sysfs_create_file(LegionController, &FSBase_L.attr);
+    if (error)
+    {
+        pr_debug("failed to create the foo file in /sys/kernel/FSBase_L \n");
+    }
+    error = sysfs_create_file(LegionController, &FSBase_R.attr);
+    if (error)
+    {
+        pr_debug("failed to create the foo file in /sys/kernel/FSBase_R \n");
+    }
     error = sysfs_create_file(LegionController, &FSCurrent_L.attr);
     if (error)
     {
@@ -134,17 +156,17 @@ int init_module(void)
     error = sysfs_create_file(LegionController, &FTCurrent_L.attr);
     if (error)
     {
-        pr_debug("failed to create the foo file in /sys/kernel/FSCurrent_R \n");
+        pr_debug("failed to create the foo file in /sys/kernel/FTCurrent_R \n");
     }
     error = sysfs_create_file(LegionController, &FTCurrent_R.attr);
     if (error)
     {
-        pr_debug("failed to create the foo file in /sys/kernel/FSCurrent_R \n");
+        pr_debug("failed to create the foo file in /sys/kernel/FTCurrent_R \n");
     }
     error = sysfs_create_file(LegionController, &powerMode.attr);
     if (error)
     {
-        pr_debug("failed to create the foo file in /sys/kernel/PowerMode \n");
+        pr_debug("failed to create the foo file in /sys/kernel/powerMode \n");
     }
     /* error = sysfs_create_file(LegionController, &No_of_FanPoint.attr);
     if (error)

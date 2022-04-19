@@ -1,0 +1,1 @@
+cmd_/home/nutsu7/LegionController/Module.symvers := sed 's/\.ko$$/\.o/' /home/nutsu7/LegionController/modules.order | scripts/mod/modpost  -a  -o /home/nutsu7/LegionController/Module.symvers -e -i Module.symvers  -N -T -
