@@ -1,1 +1,0 @@
-cmd_/home/nutsu7/LegionController/LegionController.ko := ld -r -m elf_x86_64 --build-id=sha1  -T scripts/module.lds -o /home/nutsu7/LegionController/LegionController.ko /home/nutsu7/LegionController/LegionController.o /home/nutsu7/LegionController/LegionController.mod.o;  true
