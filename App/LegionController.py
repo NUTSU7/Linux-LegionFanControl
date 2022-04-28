@@ -47,19 +47,19 @@ modes.place(rely=0.80, relheight=0.20, relwidth=1)
 
 
 # Buttons
-perfBtn = Button(modes, image=perfIcon, bg='#676871')
+perfBtn = Button(modes, image=perfIcon, bg='#676871', activebackground='#676871')
 perfBtn.place(relwidth=0.20, relheight=1)
 
-balancedBtn = Button(modes, image=balancedIcon, bg='#676871')
+balancedBtn = Button(modes, image=balancedIcon, bg='#676871', activebackground='#676871')
 balancedBtn.place(relx=0.20, relwidth=0.20, relheight=1)
 
-quietBtn = Button(modes,image=quietIcon, bg='#676871')
+quietBtn = Button(modes,image=quietIcon, bg='#676871', activebackground='#676871')
 quietBtn.place(relx=0.40, relwidth=0.20, relheight=1)
 
-saveBtn = Button(modes, image=saveIcon, bg='#676871')
+saveBtn = Button(modes, image=saveIcon, bg='#676871', activebackground='#676871')
 saveBtn.place(relx=0.60, relwidth=0.20, relheight=1)
 
-settingsBtn = Button(modes, image=settingsIcon, bg='#676871')
+settingsBtn = Button(modes, image=settingsIcon, bg='#676871', activebackground='#676871')
 settingsBtn.place(relx=0.80, relwidth=0.20, relheight=1)
 
 root.mainloop()
