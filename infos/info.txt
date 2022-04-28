@@ -1,6 +1,6 @@
 Current Fan Speeds:
-Left- 0xE0
-Right- 0xE1
+Left- 0xE0 / 0xDC
+Right- 0xE1 / 0xDD sometimes 0xEX doesnt work
 
 Current temps: 
 CPU(Left)- 0x18

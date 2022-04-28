@@ -1,5 +1,6 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
+#include <linux/moduleparam.h>
 #include <linux/types.h>
 #include <asm/io.h>
 
@@ -37,14 +38,13 @@ struct DEVICE_DATA GKCN =
 
 };
 
-struct DEVICE_DATA *dev_data;
 uint8_t *virt;
+static int changed;
 
+struct DEVICE_DATA *dev_data;
 
 static struct kobject *LegionController;
-
-static ssize_t sysfs_show(struct kobject *kobj,
-                          struct kobj_attribute *attr, char *buf);
+static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf);
 
 struct kobj_attribute FSBase_L = __ATTR(FSBase_L, 0444, sysfs_show, NULL);
 struct kobj_attribute FSBase_R = __ATTR(FSBase_R, 0444, sysfs_show, NULL);
@@ -55,8 +55,8 @@ struct kobj_attribute FTCurrent_R = __ATTR(FTCurrent_R, 0444, sysfs_show, NULL);
 struct kobj_attribute No_of_FanPoint = __ATTR(no_fan_point, 0444, sysfs_show, NULL);
 struct kobj_attribute powerMode = __ATTR(powerMode, 0444, sysfs_show, NULL);
 
-static ssize_t sysfs_show(struct kobject *kobj,
-                          struct kobj_attribute *attr, char *buf)
+
+static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 {
     if (attr == &FSBase_L)
     {
