@@ -1,3 +1,0 @@
-# LegionCotnrollerLinux
-
-# Credits SmokelessCPU
