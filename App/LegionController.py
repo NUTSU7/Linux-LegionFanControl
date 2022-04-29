@@ -1,8 +1,10 @@
 #!/usr/bin/python
 from tempfile import tempdir
-from tkinter import*
+from tkinter import *
 from PIL import ImageTk, Image
 import os
+import threading
+import time
 
 root = Tk()
 root.geometry('500x500')
@@ -26,6 +28,7 @@ def fcurrentMode():
         quietBtn.configure(bg='#676871', activebackground='#676871')
         saveBtn.configure(bg='#676871', activebackground='#676871')
         settingsBtn.configure(bg='#676871', activebackground='#676871')
+        settingsBtn.after(1000,fcurrentMode)
     elif temp=='balanced': 
         currentMode=2
         perfBtn.configure(bg='#676871', activebackground='#676871')
@@ -33,6 +36,7 @@ def fcurrentMode():
         quietBtn.configure(bg='#676871', activebackground='#676871')
         saveBtn.configure(bg='#676871', activebackground='#676871')
         settingsBtn.configure(bg='#676871', activebackground='#676871')
+        settingsBtn.after(1000,fcurrentMode)
     elif temp=='quiet': 
         currentMode=3
         perfBtn.configure(bg='#676871', activebackground='#676871')
@@ -40,6 +44,7 @@ def fcurrentMode():
         quietBtn.configure(bg='#2333B4', activebackground='#2333B4')
         saveBtn.configure(bg='#676871', activebackground='#676871')
         settingsBtn.configure(bg='#676871', activebackground='#676871')
+        settingsBtn.after(1000,fcurrentMode)
 
 #Images
 #Window icon
@@ -77,10 +82,9 @@ modes.place(rely=0.80, relheight=0.20, relwidth=1)
 
 
 #Page
-label1 = Label(page)
-label1.place(anchor=CENTER,relx=0.25, rely=0.25, relheight=0.2, relwidth=0.5)
-label2 = Label(page)
-label2.place(anchor=CENTER,relx=0.25, rely=0.5, relheight=0.2, relwidth=0.5)
+#label1 = Label(page)
+#label1.place(anchor=CENTER,relx=0.25, rely=0.25, relheight=0.2, relwidth=0.5)
+
 
 # Buttons
 perfBtn = Button(modes, image=perfIcon)
@@ -98,6 +102,7 @@ saveBtn.place(relx=0.60, relwidth=0.20, relheight=1)
 settingsBtn = Button(modes, image=settingsIcon)
 settingsBtn.place(relx=0.80, relwidth=0.20, relheight=1)
 
+#threading.Thread(target=fcurrentMode).start()
 fcurrentMode()
 
 root.mainloop()
