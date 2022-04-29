@@ -1,5 +1,6 @@
 from tkinter import*
 from PIL import ImageTk, Image
+import os
 
 root = Tk()
 root.geometry('500x500')
@@ -7,6 +8,23 @@ root.title('LegionController')
 root.resizable(False, False)
 
 #Vars
+currentMode = 0
+
+
+def fcurrentMode():
+    f = open("/sys/kernel/LegionController/powerMode", "r")
+    temp=f.read()
+    if temp=='performance': 
+        currentMode=1
+        perfBtn.configure(bg='#2333B4', activebackground='#2333B4')
+    elif temp=='balanced': 
+        currentMode=2
+        balancedBtn.configure(bg='#2333B4', activebackground='#2333B4')
+    elif temp=='quiet': 
+        currentMode=3
+        quietBtn.configure(bg='#2333B4', activebackground='#2333B4')
+    
+
 
 #Images
 #Window icon
@@ -27,11 +45,11 @@ img.thumbnail((100,100), Image.ANTIALIAS)
 quietIcon = ImageTk.PhotoImage(img)
 #Save Icon
 img = Image.open("/home/nutsu7/LegionController/App/img/save.png") 
-img.thumbnail((100,100), Image.ANTIALIAS)
+img.thumbnail((80,80), Image.ANTIALIAS)
 saveIcon = ImageTk.PhotoImage(img)
 #Settings Icon
 img = Image.open("/home/nutsu7/LegionController/App/img/settings.png") 
-img.thumbnail((100,100), Image.ANTIALIAS)
+img.thumbnail((75,75), Image.ANTIALIAS)
 settingsIcon = ImageTk.PhotoImage(img)
 
 
@@ -62,4 +80,5 @@ saveBtn.place(relx=0.60, relwidth=0.20, relheight=1)
 settingsBtn = Button(modes, image=settingsIcon, bg='#676871', activebackground='#676871')
 settingsBtn.place(relx=0.80, relwidth=0.20, relheight=1)
 
+root.after_idle(fcurrentMode())
 root.mainloop()
