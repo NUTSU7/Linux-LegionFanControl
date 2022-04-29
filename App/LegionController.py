@@ -15,32 +15,31 @@ temp = 0
 def fcurrentMode():
     global temp
     global currentMode
-    f = open("/sys/kernel/LegionController/powerMode", "r")
+    f = open("/sys/kernel/LegionController/powerMode", "rt")
     temp=f.read()
     f.close()
-    label2['text']=temp
+    temp=temp[:-1]
     if temp=='performance': 
         currentMode=1
         perfBtn.configure(bg='#2333B4', activebackground='#2333B4')
         balancedBtn.configure(bg='#676871', activebackground='#676871')
         quietBtn.configure(bg='#676871', activebackground='#676871')
         saveBtn.configure(bg='#676871', activebackground='#676871')
-        balancedBtn.configure(bg='#676871', activebackground='#676871')
+        settingsBtn.configure(bg='#676871', activebackground='#676871')
     elif temp=='balanced': 
         currentMode=2
         perfBtn.configure(bg='#676871', activebackground='#676871')
         balancedBtn.configure(bg='#2333B4', activebackground='#2333B4')
         quietBtn.configure(bg='#676871', activebackground='#676871')
         saveBtn.configure(bg='#676871', activebackground='#676871')
-        balancedBtn.configure(bg='#676871', activebackground='#676871')
+        settingsBtn.configure(bg='#676871', activebackground='#676871')
     elif temp=='quiet': 
         currentMode=3
         perfBtn.configure(bg='#676871', activebackground='#676871')
         balancedBtn.configure(bg='#676871', activebackground='#676871')
         quietBtn.configure(bg='#2333B4', activebackground='#2333B4')
         saveBtn.configure(bg='#676871', activebackground='#676871')
-        balancedBtn.configure(bg='#676871', activebackground='#676871')
-    label1['text']='1'
+        settingsBtn.configure(bg='#676871', activebackground='#676871')
 
 #Images
 #Window icon
