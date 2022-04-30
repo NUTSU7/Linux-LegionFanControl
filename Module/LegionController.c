@@ -96,11 +96,11 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
         switch (*(virt + dev_data->powerMode))
         {
         case 0:
-            return sprintf(buf, "%s\n", "balanced");
+            return sprintf(buf, "%s\n", "0");
         case 1:
-            return sprintf(buf, "%s\n", "performance");
+            return sprintf(buf, "%s\n", "1");
         case 2:
-            return sprintf(buf, "%s\n", "quiet");
+            return sprintf(buf, "%s\n", "2");
 
         default:
             break;
