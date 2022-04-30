@@ -1,4 +1,5 @@
 #!/usr/bin/python
+from multiprocessing import cpu_count
 from tempfile import tempdir
 from tkinter import *
 from PIL import ImageTk, Image
@@ -15,33 +16,34 @@ perfBtnPressedValue = False
 balancedBtnPressedValue = False
 quietBtnPressedValue = False
 saveBtnPressedValue = False
+initPowerModeBtns = False
 
 #Functions
-def fcurrentMode():
-    temp = 0
+def checkCurrentPowerMode():
     global currentMode
-    f = open("/sys/kernel/LegionController/powerMode", "rt")
-    temp=f.read()
-    f.close()
-    temp=temp[:-1]
-    if temp=='performance': 
-        currentMode=1
-        perfBtn.configure(bg='#2333B4', activebackground='#2333B4')
-        balancedBtn.configure(bg='#676871', activebackground='#676871')
-        quietBtn.configure(bg='#676871', activebackground='#676871')
-        quietBtn.after(1000,fcurrentMode)
-    elif temp=='balanced': 
-        currentMode=0
+    global initPowerModeBtns
+    temp = 0
+    if not initPowerModeBtns:
+        stream = os.popen('cat /sys/kernel/LegionController/powerMode')
+        currentMode = int(stream.read())
+        initPowerModeBtns = True
+    os.system('cat /sys/kernel/LegionController/powerMode')
+    print(temp)
+    if currentMode == 0: 
         perfBtn.configure(bg='#676871', activebackground='#676871')
         balancedBtn.configure(bg='#2333B4', activebackground='#2333B4')
         quietBtn.configure(bg='#676871', activebackground='#676871')
-        quietBtn.after(1000,fcurrentMode)
-    elif temp=='quiet': 
-        currentMode=2
+        quietBtn.after(1000,checkCurrentPowerMode)
+    elif currentMode == 1: 
+        perfBtn.configure(bg='#2333B4', activebackground='#2333B4')
+        balancedBtn.configure(bg='#676871', activebackground='#676871')
+        quietBtn.configure(bg='#676871', activebackground='#676871')
+        quietBtn.after(1000,checkCurrentPowerMode)
+    elif currentMode == 2: 
         perfBtn.configure(bg='#676871', activebackground='#676871')
         balancedBtn.configure(bg='#676871', activebackground='#676871')
         quietBtn.configure(bg='#2333B4', activebackground='#2333B4')
-        quietBtn.after(1000,fcurrentMode)
+        quietBtn.after(1000,checkCurrentPowerMode)
 
 def perfBtnPressed():
     global perfBtnPressedValue
@@ -65,30 +67,17 @@ def powerModeBtnPressed():
     global quietBtnPressedValue
 
     if balancedBtnPressedValue:
-        balancedBtn.configure(bg='#2333B4', activebackground='#2333B4')
-        f = open("/sys/module/LegionController/parameters/cPowerMode", "w")
-        f.write("0")
-        f.close()
-        balancedBtn.configure(bg='#676871', activebackground='#676871')
+        os.system('echo 0 > /sys/module/LegionController/parameters/cPowerMode')
         balancedBtnPressedValue = False
         currentMode = 0
     elif perfBtnPressedValue:
-        perfBtn.configure(bg='#2333B4', activebackground='#2333B4')
-        f = open("/sys/module/LegionController/parameters/cPowerMode", "w")
-        f.write("1")
-        f.close()
-        perfBtn.configure(bg='#676871', activebackground='#676871')
+        os.system('echo 1 > /sys/module/LegionController/parameters/cPowerMode')
         perfBtnPressedValue = False
         currentMode = 1
     elif quietBtnPressedValue:
-        quietBtn.configure(bg='#2333B4', activebackground='#2333B4')
-        f = open("/sys/module/LegionController/parameters/cPowerMode", "w")
-        f.write("2")
-        f.close()
-        quietBtn.configure(bg='#676871', activebackground='#676871')
+        os.system('echo 2 > /sys/module/LegionController/parameters/cPowerMode')
         quietBtnPressedValue = False
         currentMode = 2
-    #os.system('cat /sys/kernel/LegionController/powerMode')
 
 
 def saveBtnPressed():
@@ -166,6 +155,6 @@ settingsBtn.place(relx=0.80, relwidth=0.20, relheight=1)
 
 #saveBtnTh = threading.Thread(target=btnLightUp).start()
 
-fcurrentMode()
+checkCurrentPowerMode()
 
 root.mainloop()
