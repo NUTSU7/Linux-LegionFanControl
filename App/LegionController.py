@@ -11,6 +11,9 @@ root.resizable(False, False)
 
 #Vars
 currentMode = 0
+perfBtnPressedValue = False
+balancedBtnPressedValue = False
+quietBtnPressedValue = False
 saveBtnPressedValue = False
 
 #Functions
@@ -28,31 +31,80 @@ def fcurrentMode():
         quietBtn.configure(bg='#676871', activebackground='#676871')
         quietBtn.after(1000,fcurrentMode)
     elif temp=='balanced': 
-        currentMode=2
+        currentMode=0
         perfBtn.configure(bg='#676871', activebackground='#676871')
         balancedBtn.configure(bg='#2333B4', activebackground='#2333B4')
         quietBtn.configure(bg='#676871', activebackground='#676871')
         quietBtn.after(1000,fcurrentMode)
     elif temp=='quiet': 
-        currentMode=3
+        currentMode=2
         perfBtn.configure(bg='#676871', activebackground='#676871')
         balancedBtn.configure(bg='#676871', activebackground='#676871')
         quietBtn.configure(bg='#2333B4', activebackground='#2333B4')
         quietBtn.after(1000,fcurrentMode)
 
+def perfBtnPressed():
+    global perfBtnPressedValue
+    perfBtnPressedValue = True
+    powerModeBtnPressed()
+
+def balancedBtnPressed():
+    global balancedBtnPressedValue
+    balancedBtnPressedValue = True
+    powerModeBtnPressed()
+
+def quietBtnPressed():
+    global quietBtnPressedValue
+    quietBtnPressedValue = True
+    powerModeBtnPressed()
+
+def powerModeBtnPressed():
+    global currentMode
+    global balancedBtnPressedValue
+    global perfBtnPressedValue
+    global quietBtnPressedValue
+
+    if balancedBtnPressedValue:
+        balancedBtn.configure(bg='#2333B4', activebackground='#2333B4')
+        f = open("/sys/module/LegionController/parameters/cPowerMode", "w")
+        f.write("0")
+        f.close()
+        balancedBtn.configure(bg='#676871', activebackground='#676871')
+        balancedBtnPressedValue = False
+        currentMode = 0
+    elif perfBtnPressedValue:
+        perfBtn.configure(bg='#2333B4', activebackground='#2333B4')
+        f = open("/sys/module/LegionController/parameters/cPowerMode", "w")
+        f.write("1")
+        f.close()
+        perfBtn.configure(bg='#676871', activebackground='#676871')
+        perfBtnPressedValue = False
+        currentMode = 1
+    elif quietBtnPressedValue:
+        quietBtn.configure(bg='#2333B4', activebackground='#2333B4')
+        f = open("/sys/module/LegionController/parameters/cPowerMode", "w")
+        f.write("2")
+        f.close()
+        quietBtn.configure(bg='#676871', activebackground='#676871')
+        quietBtnPressedValue = False
+        currentMode = 2
+    #os.system('cat /sys/kernel/LegionController/powerMode')
+
+
 def saveBtnPressed():
     global saveBtnPressedValue
     saveBtnPressedValue = True
+    root.after(100, lambda: saveBtn.configure(bg='#2333B4', activebackground='#2333B4'))
+    root.after(400, lambda: saveBtn.configure(bg='#676871', activebackground='#676871'))
 
 def btnLightUp():
-    while True:
-        global saveBtnPressedValue
-        if saveBtnPressedValue == True:
-            saveBtn.configure(bg='#2333B4', activebackground='#2333B4')
-            time.sleep(0.35)
-            saveBtn.configure(bg='#676871', activebackground='#676871')
-            saveBtnPressedValue = False
-        time.sleep(0.2)
+    global saveBtnPressedValue
+    if saveBtnPressedValue == True:
+        saveBtn.configure(bg='#2333B4', activebackground='#2333B4')
+        time.sleep(0.35)
+        saveBtn.configure(bg='#676871', activebackground='#676871')
+        saveBtnPressedValue = False
+    time.sleep(0.2)
 
 
 #Images
@@ -96,13 +148,13 @@ modes.place(rely=0.80, relheight=0.20, relwidth=1)
 
 
 # Buttons
-perfBtn = Button(modes, image=perfIcon)
+perfBtn = Button(modes, image=perfIcon, command=perfBtnPressed)
 perfBtn.place(relwidth=0.20, relheight=1)
 
-balancedBtn = Button(modes, image=balancedIcon)
+balancedBtn = Button(modes, image=balancedIcon,command=balancedBtnPressed)
 balancedBtn.place(relx=0.20, relwidth=0.20, relheight=1)
 
-quietBtn = Button(modes,image=quietIcon)
+quietBtn = Button(modes,image=quietIcon,command=quietBtnPressed)
 quietBtn.place(relx=0.40, relwidth=0.20, relheight=1)
 
 saveBtn = Button(modes, image=saveIcon,bg='#676871', activebackground='#676871', command=saveBtnPressed)
@@ -111,7 +163,6 @@ saveBtn.place(relx=0.60, relwidth=0.20, relheight=1)
 settingsBtn = Button(modes, image=settingsIcon,bg='#676871', activebackground='#676871')
 settingsBtn.place(relx=0.80, relwidth=0.20, relheight=1)
 
-saveBtn.after(200, lambda: saveBtn.configure(bg='#2333B4', activebackground='#2333B4'))
 
 #saveBtnTh = threading.Thread(target=btnLightUp).start()
 
