@@ -25,21 +25,23 @@ struct DEVICE_DATA
 
 struct DEVICE_DATA GKCN =
     {
-        .EC_Base = 0xFE00D520,
-        .FSBase_L = 0x21,
-        .FSBase_R = 0x31,
-        .FSCurrent_L = 0xDC,
-        .FSCurrent_R = 0xDD,
+        .EC_Base = 0xFE00D400, //need to start at EC level
+        .FSBase_L = 0x141,
+        .FSBase_R = 0x151,
+        .FSCurrent_L = 0x200,
+        .FSCurrent_R = 0x201,
         .N_Fan_Point = {9, 9, 10},
         .FSMultiplier = 100,
-        .FTCurrent_L = 0x18,
-        .FTCurrent_R = 0x19,
-        .powerMode = 0x10,
+        .FTCurrent_L = 0x138,
+        .FTCurrent_R = 0x139,
+        .powerMode = 0x20,
 
 };
 
 uint8_t *virt;
-static int changed;
+
+static int cPowerMode = -1;
+module_param(cPowerMode, int, 0644);
 
 struct DEVICE_DATA *dev_data;
 
@@ -47,12 +49,12 @@ static struct kobject *LegionController;
 static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf);
 
 struct kobj_attribute FSBase_L = __ATTR(FSBase_L, 0444, sysfs_show, NULL);
-struct kobj_attribute FSBase_R = __ATTR(FSBase_R, 0444, sysfs_show, NULL);
+struct kobj_attribute FSBase_R = __ATTR(FSBase_R, 0644, sysfs_show, NULL);
 struct kobj_attribute FSCurrent_L = __ATTR(FSCurrent_L, 0444, sysfs_show, NULL);
 struct kobj_attribute FSCurrent_R = __ATTR(FSCurrent_R, 0444, sysfs_show, NULL);
 struct kobj_attribute FTCurrent_L = __ATTR(FTCurrent_L, 0444, sysfs_show, NULL);
 struct kobj_attribute FTCurrent_R = __ATTR(FTCurrent_R, 0444, sysfs_show, NULL);
-struct kobj_attribute No_of_FanPoint = __ATTR(no_fan_point, 0444, sysfs_show, NULL);
+struct kobj_attribute No_of_FanPoint = __ATTR(no_fan_point, 0644, sysfs_show, NULL);
 struct kobj_attribute powerMode = __ATTR(powerMode, 0444, sysfs_show, NULL);
 
 
@@ -85,13 +87,19 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
 
     if (attr == &powerMode)
     {
+        if (cPowerMode >= 0 && cPowerMode != *(virt + dev_data->powerMode) && cPowerMode <= 2)
+        {
+            *(virt + dev_data->powerMode) = cPowerMode;
+            cPowerMode = -1;
+        }
+
         switch (*(virt + dev_data->powerMode))
         {
-        case 12:
-            return sprintf(buf, "%s\n", "performance");
-        case 13:
+        case 0:
             return sprintf(buf, "%s\n", "balanced");
-        case 14:
+        case 1:
+            return sprintf(buf, "%s\n", "performance");
+        case 2:
             return sprintf(buf, "%s\n", "quiet");
 
         default:
