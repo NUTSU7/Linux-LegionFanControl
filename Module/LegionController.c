@@ -14,8 +14,8 @@ struct DEVICE_DATA
     uint16_t fanSpeedCurrentRight;
     uint16_t FTBase_L; 
     uint16_t FTBase_R; 
-    uint16_t fanTempCurrentLeft; // CPU temp
-    uint16_t fanTempCurrentRight; // GPU temp
+    uint16_t fanTempCurrentCPU; // CPU temp
+    uint16_t fanTempCurrentGPU; // GPU temp
     uint16_t fanCurveLeft[9];
     uint16_t fanCurveRight[9];
     uint8_t fanSpeedMultiplier;
@@ -30,8 +30,8 @@ struct DEVICE_DATA GKCN =
         .fanCurveLeft = {0x141, 0x142, 0x143, 0x144, 0x145, 0x146, 0x147, 0x148, 0x149},
         .fanCurveRight = {0x151, 0x152, 0x153, 0x154, 0x155, 0x156, 0x157, 0x158, 0x159},
         .fanSpeedMultiplier = 100,
-        .fanTempCurrentLeft = 0x138,
-        .fanTempCurrentRight = 0x139,
+        .fanTempCurrentCPU = 0x138,
+        .fanTempCurrentGPU = 0x139,
         .powerMode = 0x20,
 
 };
@@ -48,8 +48,8 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
 
 struct kobj_attribute fanSpeedCurrentLeft = __ATTR(fanSpeedCurrentLeft, 0444, sysfs_show, NULL);
 struct kobj_attribute fanSpeedCurrentRight = __ATTR(fanSpeedCurrentRight, 0444, sysfs_show, NULL);
-struct kobj_attribute fanTempCurrentLeft = __ATTR(fanTempCurrentLeft, 0444, sysfs_show, NULL);
-struct kobj_attribute fanTempCurrentRight = __ATTR(fanTempCurrentRight, 0444, sysfs_show, NULL);
+struct kobj_attribute fanTempCurrentCPU = __ATTR(fanTempCurrentCPU, 0444, sysfs_show, NULL);
+struct kobj_attribute fanTempCurrentGPU = __ATTR(fanTempCurrentGPU, 0444, sysfs_show, NULL);
 struct kobj_attribute fanCurveLeft = __ATTR(fanCurveLeft, 0444, sysfs_show, NULL);
 struct kobj_attribute fanCurveRight = __ATTR(fanCurveRight, 0444, sysfs_show, NULL);
 struct kobj_attribute powerMode = __ATTR(powerMode, 0444, sysfs_show, NULL);
@@ -65,13 +65,13 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
     {
         return sprintf(buf, "%d\n", *(virt + dev_data->fanSpeedCurrentRight) * dev_data->fanSpeedMultiplier);
     }
-    if (attr == &fanTempCurrentLeft)
+    if (attr == &fanTempCurrentCPU)
     {
-        return sprintf(buf, "%d C\n", *(virt + dev_data->fanTempCurrentLeft));
+        return sprintf(buf, "%d C\n", *(virt + dev_data->fanTempCurrentCPU));
     }
-    if (attr == &fanTempCurrentRight)
+    if (attr == &fanTempCurrentGPU)
     {
-        return sprintf(buf, "%d C\n", *(virt + dev_data->fanTempCurrentRight));
+        return sprintf(buf, "%d C\n", *(virt + dev_data->fanTempCurrentGPU));
     }
 
     if (attr == &powerMode)
@@ -150,15 +150,15 @@ int init_module(void)
     {
         pr_debug("failed to create the foo file in /sys/kernel/fanSpeedCurrentRight \n");
     }
-    error = sysfs_create_file(LegionController, &fanTempCurrentLeft.attr);
+    error = sysfs_create_file(LegionController, &fanTempCurrentCPU.attr);
     if (error)
     {
-        pr_debug("failed to create the foo file in /sys/kernel/fanTempCurrentLeft \n");
+        pr_debug("failed to create the foo file in /sys/kernel/fanTempCurrentCPU \n");
     }
-    error = sysfs_create_file(LegionController, &fanTempCurrentRight.attr);
+    error = sysfs_create_file(LegionController, &fanTempCurrentGPU.attr);
     if (error)
     {
-        pr_debug("failed to create the foo file in /sys/kernel/fanTempCurrentRight \n");
+        pr_debug("failed to create the foo file in /sys/kernel/fanTempCurrentGPU \n");
     }
     error = sysfs_create_file(LegionController, &fanCurveLeft.attr);
     if (error)
