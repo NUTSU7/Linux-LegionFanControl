@@ -11,6 +11,7 @@ root.title('LegionController')
 root.resizable(False, False)
 
 #Vars
+cwd=os.getcwd()
 currentPowerMode = -1
 perfBtnPressedValue = False
 balancedBtnPressedValue = False
@@ -130,27 +131,27 @@ def checkCurrentData():
 
 #Images
 #Window icon
-img = Image.open("/home/nutsu7/LegionController/App/img/main.xbm") # .ico for windows, .xbm for linux
+img = Image.open(cwd+"/img/main.xbm") # .ico for windows, .xbm for linux
 mainIcon = ImageTk.PhotoImage(img)
 root.tk.call('wm', 'iconphoto', root._w, mainIcon)
 #Performance Mode Icon
-img = Image.open("/home/nutsu7/LegionController/App/img/perf.png") 
+img = Image.open(cwd+"/img/perf.png") 
 img.thumbnail((100,100), Image.ANTIALIAS)
 perfIcon = ImageTk.PhotoImage(img)
 #Balanced Mode Icon
-img = Image.open("/home/nutsu7/LegionController/App/img/balanced.png") 
+img = Image.open(cwd+"/img/balanced.png") 
 img.thumbnail((100,100), Image.ANTIALIAS)
 balancedIcon = ImageTk.PhotoImage(img)
 #Quiet Mode Icon
-img = Image.open("/home/nutsu7/LegionController/App/img/quiet.png") 
+img = Image.open(cwd+"/img/quiet.png") 
 img.thumbnail((100,100), Image.ANTIALIAS)
 quietIcon = ImageTk.PhotoImage(img)
 #Save Icon
-img = Image.open("/home/nutsu7/LegionController/App/img/save.png") 
+img = Image.open(cwd+"/img/save.png") 
 img.thumbnail((80,80), Image.ANTIALIAS)
 saveIcon = ImageTk.PhotoImage(img)
 #Settings Icon
-img = Image.open("/home/nutsu7/LegionController/App/img/settings.png") 
+img = Image.open(cwd+"/img/settings.png") 
 img.thumbnail((75,75), Image.ANTIALIAS)
 settingsIcon = ImageTk.PhotoImage(img)
 
