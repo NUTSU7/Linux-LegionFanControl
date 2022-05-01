@@ -25,8 +25,8 @@ struct DEVICE_DATA
 struct DEVICE_DATA GKCN =
     {
         .baseEC = 0xFE00D400, //need to start at EC level
-        .fanSpeedCurrentLeft = 0x200,
-        .fanSpeedCurrentRight = 0x201,
+        .fanSpeedCurrentLeft = 0x200, //0x1FC
+        .fanSpeedCurrentRight = 0x201, //0x1FD
         .fanCurveLeft = {0x141, 0x142, 0x143, 0x144, 0x145, 0x146, 0x147, 0x148, 0x149},
         .fanCurveRight = {0x151, 0x152, 0x153, 0x154, 0x155, 0x156, 0x157, 0x158, 0x159},
         .fanSpeedMultiplier = 100,
@@ -67,11 +67,11 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
     }
     if (attr == &fanTempCurrentCPU)
     {
-        return sprintf(buf, "%d C\n", *(virt + dev_data->fanTempCurrentCPU));
+        return sprintf(buf, "%d\n", *(virt + dev_data->fanTempCurrentCPU));
     }
     if (attr == &fanTempCurrentGPU)
     {
-        return sprintf(buf, "%d C\n", *(virt + dev_data->fanTempCurrentGPU));
+        return sprintf(buf, "%d\n", *(virt + dev_data->fanTempCurrentGPU));
     }
 
     if (attr == &powerMode)
