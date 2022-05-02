@@ -2,9 +2,11 @@
 from tkinter import *
 from PIL import ImageTk, Image
 import os, threading, time
+from importlib_metadata import entry_points
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from setuptools import Command
 
 params = {"xtick.color" : "white",
           "ytick.color" : "white",
@@ -22,6 +24,7 @@ root = Tk()
 root.geometry('700x700')
 root.title('LegionController')
 root.resizable(False, False)
+root.bind_all("<Button-1>", lambda event: event.widget.focus_set())
 
 #Vars
 cwd=os.getcwd()
@@ -169,13 +172,12 @@ def getCurrentFanCurve():
     for i in range(curveLen):
         tempCurveGPU.extend(f.read().split(' '))
     f.close()
-
+    
     #Attemp for a graph
     #fanCurvePlot.cla()
     #fanCurvePlot.plot(fanCurveLeft,tempCurveCPU, color='blue')
     #fanCurvePlot.plot(fanCurveRight,tempCurveGPU, color='green')
     #fanCurveCanvas.draw()
-    
     root.after(2000, getCurrentFanCurve)
 
 
@@ -206,11 +208,11 @@ img.thumbnail((75,75), Image.ANTIALIAS)
 settingsIcon = ImageTk.PhotoImage(img)
 
 # Main Frames
-page = Frame(root, bg='#000000', highlightbackground="white", highlightthickness=1)
-page.place(height=602, relwidth=1)
+page = Frame(root, bg='#000000')
+page.place(height=600, width=698, x=1, y=1)
 
-modes = Frame(root, bg='#000000', highlightbackground="white", highlightthickness=1)
-modes.place(y=600, height=100, relwidth=1)
+modes = Frame(root, bg='#000000')
+modes.place(y=602, height=97, width=698, x=1)
 
 #Attemp for a graph
 #fanCurveFig = Figure(figsize=(2,2), dpi=100)
@@ -221,34 +223,61 @@ modes.place(y=600, height=100, relwidth=1)
 #fanCurvePlot.axes.yaxis.set_visible(False)
 
 #Page Frames
-fanCurveFigFrame = Frame(page, bg='#000000', highlightbackground="white", highlightthickness=1)
-fanCurveFigFrame.place(relwidth=1,relheight=0.7)
+fanCurveFrame = Frame(page, bg='white')
+fanCurveFrame.place(relwidth=1,height=500)
 
-currentDataFrame = Frame(page, bg='#000000', highlightbackground="white", highlightthickness=1)
-currentDataFrame.place(rely=0.7, relheight=0.3, relwidth=1)
+currentDataFrame = Frame(page, bg='white')
+currentDataFrame.place(y=500, height=99, relwidth=1)
 
 #Fan Curve Frame
+
+fanCurveGraphFrame = Frame(fanCurveFrame, bg='#000000')
+fanCurveGraphFrame.place(height=299, relwidth=1)
+
+fanCurveInputFrame = Frame(fanCurveFrame, bg='white')
+fanCurveInputFrame.place(y=300, height=199, relwidth=1)
 
 #Attemp for a graph
 #fanCurveCanvas = FigureCanvasTkAgg(fanCurveFig, fanCurveFigFrame)
 #fanCurveCanvas.draw()
 #fanCurveCanvas.get_tk_widget().place(relwidth=1, relheight=1)
 
-#Current Data Frame elements
-currentDataFrameFanSpeed = Frame(currentDataFrame, bg='#000000', highlightbackground="white", highlightthickness=1)
-currentDataFrameFanSpeed.place(relheight=1, relwidth=0.5)
+#Fan Curve Input Frame elements
+fanCurveInputLeftFrame = Frame(fanCurveInputFrame, bd=10,bg='#000000')
+fanCurveInputLeftFrame.place(height=99, relwidth=1)
 
-currentDataFrameTemp = Frame(currentDataFrame, bg='#000000', highlightbackground="white", highlightthickness=1)
-currentDataFrameTemp.place(relheight=1, relwidth=0.5, relx=0.5)
+fanCurveInputRightFrame = Frame(fanCurveInputFrame, bg='#000000')
+fanCurveInputRightFrame.place(y=100, height=99, relwidth=1)
+
+# Fan Curve Input Left Frame elements
+fanCurveInputLeftText = Label(fanCurveInputLeftFrame, text='Left Fan', font=("Arial", 12), fg='white', bg='#000000')
+fanCurveInputLeftText.place(relx=0, rely=0.3, relheight=0.30, relwidth=0.4)
+
+tempCurveInputText = Label(fanCurveInputLeftFrame, text='Right Fan', font=("Arial", 12), fg='white', bg='#000000')
+tempCurveInputText.place(relx=0, rely=0.65, relheight=0.30, relwidth=0.4)
+
+fanSpeedCurrentLeftLabel = Entry(fanCurveInputLeftFrame, bg='#676871', font=("Arial", 17), fg='black')
+fanSpeedCurrentLeftLabel.place(relx=0.4, rely=0.30, relheight=0.30, relwidth=0.5)
+
+fanSpeedCurrentRightLabel = Entry(fanCurveInputLeftFrame, bg='#676871', font=("Arial", 17), fg='black')
+fanSpeedCurrentRightLabel.place(relx=0.4, rely=0.65, relheight=0.30, relwidth=0.5)
+
+
+#Current Data Frame elements
+currentDataFrameFanSpeed = Frame(currentDataFrame, bg='#000000')
+currentDataFrameFanSpeed.place(height=99, width=349)
+
+currentDataFrameTemp = Frame(currentDataFrame, bg='#000000')
+currentDataFrameTemp.place(height=99, width=349, x=350)
 
 #Current Data Fan Speed
-currentDataFrameFanSpeedText = Label(currentDataFrameFanSpeed, text='Current Fan Speed', font=("Arial", 20), fg='white', bg='#000000')
+currentDataFrameFanSpeedText = Label(currentDataFrameFanSpeed, text='Current Fan Speed', font=("Arial", 15), fg='white', bg='#000000')
 currentDataFrameFanSpeedText.place(relx=0, rely=0.025, relheight=0.20, relwidth=1)
 
-currentDataFrameFanSpeedLeftText = Label(currentDataFrameFanSpeed, text='Left Fan', font=("Arial", 15), fg='white', bg='#000000')
+currentDataFrameFanSpeedLeftText = Label(currentDataFrameFanSpeed, text='Left Fan', font=("Arial", 12), fg='white', bg='#000000')
 currentDataFrameFanSpeedLeftText.place(relx=0, rely=0.3, relheight=0.30, relwidth=0.4)
 
-currentDataFrameFanSpeedRightText = Label(currentDataFrameFanSpeed, text='Right Fan', font=("Arial", 15), fg='white', bg='#000000')
+currentDataFrameFanSpeedRightText = Label(currentDataFrameFanSpeed, text='Right Fan', font=("Arial", 12), fg='white', bg='#000000')
 currentDataFrameFanSpeedRightText.place(relx=0, rely=0.65, relheight=0.30, relwidth=0.4)
 
 fanSpeedCurrentLeftLabel = Label(currentDataFrameFanSpeed, bg='#676871', activebackground='#676871', font=("Arial", 17), fg='black')
@@ -258,13 +287,13 @@ fanSpeedCurrentRightLabel = Label(currentDataFrameFanSpeed, bg='#676871', active
 fanSpeedCurrentRightLabel.place(relx=0.4, rely=0.65, relheight=0.30, relwidth=0.5)
 
 #Current Data Temps
-currentDataFrameTempText = Label(currentDataFrameTemp, text='Current Temps', font=("Arial", 20), fg='white', bg='#000000')
+currentDataFrameTempText = Label(currentDataFrameTemp, text='Current Temps', font=("Arial", 15), fg='white', bg='#000000')
 currentDataFrameTempText.place(relx=0, rely=0.025, relheight=0.20, relwidth=1)
 
-currentDataFrameTempCPUText = Label(currentDataFrameTemp, text='CPU', font=("Arial", 15), fg='white', bg='#000000')
+currentDataFrameTempCPUText = Label(currentDataFrameTemp, text='CPU', font=("Arial", 12), fg='white', bg='#000000')
 currentDataFrameTempCPUText.place(relx=0.005, rely=0.3, relheight=0.30, relwidth=0.4)
 
-currentDataFrameTempGPUText = Label(currentDataFrameTemp, text='GPU', font=("Arial", 15), fg='white', bg='#000000')
+currentDataFrameTempGPUText = Label(currentDataFrameTemp, text='GPU', font=("Arial", 12), fg='white', bg='#000000')
 currentDataFrameTempGPUText.place(relx=0.005, rely=0.65, relheight=0.30, relwidth=0.4)
 
 tempCurrentCPULabel = Label(currentDataFrameTemp, bg='#676871', activebackground='#676871', font=("Arial", 17), fg='black')
@@ -276,19 +305,19 @@ tempCurrentGPULabel.place(relx=0.4, rely=0.65, relheight=0.30, relwidth=0.5)
 
 # Buttons
 perfBtn = Button(modes, image=perfIcon, command=perfBtnPressed)
-perfBtn.place(x=100, width=100, height=100) #relwidth=0.20, relheight=1, relx=0.2
+perfBtn.place(x=100, width=100, height=97) #relwidth=0.20, relheight=1, relx=0.2
 
 balancedBtn = Button(modes, image=balancedIcon,command=balancedBtnPressed)
-balancedBtn.place(x=200, width=100, height=100)
+balancedBtn.place(x=200, width=100, height=97)
 
 quietBtn = Button(modes,image=quietIcon,command=quietBtnPressed)
-quietBtn.place(x=300, width=100, height=100)
+quietBtn.place(x=300, width=100, height=97)
 
 saveBtn = Button(modes, image=saveIcon,bg='#676871', activebackground='#676871', command=saveBtnPressed)
-saveBtn.place(x=400, width=100, height=100)
+saveBtn.place(x=400, width=100, height=97)
 
 settingsBtn = Button(modes, image=settingsIcon,bg='#676871', activebackground='#676871')
-settingsBtn.place(x=500, width=100, height=100)
+settingsBtn.place(x=500, width=100, height=97)
 
 getCurrentPowerMode()
 getCurrentData()
