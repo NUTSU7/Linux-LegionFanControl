@@ -65,11 +65,11 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
 {
     if (attr == &fanSpeedCurrentLeft)
     {
-        return sprintf(buf, "%d\n", *(virt + dev_data->fanSpeedCurrentLeft) * dev_data->fanSpeedMultiplier);
+        return sprintf(buf, "%d\n", *(virt + dev_data->fanSpeedCurrentLeft));
     }
     if (attr == &fanSpeedCurrentRight)
     {
-        return sprintf(buf, "%d\n", *(virt + dev_data->fanSpeedCurrentRight) * dev_data->fanSpeedMultiplier);
+        return sprintf(buf, "%d\n", *(virt + dev_data->fanSpeedCurrentRight));
     }
     if (attr == &tempCurrentCPU)
     {
@@ -105,29 +105,29 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
     if (attr == &fanCurveLeft)
     {
         return sprintf(buf, "%d %d %d %d %d %d %d %d %d\n", 
-                       *(virt + dev_data->fanCurveLeft[0]) * dev_data->fanSpeedMultiplier,
-                       *(virt + dev_data->fanCurveLeft[1]) * dev_data->fanSpeedMultiplier,
-                       *(virt + dev_data->fanCurveLeft[2]) * dev_data->fanSpeedMultiplier,
-                       *(virt + dev_data->fanCurveLeft[3]) * dev_data->fanSpeedMultiplier,
-                       *(virt + dev_data->fanCurveLeft[4]) * dev_data->fanSpeedMultiplier,
-                       *(virt + dev_data->fanCurveLeft[5]) * dev_data->fanSpeedMultiplier,
-                       *(virt + dev_data->fanCurveLeft[6]) * dev_data->fanSpeedMultiplier,
-                       *(virt + dev_data->fanCurveLeft[7]) * dev_data->fanSpeedMultiplier,
-                       *(virt + dev_data->fanCurveLeft[8]) * dev_data->fanSpeedMultiplier);
+                       *(virt + dev_data->fanCurveLeft[0]),
+                       *(virt + dev_data->fanCurveLeft[1]),
+                       *(virt + dev_data->fanCurveLeft[2]),
+                       *(virt + dev_data->fanCurveLeft[3]),
+                       *(virt + dev_data->fanCurveLeft[4]),
+                       *(virt + dev_data->fanCurveLeft[5]),
+                       *(virt + dev_data->fanCurveLeft[6]),
+                       *(virt + dev_data->fanCurveLeft[7]),
+                       *(virt + dev_data->fanCurveLeft[8]));
     }
 
     if (attr == &fanCurveRight)
     {
         return sprintf(buf, "%d %d %d %d %d %d %d %d %d\n",
-                       *(virt + dev_data->fanCurveRight[0]) * dev_data->fanSpeedMultiplier,
-                       *(virt + dev_data->fanCurveRight[1]) * dev_data->fanSpeedMultiplier,
-                       *(virt + dev_data->fanCurveRight[2]) * dev_data->fanSpeedMultiplier,
-                       *(virt + dev_data->fanCurveRight[3]) * dev_data->fanSpeedMultiplier,
-                       *(virt + dev_data->fanCurveRight[4]) * dev_data->fanSpeedMultiplier,
-                       *(virt + dev_data->fanCurveRight[5]) * dev_data->fanSpeedMultiplier,
-                       *(virt + dev_data->fanCurveRight[6]) * dev_data->fanSpeedMultiplier,
-                       *(virt + dev_data->fanCurveRight[7]) * dev_data->fanSpeedMultiplier,
-                       *(virt + dev_data->fanCurveRight[8]) * dev_data->fanSpeedMultiplier);
+                       *(virt + dev_data->fanCurveRight[0]),
+                       *(virt + dev_data->fanCurveRight[1]),
+                       *(virt + dev_data->fanCurveRight[2]),
+                       *(virt + dev_data->fanCurveRight[3]),
+                       *(virt + dev_data->fanCurveRight[4]),
+                       *(virt + dev_data->fanCurveRight[5]),
+                       *(virt + dev_data->fanCurveRight[6]),
+                       *(virt + dev_data->fanCurveRight[7]),
+                       *(virt + dev_data->fanCurveRight[8]));
     }
 
     if (attr == &tempCurveCPU)
