@@ -3,6 +3,7 @@
 #include <linux/moduleparam.h>
 #include <linux/types.h>
 #include <asm/io.h>
+#include <linux/loop.h>
 
 #define LegionControllerVer "V0.3"
 
@@ -41,9 +42,19 @@ struct DEVICE_DATA GKCN =
 };
 
 uint8_t *virt;
+int i;
 
 static int cPowerMode = -1;
+static int cFanCurveLeft[9] = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
+static int cFanCurveRight[9] = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
+static int cTempCurveCPU[9] = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
+static int cTempCurveGPU[9] = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
+
 module_param(cPowerMode, int, 0644);
+module_param_array(cFanCurveLeft, int, NULL, 0644);
+module_param_array(cFanCurveRight, int, NULL, 0644);
+module_param_array(cTempCurveCPU, int, NULL, 0644);
+module_param_array(cTempCurveGPU, int, NULL, 0644);
 
 struct DEVICE_DATA *dev_data;
 
@@ -104,6 +115,15 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
 
     if (attr == &fanCurveLeft)
     {
+        for(i=0; i<9; i++)
+        {
+            if (cFanCurveLeft[i] >= 0 && cFanCurveLeft[i] != *(virt + dev_data->fanCurveLeft[i]) && cFanCurveLeft[i] <= 45)
+            {
+                *(virt + dev_data->fanCurveLeft[i]) = cFanCurveLeft[i];
+                cFanCurveLeft[i] = -1;
+            }
+        }
+
         return sprintf(buf, "%d %d %d %d %d %d %d %d %d\n", 
                        *(virt + dev_data->fanCurveLeft[0]),
                        *(virt + dev_data->fanCurveLeft[1]),
@@ -118,6 +138,15 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
 
     if (attr == &fanCurveRight)
     {
+        for (i = 0; i < 9; i++)
+        {
+            if (cFanCurveRight[i] >= 0 && cFanCurveRight[i] != *(virt + dev_data->fanCurveRight[i]) && cFanCurveRight[i] <= 45)
+            {
+                *(virt + dev_data->fanCurveRight[i]) = cFanCurveRight[i];
+                cFanCurveRight[i] = -1;
+            }
+        }
+
         return sprintf(buf, "%d %d %d %d %d %d %d %d %d\n",
                        *(virt + dev_data->fanCurveRight[0]),
                        *(virt + dev_data->fanCurveRight[1]),
@@ -132,6 +161,15 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
 
     if (attr == &tempCurveCPU)
     {
+        for (i = 0; i < 9; i++)
+        {
+            if (cTempCurveCPU[i] >= 0 && cTempCurveCPU[i] != *(virt + dev_data->tempCurveCPU[i]) && cTempCurveCPU[i] <= 105)
+            {
+                *(virt + dev_data->tempCurveCPU[i]) = cTempCurveCPU[i];
+                cTempCurveCPU[i] = -1;
+            }
+        }
+
         return sprintf(buf, "%d %d %d %d %d %d %d %d %d\n",
                        *(virt + dev_data->tempCurveCPU[0]),
                        *(virt + dev_data->tempCurveCPU[1]),
@@ -146,6 +184,15 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
 
     if (attr == &tempCurveGPU)
     {
+        for (i = 0; i < 9; i++)
+        {
+            if (cTempCurveGPU[i] >= 0 && cTempCurveCPU[i] != *(virt + dev_data->tempCurveGPU[i]) && cTempCurveGPU[i] <= 75)
+            {
+                *(virt + dev_data->tempCurveGPU[i]) = cTempCurveGPU[i];
+                cTempCurveGPU[i] = -1;
+            }
+        }
+
         return sprintf(buf, "%d %d %d %d %d %d %d %d %d\n",
                        *(virt + dev_data->tempCurveGPU[0]),
                        *(virt + dev_data->tempCurveGPU[1]),
