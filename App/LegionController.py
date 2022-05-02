@@ -46,9 +46,12 @@ curveLen = -1
 functionCalled = False
 
 #Functions
-def initValues():
+def getCurrentPowerMode():
     global currentPowerMode
+    global previousPowerMode
     global curveLen
+
+    previousPowerMode=currentPowerMode
     f = open("/sys/kernel/LegionController/powerMode", "r")
     currentPowerMode = int(f.read()[:-1])
     f.close
@@ -56,15 +59,6 @@ def initValues():
     elif currentPowerMode == 0: curveLen=8
     elif currentPowerMode == 1: curveLen=9
     elif currentPowerMode == 2: curveLen=7
-
-def getCurrentPowerMode():
-    global currentPowerMode
-    global previousPowerMode
-    
-    previousPowerMode=currentPowerMode
-    f = open("/sys/kernel/LegionController/powerMode", "r")
-    currentPowerMode = int(f.read()[:-1])
-    f.close
     if previousPowerMode != currentPowerMode:
         if currentPowerMode == 0: 
             perfBtn.configure(bg='#9E9EA4', activebackground='#9E9EA4')
@@ -82,16 +76,19 @@ def getCurrentPowerMode():
 
 def perfBtnPressed():
     global perfBtnPressedValue
+    global curveLen
     perfBtnPressedValue = True
     powerModeBtnPressed()
 
 def balancedBtnPressed():
     global balancedBtnPressedValue
+    global curveLen
     balancedBtnPressedValue = True
     powerModeBtnPressed()
 
 def quietBtnPressed():
     global quietBtnPressedValue
+    global curveLen
     quietBtnPressedValue = True
     powerModeBtnPressed()
 
@@ -118,27 +115,12 @@ def powerModeBtnPressed():
         quietBtnPressedValue = False
     getCurrentFanCurve()
 
-def saveBtnPressed():
-    global saveBtnPressedValue
-    saveBtnPressedValue = True
-    root.after(100, lambda: saveBtn.configure(bg='#2333B4', activebackground='#2333B4'))
-    root.after(400, lambda: saveBtn.configure(bg='#9E9EA4', activebackground='#9E9EA4'))
-
-def btnLightUp():
-    global saveBtnPressedValue
-    if saveBtnPressedValue == True:
-        saveBtn.configure(bg='#2333B4', activebackground='#2333B4')
-        time.sleep(0.35)
-        saveBtn.configure(bg='#9E9EA4', activebackground='#9E9EA4')
-        saveBtnPressedValue = False
-    time.sleep(0.2)
-
 def getCurrentData():
     global fanSpeedCurrentLeft
     global fanSpeedCurrentRight
     global tempCurrentCPU
     global tempCurrentGPU
-
+    global curveLen
     f = open("/sys/kernel/LegionController/fanSpeedCurrentLeft", "r")
     fanSpeedCurrentLeft = int(f.read()[:-1])*100
     f.close()
@@ -151,6 +133,7 @@ def getCurrentData():
     tempCurrentCPU = int(f.read()[:-1])
     f.close()
     tempCurrentCPULabel['text']=str(tempCurrentCPU)+' °C'
+    if int(tempCurrentCPU) < 40: curveLen=3
     f = open("/sys/kernel/LegionController/tempCurrentGPU", "r")
     tempCurrentGPU = int(f.read()[:-1])
     f.close()
@@ -168,10 +151,6 @@ def getCurrentFanCurve():
     fanCurveRight = []
     tempCurveCPU = []
     tempCurveGPU = []
-    if int(tempCurrentCPU) < 40: curveLen=3
-    elif currentPowerMode == 0: curveLen=8
-    elif currentPowerMode == 1: curveLen=9
-    elif currentPowerMode == 2: curveLen=7
     f = open("/sys/kernel/LegionController/fanCurveLeft", "r")
     for i in range(curveLen):
         fanCurveLeft.extend(f.read().split(' '))
@@ -282,8 +261,104 @@ def initEntryes():
     tempCurveGPUInputEntry7.insert(0, int(tempCurveGPU[6]))
     tempCurveGPUInputEntry8.insert(0, int(tempCurveGPU[7]))
     tempCurveGPUInputEntry9.insert(0, int(tempCurveGPU[8]))
-    print(1)
 
+def saveBtnPressed():
+    global saveBtnPressedValue
+    saveBtnPressedValue = True
+    changeFanCurve()
+    root.after(100, lambda: saveBtn.configure(bg='#2333B4', activebackground='#2333B4'))
+    root.after(400, lambda: saveBtn.configure(bg='#9E9EA4', activebackground='#9E9EA4'))
+
+def changeFanCurve():
+    global curveLen
+
+    fanCurveLeft[0] = fanCurveLeftInputEntry1.get()[:-2]
+    fanCurveLeft[1] = fanCurveLeftInputEntry2.get()[:-2]
+    fanCurveLeft[2] = fanCurveLeftInputEntry3.get()[:-2]
+    fanCurveLeft[3] = fanCurveLeftInputEntry4.get()[:-2]
+    fanCurveLeft[4] = fanCurveLeftInputEntry5.get()[:-2]
+    fanCurveLeft[5] = fanCurveLeftInputEntry6.get()[:-2]
+    fanCurveLeft[6] = fanCurveLeftInputEntry7.get()[:-2]
+
+    if curveLen >= 8:
+        fanCurveLeft[7] = fanCurveLeftInputEntry8.get()[:-2]
+    else:
+        fanCurveLeft[7] = -1
+
+    if curveLen >= 9:
+        fanCurveLeft[8] = fanCurveLeftInputEntry9.get()[:-2]
+    else:
+        fanCurveLeft[8] = -1
+
+    fanCurveRight[0] = fanCurveRightInputEntry1.get()[:-2]
+    fanCurveRight[1] = fanCurveRightInputEntry2.get()[:-2]
+    fanCurveRight[2] = fanCurveRightInputEntry3.get()[:-2]
+    fanCurveRight[3] = fanCurveRightInputEntry4.get()[:-2]
+    fanCurveRight[4] = fanCurveRightInputEntry5.get()[:-2]
+    fanCurveRight[5] = fanCurveRightInputEntry6.get()[:-2]
+    fanCurveRight[6] = fanCurveRightInputEntry7.get()[:-2]
+
+    if curveLen >= 8:
+        fanCurveRight[7] = fanCurveRightInputEntry8.get()[:-2]
+    else:
+        fanCurveRight[7] = -1
+
+    if curveLen >= 9:
+        fanCurveRight[8] = fanCurveRightInputEntry9.get()[:-2]
+    else:
+        fanCurveRight[8] = -1
+
+    tempCurveCPU[1] = tempCurveCPUInputEntry2.get()
+    tempCurveCPU[0] = tempCurveCPUInputEntry1.get()
+    tempCurveCPU[2] = tempCurveCPUInputEntry3.get()
+    tempCurveCPU[3] = tempCurveCPUInputEntry4.get()
+    tempCurveCPU[4] = tempCurveCPUInputEntry5.get()
+    tempCurveCPU[5] = tempCurveCPUInputEntry6.get()
+    tempCurveCPU[6] = tempCurveCPUInputEntry7.get()
+
+    if curveLen >= 8:
+        tempCurveCPU[7] = tempCurveCPUInputEntry8.get()
+    else:
+        tempCurveCPU[7] = -1
+
+    if curveLen >= 9:
+        tempCurveCPU[8] = tempCurveCPUInputEntry9.get()
+    else:
+        tempCurveCPU[8] = -1
+
+    tempCurveGPU[0] = tempCurveGPUInputEntry1.get()
+    tempCurveGPU[1] = tempCurveGPUInputEntry2.get()
+    tempCurveGPU[2] = tempCurveGPUInputEntry3.get()
+    tempCurveGPU[3] = tempCurveGPUInputEntry4.get()
+    tempCurveGPU[4] = tempCurveGPUInputEntry5.get()
+    tempCurveGPU[5] = tempCurveGPUInputEntry6.get()
+    tempCurveGPU[6] = tempCurveGPUInputEntry7.get()
+
+    if curveLen >= 8:
+        tempCurveGPU[7] = tempCurveGPUInputEntry8.get()
+    else:
+        tempCurveGPU[7] = -1
+    
+    if curveLen >= 9:
+        tempCurveGPU[8] = tempCurveGPUInputEntry9.get()
+    else:
+        tempCurveGPU[8] = -1
+
+    f = open("/sys/module/LegionController/parameters/cFanCurveLeft", "w")
+    f.write(str(fanCurveLeft[0])+','+str(fanCurveLeft[1])+','+str(fanCurveLeft[2])+','+str(fanCurveLeft[3])+','+str(fanCurveLeft[4])+','+str(fanCurveLeft[5])+','+str(fanCurveLeft[6])+','+str(fanCurveLeft[7])+','+str(fanCurveLeft[8]))
+    f.close()
+
+    f = open("/sys/module/LegionController/parameters/cFanCurveRight", "w")
+    f.write(str(fanCurveRight[0])+','+str(fanCurveRight[1])+','+str(fanCurveRight[2])+','+str(fanCurveRight[3])+','+str(fanCurveRight[4])+','+str(fanCurveRight[5])+','+str(fanCurveRight[6])+','+str(fanCurveRight[7])+','+str(fanCurveRight[8]))
+    f.close()
+
+    f = open("/sys/module/LegionController/parameters/cTempCurveCPU", "w")
+    f.write(str(tempCurveCPU[0])+','+str(tempCurveCPU[1])+','+str(tempCurveCPU[2])+','+str(tempCurveCPU[3])+','+str(tempCurveCPU[4])+','+str(tempCurveCPU[5])+','+str(tempCurveCPU[6])+','+str(tempCurveCPU[7])+','+str(tempCurveCPU[8]))
+    f.close()
+
+    f = open("/sys/module/LegionController/parameters/cTempCurveGPU", "w")
+    f.write(str(tempCurveGPU[0])+','+str(tempCurveGPU[1])+','+str(tempCurveGPU[2])+','+str(tempCurveGPU[3])+','+str(tempCurveGPU[4])+','+str(tempCurveGPU[5])+','+str(tempCurveGPU[6])+','+str(tempCurveGPU[7])+','+str(tempCurveGPU[8]))
+    f.close()
 
 #Images
 #Window icon
@@ -325,7 +400,6 @@ modes.place(y=602, height=97, width=698, x=1)
 #fanCurvePlot.plot(fanCurveRight,tempCurveGPU, color='green')
 #fanCurvePlot.axes.xaxis.set_visible(False)
 #fanCurvePlot.axes.yaxis.set_visible(False)
-
 
 #Page Frames
 fanCurveFrame = Frame(page, bg='white')
