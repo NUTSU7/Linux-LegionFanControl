@@ -6,4 +6,21 @@ Current temps:
 CPU(Left)- 0x18
 GPU(right)- 0x19
 
+2021
+Base - 520
+CPU Temp Trigger Point - 0x70 row
+GPU Temp Trigger Point - 0x90 row
+Left Fan Speed - 0x20 row
+Right Fan Speed - 0x30 row
+Power Mode - 0x10 (read only)
+
+2020
+Base - 520
+CPU Temp Trigger Point - 0x80 row
+GPU Temp Trigger Point - 0x90 row
+Left Fan Speed - 0x20 row
+Right Fan Speed - 0x30 row
+Power Mode - 0x10 (read only)
+
 sudo -E python3 LegionController.py // run the python script as sudo
+pip install matplotlib, pillow

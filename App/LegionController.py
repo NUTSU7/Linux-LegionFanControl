@@ -1,12 +1,25 @@
 #!/usr/bin/python
-from multiprocessing import cpu_count
-from tempfile import tempdir
 from tkinter import *
 from PIL import ImageTk, Image
 import os, threading, time
+import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+params = {"xtick.color" : "white",
+          "ytick.color" : "white",
+          "axes.edgecolor" : "white",
+          "figure.facecolor" : "black",
+          "axes.facecolor" : "black",
+          "axes.grid" : "True",
+          "axes.xmargin" : "0",
+          "axes.ymargin" : "0",
+          "axes.zmargin" : "0",
+          "axes.autolimit_mode" : "data"}
+plt.rcParams.update(params)
 
 root = Tk()
-root.geometry('500x500')
+root.geometry('700x700')
 root.title('LegionController')
 root.resizable(False, False)
 
@@ -17,37 +30,37 @@ perfBtnPressedValue = False
 balancedBtnPressedValue = False
 quietBtnPressedValue = False
 saveBtnPressedValue = False
-initPowerModeBtns = False
 fanSpeedCurrentLeft = -1
 fanSpeedCurrentRight = -1
 tempCurrentCPU = -1
 tempCurrentGPU = -1
+fanCurveLeft = []
+fanCurveRight = []
+tempCurveCPU = []
+tempCurveGPU = []
+curveLen = -1
 
 #Functions
-def checkCurrentPowerMode():
+def getCurrentPowerMode():
     global currentPowerMode
-    global initPowerModeBtns
-    if not initPowerModeBtns:
-        f = open("/sys/kernel/LegionController/powerMode", "r")
-        currentPowerMode = int(f.read()[:-1])
-        f.close
-        initPowerModeBtns = True
-    os.system('cat /sys/kernel/LegionController/powerMode')
+    f = open("/sys/kernel/LegionController/powerMode", "r")
+    currentPowerMode = int(f.read()[:-1])
+    f.close
     if currentPowerMode == 0: 
         perfBtn.configure(bg='#676871', activebackground='#676871')
         balancedBtn.configure(bg='#2333B4', activebackground='#2333B4')
         quietBtn.configure(bg='#676871', activebackground='#676871')
-        quietBtn.after(2000,checkCurrentPowerMode)
+        quietBtn.after(2000,getCurrentPowerMode)
     elif currentPowerMode == 1: 
         perfBtn.configure(bg='#2333B4', activebackground='#2333B4')
         balancedBtn.configure(bg='#676871', activebackground='#676871')
         quietBtn.configure(bg='#676871', activebackground='#676871')
-        quietBtn.after(2000,checkCurrentPowerMode)
+        quietBtn.after(2000,getCurrentPowerMode)
     elif currentPowerMode == 2: 
         perfBtn.configure(bg='#676871', activebackground='#676871')
         balancedBtn.configure(bg='#676871', activebackground='#676871')
         quietBtn.configure(bg='#2333B4', activebackground='#2333B4')
-        quietBtn.after(2000,checkCurrentPowerMode)
+        quietBtn.after(2000,getCurrentPowerMode)
 
 def perfBtnPressed():
     global perfBtnPressedValue
@@ -75,20 +88,16 @@ def powerModeBtnPressed():
         f.write('0')
         f.close()
         balancedBtnPressedValue = False
-        currentPowerMode = 0
     elif perfBtnPressedValue:
         f = open("/sys/module/LegionController/parameters/cPowerMode", "w")
         f.write('1')
         f.close()
         perfBtnPressedValue = False
-        currentPowerMode = 1
     elif quietBtnPressedValue:
         f = open("/sys/module/LegionController/parameters/cPowerMode", "w")
         f.write('2')
         f.close()
         quietBtnPressedValue = False
-        currentPowerMode = 2
-
 
 def saveBtnPressed():
     global saveBtnPressedValue
@@ -105,7 +114,7 @@ def btnLightUp():
         saveBtnPressedValue = False
     time.sleep(0.2)
 
-def checkCurrentData():
+def getCurrentData():
     global fanSpeedCurrentLeft
     global fanSpeedCurrentRight
     global tempCurrentCPU
@@ -119,15 +128,56 @@ def checkCurrentData():
     fanSpeedCurrentRight = f.read()[:-1]
     f.close()
     fanSpeedCurrentRightLabel['text']=fanSpeedCurrentRight+' RPM'
-    f = open("/sys/kernel/LegionController/fanTempCurrentCPU", "r")
+    f = open("/sys/kernel/LegionController/tempCurrentCPU", "r")
     tempCurrentCPU = f.read()[:-1]
     f.close()
     tempCurrentCPULabel['text']=tempCurrentCPU+' °C'
-    f = open("/sys/kernel/LegionController/fanTempCurrentGPU", "r")
+    f = open("/sys/kernel/LegionController/tempCurrentGPU", "r")
     tempCurrentGPU = f.read()[:-1]
     f.close()
     tempCurrentGPULabel['text']=tempCurrentGPU+' °C'
-    tempCurrentGPULabel.after(1000, checkCurrentData)
+    tempCurrentGPULabel.after(2000, getCurrentData)
+
+def getCurrentFanCurve():
+    global fanCurveLeft
+    global fanCurveRight
+    global tempCurveCPU
+    global tempCurveGPU
+    global tempCurrentCPU
+    global curveLen
+    fanCurveLeft = []
+    fanCurveRight = []
+    tempCurveCPU = []
+    tempCurveGPU = []
+    if int(tempCurrentCPU) < 40: curveLen=3
+    elif currentPowerMode == 0: curveLen=8
+    elif currentPowerMode == 1: curveLen=9
+    elif currentPowerMode == 2: curveLen=7
+    f = open("/sys/kernel/LegionController/fanCurveLeft", "r")
+    for i in range(curveLen):
+        fanCurveLeft.extend(f.read().split(' '))
+    f.close()
+    f = open("/sys/kernel/LegionController/fanCurveRight", "r")
+    for i in range(curveLen):
+        fanCurveRight.extend(f.read().split(' '))
+    f.close()
+    f = open("/sys/kernel/LegionController/tempCurveCPU", "r")
+    for i in range(curveLen):
+        tempCurveCPU.extend(f.read().split(' '))
+    f.close()
+    f = open("/sys/kernel/LegionController/tempCurveGPU", "r")
+    for i in range(curveLen):
+        tempCurveGPU.extend(f.read().split(' '))
+    f.close()
+
+    #Attemp for a graph
+    #fanCurvePlot.cla()
+    #fanCurvePlot.plot(fanCurveLeft,tempCurveCPU, color='blue')
+    #fanCurvePlot.plot(fanCurveRight,tempCurveGPU, color='green')
+    #fanCurveCanvas.draw()
+    
+    root.after(2000, getCurrentFanCurve)
+
 
 #Images
 #Window icon
@@ -155,80 +205,93 @@ img = Image.open(cwd+"/img/settings.png")
 img.thumbnail((75,75), Image.ANTIALIAS)
 settingsIcon = ImageTk.PhotoImage(img)
 
-
 # Main Frames
 page = Frame(root, bg='#000000', highlightbackground="white", highlightthickness=1)
-page.place(relheight=0.80, relwidth=1)
+page.place(height=602, relwidth=1)
 
 modes = Frame(root, bg='#000000', highlightbackground="white", highlightthickness=1)
-modes.place(rely=0.80, relheight=0.20, relwidth=1)
+modes.place(y=600, height=100, relwidth=1)
 
+#Attemp for a graph
+#fanCurveFig = Figure(figsize=(2,2), dpi=100)
+#fanCurvePlot = fanCurveFig.add_subplot(122)
+#fanCurvePlot.plot(fanCurveLeft,tempCurveCPU, color='blue')
+#fanCurvePlot.plot(fanCurveRight,tempCurveGPU, color='green')
+#fanCurvePlot.axes.xaxis.set_visible(False)
+#fanCurvePlot.axes.yaxis.set_visible(False)
 
 #Page Frames
-fanCurve = Frame(page, bg='#000000', highlightbackground="white", highlightthickness=1)
-fanCurve.place(relwidth=1,relheight=0.7)
+fanCurveFigFrame = Frame(page, bg='#000000', highlightbackground="white", highlightthickness=1)
+fanCurveFigFrame.place(relwidth=1,relheight=0.7)
 
-currentData = Frame(page, bg='#000000', highlightbackground="white", highlightthickness=1)
-currentData.place(rely=0.7, relheight=0.3, relwidth=1)
+currentDataFrame = Frame(page, bg='#000000', highlightbackground="white", highlightthickness=1)
+currentDataFrame.place(rely=0.7, relheight=0.3, relwidth=1)
+
+#Fan Curve Frame
+
+#Attemp for a graph
+#fanCurveCanvas = FigureCanvasTkAgg(fanCurveFig, fanCurveFigFrame)
+#fanCurveCanvas.draw()
+#fanCurveCanvas.get_tk_widget().place(relwidth=1, relheight=1)
 
 #Current Data Frame elements
-currentDataFanSpeed = Frame(currentData, bg='#000000', highlightbackground="white", highlightthickness=1)
-currentDataFanSpeed.place(relheight=1, relwidth=0.5)
+currentDataFrameFanSpeed = Frame(currentDataFrame, bg='#000000', highlightbackground="white", highlightthickness=1)
+currentDataFrameFanSpeed.place(relheight=1, relwidth=0.5)
 
-currentDataTemp = Frame(currentData, bg='#000000', highlightbackground="white", highlightthickness=1)
-currentDataTemp.place(relheight=1, relwidth=0.5, relx=0.5)
+currentDataFrameTemp = Frame(currentDataFrame, bg='#000000', highlightbackground="white", highlightthickness=1)
+currentDataFrameTemp.place(relheight=1, relwidth=0.5, relx=0.5)
 
 #Current Data Fan Speed
-currentDataFanSpeedText = Label(currentDataFanSpeed, text='Current Fan Speed', font=("Arial", 20), fg='white', bg='#000000')
-currentDataFanSpeedText.place(relx=0, rely=0.025, relheight=0.20, relwidth=1)
+currentDataFrameFanSpeedText = Label(currentDataFrameFanSpeed, text='Current Fan Speed', font=("Arial", 20), fg='white', bg='#000000')
+currentDataFrameFanSpeedText.place(relx=0, rely=0.025, relheight=0.20, relwidth=1)
 
-currentDataFanSpeedLeftText = Label(currentDataFanSpeed, text='Left Fan', font=("Arial", 15), fg='white', bg='#000000')
-currentDataFanSpeedLeftText.place(relx=0, rely=0.3, relheight=0.30, relwidth=0.4)
+currentDataFrameFanSpeedLeftText = Label(currentDataFrameFanSpeed, text='Left Fan', font=("Arial", 15), fg='white', bg='#000000')
+currentDataFrameFanSpeedLeftText.place(relx=0, rely=0.3, relheight=0.30, relwidth=0.4)
 
-currentDataFanSpeedRightText = Label(currentDataFanSpeed, text='Right Fan', font=("Arial", 15), fg='white', bg='#000000')
-currentDataFanSpeedRightText.place(relx=0, rely=0.65, relheight=0.30, relwidth=0.4)
+currentDataFrameFanSpeedRightText = Label(currentDataFrameFanSpeed, text='Right Fan', font=("Arial", 15), fg='white', bg='#000000')
+currentDataFrameFanSpeedRightText.place(relx=0, rely=0.65, relheight=0.30, relwidth=0.4)
 
-fanSpeedCurrentLeftLabel = Label(currentDataFanSpeed, bg='#676871', activebackground='#676871', font=("Arial", 17), fg='black')
+fanSpeedCurrentLeftLabel = Label(currentDataFrameFanSpeed, bg='#676871', activebackground='#676871', font=("Arial", 17), fg='black')
 fanSpeedCurrentLeftLabel.place(relx=0.4, rely=0.30, relheight=0.30, relwidth=0.5)
 
-fanSpeedCurrentRightLabel = Label(currentDataFanSpeed, bg='#676871', activebackground='#676871', font=("Arial", 17), fg='black')
+fanSpeedCurrentRightLabel = Label(currentDataFrameFanSpeed, bg='#676871', activebackground='#676871', font=("Arial", 17), fg='black')
 fanSpeedCurrentRightLabel.place(relx=0.4, rely=0.65, relheight=0.30, relwidth=0.5)
 
 #Current Data Temps
-currentDataTempText = Label(currentDataTemp, text='Current Temps', font=("Arial", 20), fg='white', bg='#000000')
-currentDataTempText.place(relx=0, rely=0.025, relheight=0.20, relwidth=1)
+currentDataFrameTempText = Label(currentDataFrameTemp, text='Current Temps', font=("Arial", 20), fg='white', bg='#000000')
+currentDataFrameTempText.place(relx=0, rely=0.025, relheight=0.20, relwidth=1)
 
-currentDataTempCPUText = Label(currentDataTemp, text='CPU', font=("Arial", 15), fg='white', bg='#000000')
-currentDataTempCPUText.place(relx=0.005, rely=0.3, relheight=0.30, relwidth=0.4)
+currentDataFrameTempCPUText = Label(currentDataFrameTemp, text='CPU', font=("Arial", 15), fg='white', bg='#000000')
+currentDataFrameTempCPUText.place(relx=0.005, rely=0.3, relheight=0.30, relwidth=0.4)
 
-currentDataTempGPUText = Label(currentDataTemp, text='GPU', font=("Arial", 15), fg='white', bg='#000000')
-currentDataTempGPUText.place(relx=0.005, rely=0.65, relheight=0.30, relwidth=0.4)
+currentDataFrameTempGPUText = Label(currentDataFrameTemp, text='GPU', font=("Arial", 15), fg='white', bg='#000000')
+currentDataFrameTempGPUText.place(relx=0.005, rely=0.65, relheight=0.30, relwidth=0.4)
 
-tempCurrentCPULabel = Label(currentDataTemp, bg='#676871', activebackground='#676871', font=("Arial", 17), fg='black')
+tempCurrentCPULabel = Label(currentDataFrameTemp, bg='#676871', activebackground='#676871', font=("Arial", 17), fg='black')
 tempCurrentCPULabel.place(relx=0.4, rely=0.30, relheight=0.30, relwidth=0.5)
 
-tempCurrentGPULabel = Label(currentDataTemp, bg='#676871', activebackground='#676871', font=("Arial", 17), fg='black')
+tempCurrentGPULabel = Label(currentDataFrameTemp, bg='#676871', activebackground='#676871', font=("Arial", 17), fg='black')
 tempCurrentGPULabel.place(relx=0.4, rely=0.65, relheight=0.30, relwidth=0.5)
+
 
 # Buttons
 perfBtn = Button(modes, image=perfIcon, command=perfBtnPressed)
-perfBtn.place(relwidth=0.20, relheight=1)
+perfBtn.place(x=100, width=100, height=100) #relwidth=0.20, relheight=1, relx=0.2
 
 balancedBtn = Button(modes, image=balancedIcon,command=balancedBtnPressed)
-balancedBtn.place(relx=0.20, relwidth=0.20, relheight=1)
+balancedBtn.place(x=200, width=100, height=100)
 
 quietBtn = Button(modes,image=quietIcon,command=quietBtnPressed)
-quietBtn.place(relx=0.40, relwidth=0.20, relheight=1)
+quietBtn.place(x=300, width=100, height=100)
 
 saveBtn = Button(modes, image=saveIcon,bg='#676871', activebackground='#676871', command=saveBtnPressed)
-saveBtn.place(relx=0.60, relwidth=0.20, relheight=1)
+saveBtn.place(x=400, width=100, height=100)
 
 settingsBtn = Button(modes, image=settingsIcon,bg='#676871', activebackground='#676871')
-settingsBtn.place(relx=0.80, relwidth=0.20, relheight=1)
+settingsBtn.place(x=500, width=100, height=100)
 
+getCurrentPowerMode()
+getCurrentData()
+getCurrentFanCurve()
 
-#saveBtnTh = threading.Thread(target=btnLightUp).start()
-
-checkCurrentPowerMode()
-checkCurrentData()
 root.mainloop()
