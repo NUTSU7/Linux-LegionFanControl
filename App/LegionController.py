@@ -2,7 +2,7 @@
 from tkinter import *
 from tkinter import END
 from PIL import ImageTk, Image
-import os, threading, time
+import os, time
 from importlib_metadata import entry_points
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
@@ -431,10 +431,10 @@ fanCurveRightInputFrame.place(y=100, height=99, relwidth=1)
 
 
 # Fan Curve Input Left Frame elements
-fanCurveLeftInputText = Label(fanCurveLeftInputFrame, text='Left Fan Points (RPM)', font=("Arial", 12), fg='white', bg='#000000')
+fanCurveLeftInputText = Label(fanCurveLeftInputFrame, text='Left Fan (RPM)', font=("Arial", 12), fg='white', bg='#000000')
 fanCurveLeftInputText.place(x=5, y=15, height=30, width=175)
 
-tempCurveCPUInputText = Label(fanCurveLeftInputFrame, text='CPU Temp Points (°C)', font=("Arial", 12), fg='white', bg='#000000')
+tempCurveCPUInputText = Label(fanCurveLeftInputFrame, text='CPU Temp10(°C)', font=("Arial", 12), fg='white', bg='#000000')
 tempCurveCPUInputText.place(x=5, y=55, height=30, width=175)
 
 fanCurveLeftInputEntry1 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
@@ -464,39 +464,39 @@ fanCurveLeftInputEntry8.place(x=581, y=15, height=30, width=50)
 fanCurveLeftInputEntry9 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
 fanCurveLeftInputEntry9.place(x=639, y=15, height=30, width=50)
 
-tempCurveCPUInputEntry1 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
+tempCurveCPUInputEntry1 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black', justify='center')
 tempCurveCPUInputEntry1.place(x=175, y=55, height=30, width=50)
 
-tempCurveCPUInputEntry2 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
+tempCurveCPUInputEntry2 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black', justify='center')
 tempCurveCPUInputEntry2.place(x=233, y=55, height=30, width=50)
 
-tempCurveCPUInputEntry3 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
+tempCurveCPUInputEntry3 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black', justify='center')
 tempCurveCPUInputEntry3.place(x=291, y=55, height=30, width=50)
 
-tempCurveCPUInputEntry4 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
+tempCurveCPUInputEntry4 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black', justify='center')
 tempCurveCPUInputEntry4.place(x=349, y=55, height=30, width=50)
 
-tempCurveCPUInputEntry5 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
+tempCurveCPUInputEntry5 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black', justify='center')
 tempCurveCPUInputEntry5.place(x=407, y=55, height=30, width=50)
 
-tempCurveCPUInputEntry6 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
+tempCurveCPUInputEntry6 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black', justify='center')
 tempCurveCPUInputEntry6.place(x=465, y=55, height=30, width=50)
 
-tempCurveCPUInputEntry7 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
+tempCurveCPUInputEntry7 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black', justify='center')
 tempCurveCPUInputEntry7.place(x=523, y=55, height=30, width=50)
 
-tempCurveCPUInputEntry8 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
+tempCurveCPUInputEntry8 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black', justify='center')
 tempCurveCPUInputEntry8.place(x=581, y=55, height=30, width=50)
 
-tempCurveCPUInputEntry9 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
+tempCurveCPUInputEntry9 = Entry(fanCurveLeftInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black', justify='center')
 tempCurveCPUInputEntry9.place(x=639, y=55, height=30, width=50)
 
 
 # Fan Curve Input Right Frame elements
-fanCurveRightInputText = Label(fanCurveRightInputFrame, text='Left Fan Points (RPM)', font=("Arial", 12), fg='white', bg='#000000')
+fanCurveRightInputText = Label(fanCurveRightInputFrame, text='Right Fan (RPM)', font=("Arial", 12), fg='white', bg='#000000')
 fanCurveRightInputText.place(x=2, y=15, height=30, width=175)
 
-tempCurveCPUInputText = Label(fanCurveRightInputFrame, text='CPU Temp Points (°C)', font=("Arial", 12), fg='white', bg='#000000')
+tempCurveCPUInputText = Label(fanCurveRightInputFrame, text='GPU Temp (°C)', font=("Arial", 12), fg='white', bg='#000000')
 tempCurveCPUInputText.place(x=2, y=55, height=30, width=175)
 
 fanCurveRightInputEntry1 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
@@ -526,31 +526,31 @@ fanCurveRightInputEntry8.place(x=581, y=15, height=30, width=50)
 fanCurveRightInputEntry9 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
 fanCurveRightInputEntry9.place(x=639, y=15, height=30, width=50)
 
-tempCurveGPUInputEntry1 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
+tempCurveGPUInputEntry1 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black', justify='center')
 tempCurveGPUInputEntry1.place(x=175, y=55, height=30, width=50)
 
-tempCurveGPUInputEntry2 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
+tempCurveGPUInputEntry2 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black', justify='center')
 tempCurveGPUInputEntry2.place(x=233, y=55, height=30, width=50)
 
-tempCurveGPUInputEntry3 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
+tempCurveGPUInputEntry3 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black', justify='center')
 tempCurveGPUInputEntry3.place(x=291, y=55, height=30, width=50)
 
-tempCurveGPUInputEntry4 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
+tempCurveGPUInputEntry4 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black', justify='center')
 tempCurveGPUInputEntry4.place(x=349, y=55, height=30, width=50)
 
-tempCurveGPUInputEntry5 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
+tempCurveGPUInputEntry5 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black', justify='center')
 tempCurveGPUInputEntry5.place(x=407, y=55, height=30, width=50)
 
-tempCurveGPUInputEntry6 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
+tempCurveGPUInputEntry6 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black', justify='center')
 tempCurveGPUInputEntry6.place(x=465, y=55, height=30, width=50)
 
-tempCurveGPUInputEntry7 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
+tempCurveGPUInputEntry7 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black', justify='center')
 tempCurveGPUInputEntry7.place(x=523, y=55, height=30, width=50)
 
-tempCurveGPUInputEntry8 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
+tempCurveGPUInputEntry8 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black', justify='center')
 tempCurveGPUInputEntry8.place(x=581, y=55, height=30, width=50)
 
-tempCurveGPUInputEntry9 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black')
+tempCurveGPUInputEntry9 = Entry(fanCurveRightInputFrame, bg='#9E9EA4', font=("Arial", 15), fg='black', justify='center')
 tempCurveGPUInputEntry9.place(x=639, y=55, height=30, width=50)
 
 

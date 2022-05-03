@@ -24,3 +24,5 @@ Power Mode - 0x10 (read only)
 
 sudo -E python3 LegionController.py // run the python script as sudo
 pip install matplotlib, pillow
+
+cxfreeze -c LegionController.py --include-files=img/balanced.png,img/main.xbm,img/perf.png,img/quiet.png,img/save.png,img/settings.png --target-dir=/home/nutsu7/LegionController/build
