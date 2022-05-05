@@ -391,11 +391,11 @@ img.thumbnail((75,75), Image.ANTIALIAS)
 settingsIcon = ImageTk.PhotoImage(img)
 
 # Main Frames
-page = CTkFrame(root, bg='#000000')
-page.place(height=600, width=698, x=1, y=1)
+page = CTkFrame(root)
+page.place(height=600, width=700)
 
-modes = CTkFrame(root, bg='#000000')
-modes.place(y=602, height=97, width=698, x=1)
+modes = CTkFrame(root)
+modes.place(y=600, height=100, width=700)
 
 #Attemp for a graph
 #fanCurveFig = Figure(figsize=(2,2), dpi=100)
@@ -406,19 +406,19 @@ modes.place(y=602, height=97, width=698, x=1)
 #fanCurvePlot.axes.yaxis.set_visible(False)
 
 #Page Frames
-fanCurveFrame = CTkFrame(page, bg='white')
+fanCurveFrame = CTkFrame(page)
 fanCurveFrame.place(relwidth=1,height=500)
 
-currentDataFrame = CTkFrame(page, bg='white')
-currentDataFrame.place(y=500, height=99, relwidth=1)
+currentDataFrame = CTkFrame(page)
+currentDataFrame.place(y=500, height=100, relwidth=1)
 
 
 #Fan Curve Frame
-fanCurveGraphFrame = CTkFrame(fanCurveFrame, bg='#000000')
-fanCurveGraphFrame.place(height=299, relwidth=1)
+fanCurveGraphFrame = CTkFrame(fanCurveFrame)
+fanCurveGraphFrame.place(height=300, relwidth=1)
 
-fanCurveInputFrame = CTkFrame(fanCurveFrame, bg='white')
-fanCurveInputFrame.place(y=300, height=199, relwidth=1)
+fanCurveInputFrame = CTkFrame(fanCurveFrame)
+fanCurveInputFrame.place(y=300, height=200, relwidth=1)
 
 #Attemp for a graph
 #fanCurveCanvas = FigureCanvasTkAgg(fanCurveFig, fanCurveFigFrame)
@@ -427,194 +427,194 @@ fanCurveInputFrame.place(y=300, height=199, relwidth=1)
 
 
 #Fan Curve Input Frame elements
-fanCurveLeftInputFrame = CTkFrame(fanCurveInputFrame, bg='#000000')
-fanCurveLeftInputFrame.place(height=99, relwidth=1)
+fanCurveLeftInputFrame = CTkFrame(fanCurveInputFrame)
+fanCurveLeftInputFrame.place(height=100, relwidth=1)
 
-fanCurveRightInputFrame = CTkFrame(fanCurveInputFrame, bg='#000000')
-fanCurveRightInputFrame.place(y=100, height=99, relwidth=1)
+fanCurveRightInputFrame = CTkFrame(fanCurveInputFrame)
+fanCurveRightInputFrame.place(y=100, height=100, relwidth=1)
 
 
 # Fan Curve Input Left Frame elements
-fanCurveLeftInputText = CTkLabel(fanCurveLeftInputFrame, text='Left Fan (RPM)', text_font=("Arial", 12), fg='white', bg='#000000')
+fanCurveLeftInputText = CTkLabel(fanCurveLeftInputFrame, text='Left Fan (RPM)', text_font=("Arial", 12))
 fanCurveLeftInputText.place(x=5, y=15, height=30, width=175)
 
-tempCurveCPUInputText = CTkLabel(fanCurveLeftInputFrame, text='CPU Temp (°C)', text_font=("Arial", 12), fg='white', bg='#000000')
+tempCurveCPUInputText = CTkLabel(fanCurveLeftInputFrame, text='CPU Temp (°C)', text_font=("Arial", 12))
 tempCurveCPUInputText.place(x=5, y=55, height=30, width=175)
 
-fanCurveLeftInputEntry1 = CTkEntry(fanCurveLeftInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black')
+fanCurveLeftInputEntry1 = CTkEntry(fanCurveLeftInputFrame, text_font=("Arial", 15))
 fanCurveLeftInputEntry1.place(x=175, y=15, height=30, width=50)
 
-fanCurveLeftInputEntry2 = CTkEntry(fanCurveLeftInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black')
+fanCurveLeftInputEntry2 = CTkEntry(fanCurveLeftInputFrame, text_font=("Arial", 15))
 fanCurveLeftInputEntry2.place(x=233, y=15, height=30, width=50)
 
-fanCurveLeftInputEntry3 = CTkEntry(fanCurveLeftInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black')
+fanCurveLeftInputEntry3 = CTkEntry(fanCurveLeftInputFrame, text_font=("Arial", 15))
 fanCurveLeftInputEntry3.place(x=291, y=15, height=30, width=50)
 
-fanCurveLeftInputEntry4 = CTkEntry(fanCurveLeftInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black')
+fanCurveLeftInputEntry4 = CTkEntry(fanCurveLeftInputFrame, text_font=("Arial", 15))
 fanCurveLeftInputEntry4.place(x=349, y=15, height=30, width=50)
 
-fanCurveLeftInputEntry5 = CTkEntry(fanCurveLeftInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black')
+fanCurveLeftInputEntry5 = CTkEntry(fanCurveLeftInputFrame, text_font=("Arial", 15))
 fanCurveLeftInputEntry5.place(x=407, y=15, height=30, width=50)
 
-fanCurveLeftInputEntry6 = CTkEntry(fanCurveLeftInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black')
+fanCurveLeftInputEntry6 = CTkEntry(fanCurveLeftInputFrame, text_font=("Arial", 15))
 fanCurveLeftInputEntry6.place(x=465, y=15, height=30, width=50)
 
-fanCurveLeftInputEntry7 = CTkEntry(fanCurveLeftInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black')
+fanCurveLeftInputEntry7 = CTkEntry(fanCurveLeftInputFrame, text_font=("Arial", 15))
 fanCurveLeftInputEntry7.place(x=523, y=15, height=30, width=50)
 
-fanCurveLeftInputEntry8 = CTkEntry(fanCurveLeftInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black')
+fanCurveLeftInputEntry8 = CTkEntry(fanCurveLeftInputFrame, text_font=("Arial", 15))
 fanCurveLeftInputEntry8.place(x=581, y=15, height=30, width=50)
 
-fanCurveLeftInputEntry9 = CTkEntry(fanCurveLeftInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black')
+fanCurveLeftInputEntry9 = CTkEntry(fanCurveLeftInputFrame, text_font=("Arial", 15))
 fanCurveLeftInputEntry9.place(x=639, y=15, height=30, width=50)
 
-tempCurveCPUInputEntry1 = CTkEntry(fanCurveLeftInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black', justify='center')
+tempCurveCPUInputEntry1 = CTkEntry(fanCurveLeftInputFrame, text_font=("Arial", 15), justify='center')
 tempCurveCPUInputEntry1.place(x=175, y=55, height=30, width=50)
 
-tempCurveCPUInputEntry2 = CTkEntry(fanCurveLeftInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black', justify='center')
+tempCurveCPUInputEntry2 = CTkEntry(fanCurveLeftInputFrame, text_font=("Arial", 15), justify='center')
 tempCurveCPUInputEntry2.place(x=233, y=55, height=30, width=50)
 
-tempCurveCPUInputEntry3 = CTkEntry(fanCurveLeftInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black', justify='center')
+tempCurveCPUInputEntry3 = CTkEntry(fanCurveLeftInputFrame, text_font=("Arial", 15), justify='center')
 tempCurveCPUInputEntry3.place(x=291, y=55, height=30, width=50)
 
-tempCurveCPUInputEntry4 = CTkEntry(fanCurveLeftInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black', justify='center')
+tempCurveCPUInputEntry4 = CTkEntry(fanCurveLeftInputFrame, text_font=("Arial", 15), justify='center')
 tempCurveCPUInputEntry4.place(x=349, y=55, height=30, width=50)
 
-tempCurveCPUInputEntry5 = CTkEntry(fanCurveLeftInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black', justify='center')
+tempCurveCPUInputEntry5 = CTkEntry(fanCurveLeftInputFrame, text_font=("Arial", 15), justify='center')
 tempCurveCPUInputEntry5.place(x=407, y=55, height=30, width=50)
 
-tempCurveCPUInputEntry6 = CTkEntry(fanCurveLeftInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black', justify='center')
+tempCurveCPUInputEntry6 = CTkEntry(fanCurveLeftInputFrame, text_font=("Arial", 15), justify='center')
 tempCurveCPUInputEntry6.place(x=465, y=55, height=30, width=50)
 
-tempCurveCPUInputEntry7 = CTkEntry(fanCurveLeftInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black', justify='center')
+tempCurveCPUInputEntry7 = CTkEntry(fanCurveLeftInputFrame, text_font=("Arial", 15), justify='center')
 tempCurveCPUInputEntry7.place(x=523, y=55, height=30, width=50)
 
-tempCurveCPUInputEntry8 = CTkEntry(fanCurveLeftInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black', justify='center')
+tempCurveCPUInputEntry8 = CTkEntry(fanCurveLeftInputFrame, text_font=("Arial", 15), justify='center')
 tempCurveCPUInputEntry8.place(x=581, y=55, height=30, width=50)
 
-tempCurveCPUInputEntry9 = CTkEntry(fanCurveLeftInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black', justify='center')
+tempCurveCPUInputEntry9 = CTkEntry(fanCurveLeftInputFrame, text_font=("Arial", 15), justify='center')
 tempCurveCPUInputEntry9.place(x=639, y=55, height=30, width=50)
 
 
 # Fan Curve Input Right Frame elements
-fanCurveRightInputText = CTkLabel(fanCurveRightInputFrame, text='Right Fan (RPM)', text_font=("Arial", 12), fg='white', bg='#000000')
+fanCurveRightInputText = CTkLabel(fanCurveRightInputFrame, text='Right Fan (RPM)', text_font=("Arial", 12))
 fanCurveRightInputText.place(x=2, y=15, height=30, width=175)
 
-tempCurveCPUInputText = CTkLabel(fanCurveRightInputFrame, text='GPU Temp (°C)', text_font=("Arial", 12), fg='white', bg='#000000')
+tempCurveCPUInputText = CTkLabel(fanCurveRightInputFrame, text='GPU Temp (°C)', text_font=("Arial", 12))
 tempCurveCPUInputText.place(x=2, y=55, height=30, width=175)
 
-fanCurveRightInputEntry1 = CTkEntry(fanCurveRightInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black')
+fanCurveRightInputEntry1 = CTkEntry(fanCurveRightInputFrame, text_font=("Arial", 15))
 fanCurveRightInputEntry1.place(x=175, y=15, height=30, width=50)
 
-fanCurveRightInputEntry2 = CTkEntry(fanCurveRightInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black')
+fanCurveRightInputEntry2 = CTkEntry(fanCurveRightInputFrame, text_font=("Arial", 15))
 fanCurveRightInputEntry2.place(x=233, y=15, height=30, width=50)
 
-fanCurveRightInputEntry3 = CTkEntry(fanCurveRightInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black')
+fanCurveRightInputEntry3 = CTkEntry(fanCurveRightInputFrame, text_font=("Arial", 15))
 fanCurveRightInputEntry3.place(x=291, y=15, height=30, width=50)
 
-fanCurveRightInputEntry4 = CTkEntry(fanCurveRightInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black')
+fanCurveRightInputEntry4 = CTkEntry(fanCurveRightInputFrame, text_font=("Arial", 15))
 fanCurveRightInputEntry4.place(x=349, y=15, height=30, width=50)
 
-fanCurveRightInputEntry5 = CTkEntry(fanCurveRightInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black')
+fanCurveRightInputEntry5 = CTkEntry(fanCurveRightInputFrame, text_font=("Arial", 15))
 fanCurveRightInputEntry5.place(x=407, y=15, height=30, width=50)
 
-fanCurveRightInputEntry6 = CTkEntry(fanCurveRightInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black')
+fanCurveRightInputEntry6 = CTkEntry(fanCurveRightInputFrame, text_font=("Arial", 15))
 fanCurveRightInputEntry6.place(x=465, y=15, height=30, width=50)
 
-fanCurveRightInputEntry7 = CTkEntry(fanCurveRightInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black')
+fanCurveRightInputEntry7 = CTkEntry(fanCurveRightInputFrame, text_font=("Arial", 15))
 fanCurveRightInputEntry7.place(x=523, y=15, height=30, width=50)
 
-fanCurveRightInputEntry8 = CTkEntry(fanCurveRightInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black')
+fanCurveRightInputEntry8 = CTkEntry(fanCurveRightInputFrame, text_font=("Arial", 15))
 fanCurveRightInputEntry8.place(x=581, y=15, height=30, width=50)
 
-fanCurveRightInputEntry9 = CTkEntry(fanCurveRightInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black')
+fanCurveRightInputEntry9 = CTkEntry(fanCurveRightInputFrame, text_font=("Arial", 15))
 fanCurveRightInputEntry9.place(x=639, y=15, height=30, width=50)
 
-tempCurveGPUInputEntry1 = CTkEntry(fanCurveRightInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black', justify='center')
+tempCurveGPUInputEntry1 = CTkEntry(fanCurveRightInputFrame, text_font=("Arial", 15), justify='center')
 tempCurveGPUInputEntry1.place(x=175, y=55, height=30, width=50)
 
-tempCurveGPUInputEntry2 = CTkEntry(fanCurveRightInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black', justify='center')
+tempCurveGPUInputEntry2 = CTkEntry(fanCurveRightInputFrame, text_font=("Arial", 15), justify='center')
 tempCurveGPUInputEntry2.place(x=233, y=55, height=30, width=50)
 
-tempCurveGPUInputEntry3 = CTkEntry(fanCurveRightInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black', justify='center')
+tempCurveGPUInputEntry3 = CTkEntry(fanCurveRightInputFrame, text_font=("Arial", 15), justify='center')
 tempCurveGPUInputEntry3.place(x=291, y=55, height=30, width=50)
 
-tempCurveGPUInputEntry4 = CTkEntry(fanCurveRightInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black', justify='center')
+tempCurveGPUInputEntry4 = CTkEntry(fanCurveRightInputFrame, text_font=("Arial", 15), justify='center')
 tempCurveGPUInputEntry4.place(x=349, y=55, height=30, width=50)
 
-tempCurveGPUInputEntry5 = CTkEntry(fanCurveRightInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black', justify='center')
+tempCurveGPUInputEntry5 = CTkEntry(fanCurveRightInputFrame, text_font=("Arial", 15), justify='center')
 tempCurveGPUInputEntry5.place(x=407, y=55, height=30, width=50)
 
-tempCurveGPUInputEntry6 = CTkEntry(fanCurveRightInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black', justify='center')
+tempCurveGPUInputEntry6 = CTkEntry(fanCurveRightInputFrame, text_font=("Arial", 15), justify='center')
 tempCurveGPUInputEntry6.place(x=465, y=55, height=30, width=50)
 
-tempCurveGPUInputEntry7 = CTkEntry(fanCurveRightInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black', justify='center')
+tempCurveGPUInputEntry7 = CTkEntry(fanCurveRightInputFrame, text_font=("Arial", 15), justify='center')
 tempCurveGPUInputEntry7.place(x=523, y=55, height=30, width=50)
 
-tempCurveGPUInputEntry8 = CTkEntry(fanCurveRightInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black', justify='center')
+tempCurveGPUInputEntry8 = CTkEntry(fanCurveRightInputFrame, text_font=("Arial", 15), justify='center')
 tempCurveGPUInputEntry8.place(x=581, y=55, height=30, width=50)
 
-tempCurveGPUInputEntry9 = CTkEntry(fanCurveRightInputFrame, bg='#9E9EA4', text_font=("Arial", 15), fg='black', justify='center')
+tempCurveGPUInputEntry9 = CTkEntry(fanCurveRightInputFrame, text_font=("Arial", 15), justify='center')
 tempCurveGPUInputEntry9.place(x=639, y=55, height=30, width=50)
 
 
 #Current Data Frame elements
-currentDataFrameFanSpeed = CTkFrame(currentDataFrame, bg='#000000')
-currentDataFrameFanSpeed.place(height=99, width=349)
+currentDataFrameFanSpeed = CTkFrame(currentDataFrame)
+currentDataFrameFanSpeed.place(height=100, width=350)
 
-currentDataFrameTemp = CTkFrame(currentDataFrame, bg='#000000')
-currentDataFrameTemp.place(height=99, width=349, x=350)
+currentDataFrameTemp = CTkFrame(currentDataFrame)
+currentDataFrameTemp.place(height=100, width=350, x=350)
 
 
 #Current Data Fan Speed
-currentDataFrameFanSpeedText = CTkLabel(currentDataFrameFanSpeed, text='Current Fan Speed', text_font=("Arial", 15), fg='white', bg='#000000')
+currentDataFrameFanSpeedText = CTkLabel(currentDataFrameFanSpeed, text='Current Fan Speed', text_font=("Arial", 15))
 currentDataFrameFanSpeedText.place(rely=0.025, relheight=0.20, relwidth=1)
 
-currentDataFrameFanSpeedLeftText = CTkLabel(currentDataFrameFanSpeed, text='Left Fan', text_font=("Arial", 12), fg='white', bg='#000000')
+currentDataFrameFanSpeedLeftText = CTkLabel(currentDataFrameFanSpeed, text='Left Fan', text_font=("Arial", 12))
 currentDataFrameFanSpeedLeftText.place(rely=0.3, relheight=0.30, relwidth=0.4)
 
-currentDataFrameFanSpeedRightText = CTkLabel(currentDataFrameFanSpeed, text='Right Fan', text_font=("Arial", 12), fg='white', bg='#000000')
+currentDataFrameFanSpeedRightText = CTkLabel(currentDataFrameFanSpeed, text='Right Fan', text_font=("Arial", 12))
 currentDataFrameFanSpeedRightText.place(rely=0.65, relheight=0.30, relwidth=0.4)
 
-fanSpeedCurrentLeftLabel = CTkLabel(currentDataFrameFanSpeed, bg='#9E9EA4', text_font=("Arial", 17), fg='black')
+fanSpeedCurrentLeftLabel = CTkLabel(currentDataFrameFanSpeed, text_font=("Arial", 17))
 fanSpeedCurrentLeftLabel.place(relx=0.4, rely=0.30, relheight=0.30, relwidth=0.5)
 
-fanSpeedCurrentRightLabel = CTkLabel(currentDataFrameFanSpeed, bg='#9E9EA4', text_font=("Arial", 17), fg='black')
+fanSpeedCurrentRightLabel = CTkLabel(currentDataFrameFanSpeed, text_font=("Arial", 17))
 fanSpeedCurrentRightLabel.place(relx=0.4, rely=0.65, relheight=0.30, relwidth=0.5)
 
 
 #Current Data Temps
-currentDataFrameTempText = CTkLabel(currentDataFrameTemp, text='Current Temps', text_font=("Arial", 15), fg='white', bg='#000000')
+currentDataFrameTempText = CTkLabel(currentDataFrameTemp, text='Current Temps', text_font=("Arial", 15))
 currentDataFrameTempText.place(rely=0.025, relheight=0.20, relwidth=1)
 
-currentDataFrameTempCPUText = CTkLabel(currentDataFrameTemp, text='CPU', text_font=("Arial", 12), fg='white', bg='#000000')
+currentDataFrameTempCPUText = CTkLabel(currentDataFrameTemp, text='CPU', text_font=("Arial", 12))
 currentDataFrameTempCPUText.place(relx=0.005, rely=0.3, relheight=0.30, relwidth=0.4)
 
-currentDataFrameTempGPUText = CTkLabel(currentDataFrameTemp, text='GPU', text_font=("Arial", 12), fg='white', bg='#000000')
+currentDataFrameTempGPUText = CTkLabel(currentDataFrameTemp, text='GPU', text_font=("Arial", 12))
 currentDataFrameTempGPUText.place(relx=0.005, rely=0.65, relheight=0.30, relwidth=0.4)
 
-tempCurrentCPULabel = CTkLabel(currentDataFrameTemp, bg='#9E9EA4', text_font=("Arial", 17), fg='black')
+tempCurrentCPULabel = CTkLabel(currentDataFrameTemp, text_font=("Arial"))
 tempCurrentCPULabel.place(relx=0.4, rely=0.30, relheight=0.30, relwidth=0.5)
 
-tempCurrentGPULabel = CTkLabel(currentDataFrameTemp, bg='#9E9EA4', text_font=("Arial", 17), fg='black')
+tempCurrentGPULabel = CTkLabel(currentDataFrameTemp, text_font=("Arial"))
 tempCurrentGPULabel.place(relx=0.4, rely=0.65, relheight=0.30, relwidth=0.5)
 
 
 # Buttons
 perfBtn = CTkButton(modes, image=perfIcon, text='', command=perfBtnPressed)
-perfBtn.place(x=100, width=100, height=97)
+perfBtn.place(x=100, width=100, height=100)
 
 balancedBtn = CTkButton(modes, image=balancedIcon, text='', command=balancedBtnPressed)
-balancedBtn.place(x=200, width=100, height=97)
+balancedBtn.place(x=200, width=100, height=100)
 
 quietBtn = CTkButton(modes, image=quietIcon, text='', command=quietBtnPressed)
-quietBtn.place(x=300, width=100, height=97)
+quietBtn.place(x=300, width=100, height=100)
 
 saveBtn = CTkButton(modes, image=saveIcon, text='', command=saveBtnPressed)
-saveBtn.place(x=400, width=100, height=97)
+saveBtn.place(x=400, width=100, height=100)
 
 settingsBtn = CTkButton(modes, image=settingsIcon, text='')
-settingsBtn.place(x=500, width=100, height=97)
+settingsBtn.place(x=500, width=100, height=100)
 
 getCurrentPowerMode()
 getCurrentData()
