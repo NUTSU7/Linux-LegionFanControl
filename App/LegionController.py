@@ -43,8 +43,7 @@ previousPowerMode = -1
 perfBtnPressedValue = False
 balancedBtnPressedValue = False
 quietBtnPressedValue = False
-fanSpeedCurrentLeft = -1
-fanSpeedCurrentRight = -1
+fanSpeedCurrent = -1
 tempCurrentCPU = -1
 tempCurrentGPU = -1
 fanCurve = []
@@ -121,18 +120,13 @@ def powerModeBtnPressed():
         quietBtnPressedValue = False
 
 def getCurrentData():
-    global fanSpeedCurrentLeft
-    global fanSpeedCurrentRight
+    global fanSpeedCurrent
     global tempCurrentCPU
     global tempCurrentGPU
-    f = open("/sys/kernel/LegionController/fanSpeedCurrentLeft", "r")
-    fanSpeedCurrentLeft = int(f.read()[:-1])*100
+    f = open("/sys/kernel/LegionController/fanSpeedCurrent", "r")
+    fanSpeedCurrent = int(f.read()[:-1])*100
     f.close()
-    fanSpeedCurrentLeftLabel['text']=str(fanSpeedCurrentLeft)+' RPM'
-    f = open("/sys/kernel/LegionController/fanSpeedCurrentRight", "r")
-    fanSpeedCurrentRight = int(f.read()[:-1])*100
-    f.close()
-    fanSpeedCurrentRightLabel['text']=str(fanSpeedCurrentRight)+' RPM'
+    fanSpeedCurrentLabel['text']=str(fanSpeedCurrent)+' RPM'
     f = open("/sys/kernel/LegionController/tempCurrentCPU", "r")
     tempCurrentCPU = int(f.read()[:-1])
     f.close()
@@ -290,6 +284,8 @@ def getFanCurve():
 def changeEntryes():
     global fanCurve
     global tempCurveCPU
+    global tempCurrentGPU
+
     fanCurveEntry1.delete(0, END)
     fanCurveEntry2.delete(0, END)
     fanCurveEntry3.delete(0, END)
@@ -325,12 +321,12 @@ def changeEntryes():
     tempCurveCPUEntry5.insert(0, tempCurveCPU[4])
     tempCurveCPUEntry6.insert(0, tempCurveCPU[5])
 
-    tempCurveGPUEntry1.insert(0, int(tempCurveGPU[0]))
-    tempCurveGPUEntry2.insert(0, int(tempCurveGPU[1]))
-    tempCurveGPUEntry3.insert(0, int(tempCurveGPU[2]))
-    tempCurveGPUEntry4.insert(0, int(tempCurveGPU[3]))
-    tempCurveGPUEntry5.insert(0, int(tempCurveGPU[4]))
-    tempCurveGPUEntry6.insert(0, int(tempCurveGPU[5]))
+    tempCurveGPUEntry1.insert(0, tempCurveGPU[0])
+    tempCurveGPUEntry2.insert(0, tempCurveGPU[1])
+    tempCurveGPUEntry3.insert(0, tempCurveGPU[2])
+    tempCurveGPUEntry4.insert(0, tempCurveGPU[3])
+    tempCurveGPUEntry5.insert(0, tempCurveGPU[4])
+    tempCurveGPUEntry6.insert(0, tempCurveGPU[5])
 
 def saveBtnPressed():
     global fanCurve
@@ -341,7 +337,7 @@ def saveBtnPressed():
 
     root.after(100, lambda: saveBtn.configure(fg_color='#2333B4'))
     root.after(500, lambda: saveBtn.configure(fg_color='#1c94cf'))
-    
+
     if currentPowerMode == 0:
         config['fanCurveBalanced']['fanCurve1'] = fanCurveEntry1.get()
         config['fanCurveBalanced']['fanCurve2'] = fanCurveEntry2.get()
@@ -408,7 +404,12 @@ def saveBtnPressed():
 
 def changeFanCurve():
     global fanCurveCurrent
-    
+    global fanCurve
+    global tempCurrentCPU
+    global tempCurveGPU
+
+
+
     f = open("/sys/module/LegionController/parameters/cFanCurveLeft", "w")
     f.write(str(fanCurveCurrent))
     f.close()
@@ -535,17 +536,8 @@ currentDataFrameTemp.place(height=100, width=350, x=350)
 currentDataFrameFanSpeedText = CTkLabel(currentDataFrameFanSpeed, text='Current Fan Speed', text_font=("Arial", 15))
 currentDataFrameFanSpeedText.place(rely=0.025, relheight=0.20, relwidth=1)
 
-currentDataFrameFanSpeedLeftText = CTkLabel(currentDataFrameFanSpeed, text='Left Fan', text_font=("Arial", 15))
-currentDataFrameFanSpeedLeftText.place(rely=0.3, relheight=0.30, relwidth=0.4)
-
-currentDataFrameFanSpeedRightText = CTkLabel(currentDataFrameFanSpeed, text='Right Fan', text_font=("Arial", 15))
-currentDataFrameFanSpeedRightText.place(rely=0.65, relheight=0.30, relwidth=0.4)
-
-fanSpeedCurrentLeftLabel = CTkLabel(currentDataFrameFanSpeed, text_font=("Arial", 17))
-fanSpeedCurrentLeftLabel.place(relx=0.4, rely=0.30, relheight=0.30, relwidth=0.5)
-
-fanSpeedCurrentRightLabel = CTkLabel(currentDataFrameFanSpeed, text_font=("Arial", 17))
-fanSpeedCurrentRightLabel.place(relx=0.4, rely=0.65, relheight=0.30, relwidth=0.5)
+fanSpeedCurrentLabel = CTkLabel(currentDataFrameFanSpeed, text_font=("Arial", 17))
+fanSpeedCurrentLabel.place(relx=0.4, rely=0.30, relheight=0.30, relwidth=0.5)
 
 
 #Current Data Temps
