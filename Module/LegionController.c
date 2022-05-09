@@ -90,7 +90,7 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
 
     if (attr == &fanCurve)
     {
-        return sprintf(buf, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
+        return sprintf(buf, "Left: %d %d %d %d %d %d %d %d %d %d %d\nRight: %d %d %d %d %d %d %d %d %d %d %d\n",
                        *(virt + dev_data->fanCurve[0]),
                        *(virt + dev_data->fanCurve[1]),
                        *(virt + dev_data->fanCurve[2]),
