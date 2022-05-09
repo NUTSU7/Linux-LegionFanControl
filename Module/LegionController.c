@@ -9,17 +9,16 @@
 
 struct DEVICE_DATA
 {
-    // varible meanings- F-Fan  S-Speed T-Temp
     uint64_t baseEC;
     uint16_t fanSpeedCurrentLeft;
     uint16_t fanSpeedCurrentRight;
     uint16_t tempCurrentCPU; // CPU temp
     uint16_t tempCurrentGPU; // GPU temp
-    uint16_t fanCurveLeft[10];
-    uint16_t fanCurveRight[10];
-    uint16_t tempCurveCPU[10];
-    uint16_t tempCurveGPU[10];
-    uint8_t fanSpeedMultiplier;
+    uint16_t fanCurveLeft[11];
+    uint16_t fanCurveRight[11];
+    //uint16_t tempCurveCPU[11];
+    //uint16_t tempCurveGPU[11];
+    uint8_t curveLen;
     uint8_t powerMode;
 };
 
@@ -30,48 +29,42 @@ struct DEVICE_DATA GKCN =
         .fanSpeedCurrentRight = 0x201, // 0x1FD
         .tempCurrentCPU = 0x138,
         .tempCurrentGPU = 0x139,
-        .fanCurveLeft = {0x140, 0x141, 0x142, 0x143, 0x144, 0x145, 0x146, 0x147, 0x148, 0x149},
-        .fanCurveRight = {0x150, 0x151, 0x152, 0x153, 0x154, 0x155, 0x156, 0x157, 0x158, 0x159},
-        .tempCurveCPU = {0x190, 0x191, 0x192, 0x193, 0x194, 0x195, 0x196, 0x197, 0x198, 0x199},
-        .tempCurveGPU = {0x1B0, 0x1B1, 0x1B2, 0x1B3, 0x1B4, 0x1B5, 0x1B6, 0x1B7, 0x1B8, 0x1B9},
-        .fanSpeedMultiplier = 100,
+        .fanCurveLeft = {0x140, 0x141, 0x142, 0x143, 0x144, 0x145, 0x146, 0x147, 0x148, 0x149, 0x14A},
+        .fanCurveRight = {0x150, 0x151, 0x152, 0x153, 0x154, 0x155, 0x156, 0x157, 0x158, 0x159, 0x15A},
+        //.tempCurveCPU = {0x190, 0x191, 0x192, 0x193, 0x194, 0x195, 0x196, 0x197, 0x198, 0x199, 0x19A},
+        //.tempCurveGPU = {0x1B0, 0x1B1, 0x1B2, 0x1B3, 0x1B4, 0x1B5, 0x1B6, 0x1B7, 0x1B8, 0x1B9, 0x1BA},
+        .curveLen = 11,
         .powerMode = 0x20,
 
 };
 
 uint8_t *virt;
-int i, pFanCurveLeft, pFanCurveRight, powerModeCurrent;
+int i, pFanCurveLeft, pFanCurveRight;
 
 static int cPowerMode = -1;
 static int cFanCurveLeft = -1;
 static int cFanCurveRight = -1;
-// static int cFanCurveLeft[9] = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
-// static int cFanCurveRight[9] = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
-// static int cTempCurveCPU[9] = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
-// static int cTempCurveGPU[9] = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
 
 module_param(cPowerMode, int, 0644);
 module_param(cFanCurveLeft, int, 0644);
 module_param(cFanCurveRight, int, 0644);
-// module_param_array(cFanCurveLeft, int, NULL, 0644);
-// module_param_array(cFanCurveRight, int, NULL, 0644);
-// module_param_array(cTempCurveCPU, int, NULL, 0644);
-// module_param_array(cTempCurveGPU, int, NULL, 0644);
 
 struct DEVICE_DATA *dev_data;
 
 static struct kobject *LegionController;
 static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf);
-void findPowerMode(void);
+void writeFanCurveLeft(void);
+void writeFanCurveRight(void);
+void writePowerMode(void);
 
 struct kobj_attribute fanSpeedCurrentLeft = __ATTR(fanSpeedCurrentLeft, 0444, sysfs_show, NULL);
 struct kobj_attribute fanSpeedCurrentRight = __ATTR(fanSpeedCurrentRight, 0444, sysfs_show, NULL);
 struct kobj_attribute tempCurrentCPU = __ATTR(tempCurrentCPU, 0444, sysfs_show, NULL);
 struct kobj_attribute tempCurrentGPU = __ATTR(tempCurrentGPU, 0444, sysfs_show, NULL);
 struct kobj_attribute fanCurveLeft = __ATTR(fanCurveLeft, 0444, sysfs_show, NULL);
-struct kobj_attribute fanCurveRight = __ATTR(fanCurveRight, 0444, sysfs_show, NULL);
-struct kobj_attribute tempCurveCPU = __ATTR(tempCurveCPU, 0444, sysfs_show, NULL);
-struct kobj_attribute tempCurveGPU = __ATTR(tempCurveGPU, 0444, sysfs_show, NULL);
+//struct kobj_attribute fanCurveRight = __ATTR(fanCurveRight, 0444, sysfs_show, NULL);
+//struct kobj_attribute tempCurveCPU = __ATTR(tempCurveCPU, 0444, sysfs_show, NULL);
+//struct kobj_attribute tempCurveGPU = __ATTR(tempCurveGPU, 0444, sysfs_show, NULL);
 struct kobj_attribute powerMode = __ATTR(powerMode, 0444, sysfs_show, NULL);
 
 static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
@@ -95,23 +88,22 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
 
     if (attr == &powerMode)
     {
-        if (cPowerMode >= 0 && cPowerMode != *(virt + dev_data->powerMode) && cPowerMode <= 2)
-        {
-            *(virt + dev_data->powerMode) = cPowerMode;
-            cPowerMode = -1;
-        }
+        writePowerMode();
+        
+        writeFanCurveLeft();
 
-        findPowerMode();
+        writeFanCurveRight();
 
-        if (powerModeCurrent == 0)
+        
+        if (*(virt + dev_data->powerMode) == 0)
         {
             return sprintf(buf, "%d\n", 0);
         }
-        else if (powerModeCurrent == 1)
+        else if (*(virt + dev_data->powerMode) == 1)
         {
             return sprintf(buf, "%d\n", 1);
         }
-        else if (powerModeCurrent == 2)
+        else if (*(virt + dev_data->powerMode) == 2)
         {
             return sprintf(buf, "%d\n", 2);
         }
@@ -119,51 +111,20 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
 
     if (attr == &fanCurveLeft)
     {
-
-        for (i = 0; i < 10; i++)
-        {
-            if (cFanCurveLeft >= 0 && cFanCurveLeft != pFanCurveLeft && cFanCurveLeft <= 45)
-            {
-                *(virt + dev_data->fanCurveLeft[i]) = cFanCurveLeft;
-                cFanCurveLeft = -1;
-            }
-        }
-        pFanCurveLeft = cFanCurveLeft;
-
-        findPowerMode();
-
-        if (powerModeCurrent == 0)
-        {
-            return sprintf(buf, "%d %d %d %d %d %d\n",
-                           *(virt + dev_data->fanCurveLeft[0]),
-                           *(virt + dev_data->fanCurveLeft[1]),
-                           *(virt + dev_data->fanCurveLeft[3]),
-                           *(virt + dev_data->fanCurveLeft[5]),
-                           *(virt + dev_data->fanCurveLeft[7]),
-                           *(virt + dev_data->fanCurveLeft[8]));
-        }
-        else if (powerModeCurrent == 1)
-        {
-            return sprintf(buf, "%d %d %d %d %d %d\n",
-                           *(virt + dev_data->fanCurveLeft[0]),
-                           *(virt + dev_data->fanCurveLeft[1]),
-                           *(virt + dev_data->fanCurveLeft[3]),
-                           *(virt + dev_data->fanCurveLeft[5]),
-                           *(virt + dev_data->fanCurveLeft[7]),
-                           *(virt + dev_data->fanCurveLeft[9]));
-        }
-        else if (powerModeCurrent == 2)
-        {
-            return sprintf(buf, "%d %d %d %d %d %d\n",
-                           *(virt + dev_data->fanCurveLeft[0]),
-                           *(virt + dev_data->fanCurveLeft[1]),
-                           *(virt + dev_data->fanCurveLeft[3]),
-                           *(virt + dev_data->fanCurveLeft[5]),
-                           *(virt + dev_data->fanCurveLeft[6]),
-                           *(virt + dev_data->fanCurveLeft[7]));
-        }
+        return sprintf(buf, "%d %d %d %d %d %d %d %d %d %d %d\n",
+                       *(virt + dev_data->fanCurveLeft[0]),
+                       *(virt + dev_data->fanCurveLeft[1]),
+                       *(virt + dev_data->fanCurveLeft[2]),
+                       *(virt + dev_data->fanCurveLeft[3]),
+                       *(virt + dev_data->fanCurveLeft[4]),
+                       *(virt + dev_data->fanCurveLeft[5]),
+                       *(virt + dev_data->fanCurveLeft[6]),
+                       *(virt + dev_data->fanCurveLeft[7]),
+                       *(virt + dev_data->fanCurveLeft[8]),
+                       *(virt + dev_data->fanCurveLeft[9]),
+                       *(virt + dev_data->fanCurveLeft[10]));
     }
-
+/*
     if (attr == &fanCurveRight)
     {
         for (i = 0; i < 10; i++)
@@ -176,6 +137,7 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
         }
         pFanCurveRight = cFanCurveRight;
 
+          
         findPowerMode();
 
         if (powerModeCurrent == 0)
@@ -209,10 +171,10 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
                            *(virt + dev_data->fanCurveRight[7]));
         }
     }
-
+/*
     if (attr == &tempCurveCPU)
     {
-        /*
+        
         for (i = 0; i < 10; i++)
         {
             if (cTempCurveCPU[i] >= 0 && cTempCurveCPU[i] != *(virt + dev_data->tempCurveCPU[i]) && cTempCurveCPU[i] <= 105)
@@ -221,7 +183,7 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
                 cTempCurveCPU[i] = -1;
             }
         }
-        */
+        
 
         findPowerMode();
 
@@ -259,7 +221,7 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
 
     if (attr == &tempCurveGPU)
     {
-        /*
+        
         for (i = 0; i < 10; i++)
         {
             if (cTempCurveGPU[i] >= 0 && cTempCurveCPU[i] != *(virt + dev_data->tempCurveGPU[i]) && cTempCurveGPU[i] <= 75)
@@ -268,7 +230,7 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
                 cTempCurveGPU[i] = -1;
             }
         }
-        */
+        
 
         findPowerMode();
         
@@ -302,25 +264,47 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
                            *(virt + dev_data->tempCurveGPU[6]),
                            *(virt + dev_data->tempCurveGPU[7]));
         }
-    }
+    } */
 
     return 0;
 }
 
-void findPowerMode(void)
+
+void writeFanCurveLeft(void)
 {
-    if (*(virt + dev_data->powerMode) == 0)
+    for (i = 0; i < dev_data->curveLen; i++)
     {
-        powerModeCurrent = 0;
+        if (cFanCurveLeft >= 0 && cFanCurveLeft != pFanCurveLeft && cFanCurveLeft <= 45)
+        {
+            *(virt + dev_data->fanCurveLeft[i]) = cFanCurveLeft;
+        }
     }
-    else if (*(virt + dev_data->powerMode) == 1)
+    cFanCurveLeft = -1;
+
+    pFanCurveLeft = cFanCurveLeft;
+}
+
+void writeFanCurveRight(void)
+{
+    for (i = 0; i < dev_data->curveLen; i++)
     {
-        powerModeCurrent = 1;
+        if (cFanCurveRight >= 0 && cFanCurveRight != pFanCurveRight && cFanCurveRight <= 45)
+        {
+            *(virt + dev_data->fanCurveRight[i]) = cFanCurveRight;
+        }
     }
-    else if (*(virt + dev_data->powerMode) == 2)
+    cFanCurveRight = -1;
+
+    pFanCurveRight = cFanCurveRight;
+}
+
+void writePowerMode(void)
+{
+    if (cPowerMode >= 0 && cPowerMode != *(virt + dev_data->powerMode) && cPowerMode <= 2)
     {
-        powerModeCurrent = 2;
+        *(virt + dev_data->powerMode) = cPowerMode;
     }
+    cPowerMode = -1;
 }
 
 int init_module(void)
@@ -361,7 +345,7 @@ int init_module(void)
     if (error)
     {
         pr_debug("failed to create the foo file in /sys/kernel/powerMode \n");
-    }
+    } /*
     error = sysfs_create_file(LegionController, &fanCurveRight.attr);
     if (error)
     {
@@ -376,7 +360,7 @@ int init_module(void)
     if (error)
     {
         pr_debug("failed to create the foo file in /sys/kernel/powerMode \n");
-    }
+    } */
     error = sysfs_create_file(LegionController, &powerMode.attr);
     if (error)
     {
