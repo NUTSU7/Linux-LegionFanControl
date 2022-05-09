@@ -4,10 +4,11 @@
 #include <linux/types.h>
 #include <asm/io.h>
 #include <linux/loop.h>
+#include <linux/dmi.h>
 
 #define LegionControllerVer "V0.3"
 
-struct DEVICE_DATA
+    struct DEVICE_DATA
 {
     uint64_t baseEC;
     uint16_t fanSpeedCurrent;
@@ -39,7 +40,7 @@ static int cFanCurve = -1;
 module_param(cPowerMode, int, 0644);
 module_param(cFanCurve, int, 0644);
 
-struct DEVICE_DATA *dev_data;
+struct DEVICE_DATA *biosModel;
 
 static struct kobject *LegionController;
 static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf);
@@ -56,15 +57,15 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
 {
     if (attr == &fanSpeedCurrent)
     {
-        return sprintf(buf, "%d\n", *(virt + dev_data->fanSpeedCurrent));
+        return sprintf(buf, "%d\n", *(virt + biosModel->fanSpeedCurrent));
     }
     if (attr == &tempCurrentCPU)
     {
-        return sprintf(buf, "%d\n", *(virt + dev_data->tempCurrentCPU));
+        return sprintf(buf, "%d\n", *(virt + biosModel->tempCurrentCPU));
     }
     if (attr == &tempCurrentGPU)
     {
-        return sprintf(buf, "%d\n", *(virt + dev_data->tempCurrentGPU));
+        return sprintf(buf, "%d\n", *(virt + biosModel->tempCurrentGPU));
     }
 
     if (attr == &powerMode)
@@ -74,15 +75,15 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
         writeFanCurve();
 
         
-        if (*(virt + dev_data->powerMode) == 0)
+        if (*(virt + biosModel->powerMode) == 0)
         {
             return sprintf(buf, "%d\n", 0);
         }
-        else if (*(virt + dev_data->powerMode) == 1)
+        else if (*(virt + biosModel->powerMode) == 1)
         {
             return sprintf(buf, "%d\n", 1);
         }
-        else if (*(virt + dev_data->powerMode) == 2)
+        else if (*(virt + biosModel->powerMode) == 2)
         {
             return sprintf(buf, "%d\n", 2);
         }
@@ -91,28 +92,28 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
     if (attr == &fanCurve)
     {
         return sprintf(buf, "Left: %d %d %d %d %d %d %d %d %d %d %d\nRight: %d %d %d %d %d %d %d %d %d %d %d\n",
-                       *(virt + dev_data->fanCurve[0]),
-                       *(virt + dev_data->fanCurve[1]),
-                       *(virt + dev_data->fanCurve[2]),
-                       *(virt + dev_data->fanCurve[3]),
-                       *(virt + dev_data->fanCurve[4]),
-                       *(virt + dev_data->fanCurve[5]),
-                       *(virt + dev_data->fanCurve[6]),
-                       *(virt + dev_data->fanCurve[7]),
-                       *(virt + dev_data->fanCurve[8]),
-                       *(virt + dev_data->fanCurve[9]),
-                       *(virt + dev_data->fanCurve[10]),
-                       *(virt + dev_data->fanCurve[11]),
-                       *(virt + dev_data->fanCurve[12]),
-                       *(virt + dev_data->fanCurve[13]),
-                       *(virt + dev_data->fanCurve[14]),
-                       *(virt + dev_data->fanCurve[15]),
-                       *(virt + dev_data->fanCurve[16]),
-                       *(virt + dev_data->fanCurve[17]),
-                       *(virt + dev_data->fanCurve[18]),
-                       *(virt + dev_data->fanCurve[19]),
-                       *(virt + dev_data->fanCurve[20]),
-                       *(virt + dev_data->fanCurve[21]));
+                       *(virt + biosModel->fanCurve[0]),
+                       *(virt + biosModel->fanCurve[1]),
+                       *(virt + biosModel->fanCurve[2]),
+                       *(virt + biosModel->fanCurve[3]),
+                       *(virt + biosModel->fanCurve[4]),
+                       *(virt + biosModel->fanCurve[5]),
+                       *(virt + biosModel->fanCurve[6]),
+                       *(virt + biosModel->fanCurve[7]),
+                       *(virt + biosModel->fanCurve[8]),
+                       *(virt + biosModel->fanCurve[9]),
+                       *(virt + biosModel->fanCurve[10]),
+                       *(virt + biosModel->fanCurve[11]),
+                       *(virt + biosModel->fanCurve[12]),
+                       *(virt + biosModel->fanCurve[13]),
+                       *(virt + biosModel->fanCurve[14]),
+                       *(virt + biosModel->fanCurve[15]),
+                       *(virt + biosModel->fanCurve[16]),
+                       *(virt + biosModel->fanCurve[17]),
+                       *(virt + biosModel->fanCurve[18]),
+                       *(virt + biosModel->fanCurve[19]),
+                       *(virt + biosModel->fanCurve[20]),
+                       *(virt + biosModel->fanCurve[21]));
     }
 
     return 0;
@@ -121,11 +122,11 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
 
 void writeFanCurve(void)
 {
-    for (i = 0; i < dev_data->curveLen; i++)
+    for (i = 0; i < biosModel->curveLen; i++)
     {
         if (cFanCurve >= 0 && cFanCurve != pFanCurve && cFanCurve <= 45)
         {
-            *(virt + dev_data->fanCurve[i]) = cFanCurve;
+            *(virt + biosModel->fanCurve[i]) = cFanCurve;
         }
     }
     cFanCurve = -1;
@@ -135,19 +136,27 @@ void writeFanCurve(void)
 
 void writePowerMode(void)
 {
-    if (cPowerMode >= 0 && cPowerMode != *(virt + dev_data->powerMode) && cPowerMode <= 2)
+    if (cPowerMode >= 0 && cPowerMode != *(virt + biosModel->powerMode) && cPowerMode <= 2)
     {
-        *(virt + dev_data->powerMode) = cPowerMode;
+        *(virt + biosModel->powerMode) = cPowerMode;
     }
     cPowerMode = -1;
 }
 
 int init_module(void)
 {
-    dev_data = &GKCN;
+    
+    //char temp[8];
+    //strcpy(temp, dmi_get_system_info(DMI_BIOS_VERSION));
+    //temp[4] = '\0';
+    //if(strcmp(temp, "GKCN"))
+    //{
+    //    biosModel = &GKCN;
+    //}
+    biosModel = &GKCN;
     int error = 0;
     pr_info("Legion Controller %s Loaded \n", LegionControllerVer);
-    virt = (ioremap(dev_data->baseEC, 0xFF * 3));
+    virt = (ioremap(biosModel->baseEC, 0xFF * 3));
     pr_info("Succefful Mapped EC (Virtual Address 0x%p)\n", virt);
 
     pr_info("Creating sysfs inteface over /sys/kernel/LegionController/");
@@ -175,22 +184,7 @@ int init_module(void)
     if (error)
     {
         pr_debug("failed to create the foo file in /sys/kernel/powerMode \n");
-    } /*
-    error = sysfs_create_file(LegionController, &fanCurveRight.attr);
-    if (error)
-    {
-        pr_debug("failed to create the foo file in /sys/kernel/powerMode \n");
-    }
-    error = sysfs_create_file(LegionController, &tempCurveCPU.attr);
-    if (error)
-    {
-        pr_debug("failed to create the foo file in /sys/kernel/powerMode \n");
-    }
-    error = sysfs_create_file(LegionController, &tempCurveGPU.attr);
-    if (error)
-    {
-        pr_debug("failed to create the foo file in /sys/kernel/powerMode \n");
-    } */
+    } 
     error = sysfs_create_file(LegionController, &powerMode.attr);
     if (error)
     {
@@ -211,5 +205,5 @@ void cleanup_module(void)
 }
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("NUTSU7");
+MODULE_AUTHOR("NUTSU7 & SMOKELESSCPU");
 MODULE_DESCRIPTION("LEGION");
