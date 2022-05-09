@@ -10,8 +10,8 @@
 struct DEVICE_DATA
 {
     uint64_t baseEC;
-    uint16_t fanSpeedCurrentLeft;
-    uint16_t fanSpeedCurrentRight;
+    uint16_t fanSpeedCurrent;
+    //uint16_t fanSpeedCurrentRight;
     uint16_t tempCurrentCPU; // CPU temp
     uint16_t tempCurrentGPU; // GPU temp
     uint16_t fanCurveLeft[11];
@@ -25,8 +25,8 @@ struct DEVICE_DATA
 struct DEVICE_DATA GKCN =
     {
         .baseEC = 0xFE00D400,          // need to start at EC level
-        .fanSpeedCurrentLeft = 0x200,  // 0x1FC
-        .fanSpeedCurrentRight = 0x201, // 0x1FD
+        .fanSpeedCurrent = 0x200,  // 0x1FC
+        //.fanSpeedCurrentRight = 0x201, // 0x1FD
         .tempCurrentCPU = 0x138,
         .tempCurrentGPU = 0x139,
         .fanCurveLeft = {0x140, 0x141, 0x142, 0x143, 0x144, 0x145, 0x146, 0x147, 0x148, 0x149, 0x14A},
@@ -39,15 +39,13 @@ struct DEVICE_DATA GKCN =
 };
 
 uint8_t *virt;
-int i, pFanCurveLeft, pFanCurveRight;
+int i, pFanCurve;
 
 static int cPowerMode = -1;
-static int cFanCurveLeft = -1;
-static int cFanCurveRight = -1;
+static int cFanCurve = -1;
 
 module_param(cPowerMode, int, 0644);
-module_param(cFanCurveLeft, int, 0644);
-module_param(cFanCurveRight, int, 0644);
+module_param(cFanCurve, int, 0644);
 
 struct DEVICE_DATA *dev_data;
 
@@ -57,8 +55,8 @@ void writeFanCurveLeft(void);
 void writeFanCurveRight(void);
 void writePowerMode(void);
 
-struct kobj_attribute fanSpeedCurrentLeft = __ATTR(fanSpeedCurrentLeft, 0444, sysfs_show, NULL);
-struct kobj_attribute fanSpeedCurrentRight = __ATTR(fanSpeedCurrentRight, 0444, sysfs_show, NULL);
+struct kobj_attribute fanSpeedCurrent = __ATTR(fanSpeedCurrent, 0444, sysfs_show, NULL);
+//struct kobj_attribute fanSpeedCurrentRight = __ATTR(fanSpeedCurrentRight, 0444, sysfs_show, NULL);
 struct kobj_attribute tempCurrentCPU = __ATTR(tempCurrentCPU, 0444, sysfs_show, NULL);
 struct kobj_attribute tempCurrentGPU = __ATTR(tempCurrentGPU, 0444, sysfs_show, NULL);
 struct kobj_attribute fanCurveLeft = __ATTR(fanCurveLeft, 0444, sysfs_show, NULL);
@@ -69,13 +67,9 @@ struct kobj_attribute powerMode = __ATTR(powerMode, 0444, sysfs_show, NULL);
 
 static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 {
-    if (attr == &fanSpeedCurrentLeft)
+    if (attr == &fanSpeedCurrent)
     {
-        return sprintf(buf, "%d\n", *(virt + dev_data->fanSpeedCurrentLeft));
-    }
-    if (attr == &fanSpeedCurrentRight)
-    {
-        return sprintf(buf, "%d\n", *(virt + dev_data->fanSpeedCurrentRight));
+        return sprintf(buf, "%d\n", *(virt + dev_data->fanSpeedCurrent));
     }
     if (attr == &tempCurrentCPU)
     {
@@ -274,28 +268,28 @@ void writeFanCurveLeft(void)
 {
     for (i = 0; i < dev_data->curveLen; i++)
     {
-        if (cFanCurveLeft >= 0 && cFanCurveLeft != pFanCurveLeft && cFanCurveLeft <= 45)
+        if (cFanCurve >= 0 && cFanCurve != pFanCurve && cFanCurve <= 45)
         {
-            *(virt + dev_data->fanCurveLeft[i]) = cFanCurveLeft;
+            *(virt + dev_data->fanCurveLeft[i]) = cFanCurve;
         }
     }
-    cFanCurveLeft = -1;
+    cFanCurve = -1;
 
-    pFanCurveLeft = cFanCurveLeft;
+    pFanCurve = cFanCurve;
 }
 
 void writeFanCurveRight(void)
 {
     for (i = 0; i < dev_data->curveLen; i++)
     {
-        if (cFanCurveRight >= 0 && cFanCurveRight != pFanCurveRight && cFanCurveRight <= 45)
+        if (cFanCurve >= 0 && cFanCurve != pFanCurve && cFanCurve <= 45)
         {
-            *(virt + dev_data->fanCurveRight[i]) = cFanCurveRight;
+            *(virt + dev_data->fanCurveRight[i]) = cFanCurve;
         }
     }
-    cFanCurveRight = -1;
+    cFanCurve = -1;
 
-    pFanCurveRight = cFanCurveRight;
+    pFanCurve = cFanCurve;
 }
 
 void writePowerMode(void)
@@ -321,15 +315,10 @@ int init_module(void)
     if (!LegionController)
         return -ENOMEM;
 
-    error = sysfs_create_file(LegionController, &fanSpeedCurrentLeft.attr);
+    error = sysfs_create_file(LegionController, &fanSpeedCurrent.attr);
     if (error)
     {
-        pr_debug("failed to create the foo file in /sys/kernel/fanSpeedCurrentLeft \n");
-    }
-    error = sysfs_create_file(LegionController, &fanSpeedCurrentRight.attr);
-    if (error)
-    {
-        pr_debug("failed to create the foo file in /sys/kernel/fanSpeedCurrentRight \n");
+        pr_debug("failed to create the foo file in /sys/kernel/fanSpeedCurrent \n");
     }
     error = sysfs_create_file(LegionController, &tempCurrentCPU.attr);
     if (error)
