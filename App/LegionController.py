@@ -1,14 +1,8 @@
 #!/usr/bin/python
 from tkinter import *
-import customtkinter
 from customtkinter import *
 from PIL import ImageTk, Image
-import os, time
-from importlib_metadata import entry_points
-import matplotlib.pyplot as plt
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import configparser
+import os, time, configparser, customtkinter
 
 customtkinter.set_appearance_mode("Dark")
 customtkinter.set_default_color_theme("blue")
@@ -17,18 +11,6 @@ config = configparser.ConfigParser()
 config.add_section('fanCurveQuiet')
 config.add_section('fanCurveBalanced')
 config.add_section('fanCurvePerf')
-
-params = {"xtick.color" : "white",
-          "ytick.color" : "white",
-          "axes.edgecolor" : "white",
-          "figure.facecolor" : "black",
-          "axes.facecolor" : "black",
-          "axes.grid" : "True",
-          "axes.xmargin" : "0",
-          "axes.ymargin" : "0",
-          "axes.zmargin" : "0",
-          "axes.autolimit_mode" : "data"}
-plt.rcParams.update(params)
 
 root = CTk()
 root.geometry('700x700')
@@ -484,7 +466,7 @@ currentDataFrame.place(y=500, height=100, relwidth=1)
 
 
 # Fan Curve Input Left Frame elements
-fanCurveText = CTkLabel(fanCurveFrame, text='Left Fan (RPM)', text_font=("Arial", 15))
+fanCurveText = CTkLabel(fanCurveFrame, text='Fan Speed (RPM)', text_font=("Arial", 15))
 fanCurveText.place(x=5, y=15, height=30, width=175)
 
 tempCurveCPUText = CTkLabel(fanCurveFrame, text='CPU Temp (°C)', text_font=("Arial", 15))
