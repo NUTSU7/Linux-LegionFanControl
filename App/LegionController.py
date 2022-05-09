@@ -50,8 +50,6 @@ fanCurve = []
 tempCurveCPU = []
 tempCurveGPU = []
 fanCurveCurrent = -1
-tempCurveCurrentCPU = -1
-tempCurveCurrentGPU = -1
 fanCurveQuiet = []
 fanCurveBalanced = []
 fanCurvePerf = []
@@ -143,7 +141,7 @@ def loadConfig():
     global fanCurveBalanced
     global fanCurvePerf
     global config
-    configFileExist = os.path.exists("config.txt")
+    configFileExist = os.path.exists(cwd+"/config.ini")
     
     if not configFileExist:
         config.set('fanCurveBalanced', 'fanCurve1', '0')
@@ -203,10 +201,10 @@ def loadConfig():
         config.set('fanCurveQuiet', 'tempCurveGPU5', '72')
         config.set('fanCurveQuiet', 'tempCurveGPU6', '78')
 
-        with open(cwd+r"config.ini", 'w') as configfile:
+        with open(cwd+r"/config.ini", 'w') as configfile:
             config.write(configfile)
     else:
-        config.read(cwd+'config.ini')
+        config.read(cwd+'/config.ini')
         fanCurveBalanced = config['fanCurveBalanced']
         fanCurvePerf = config['fanCurvePerf']
         fanCurveQuiet = config['fanCurveQuiet']
@@ -396,7 +394,7 @@ def saveBtnPressed():
         config['fanCurveQuiet']['tempCurveGPU5'] = tempCurveGPUEntry5.get()
         config['fanCurveQuiet']['tempCurveGPU6'] = tempCurveGPUEntry6.get()
 
-    with open(cwd+r"config.ini", 'w') as configfile:
+    with open(cwd+r"/config.ini", 'w') as configfile:
         config.write(configfile)
 
     getFanCurve()
@@ -408,11 +406,38 @@ def changeFanCurve():
     global tempCurrentCPU
     global tempCurveGPU
 
+    if tempCurrentCPU >= tempCurrentGPU:
+        if tempCurrentCPU >= tempCurveCPU[0] and tempCurrentCPU < tempCurveCPU[1]:
+            fanCurveCurrent = fanCurve[0]/100
+        elif tempCurrentCPU >= tempCurveCPU[1] and tempCurrentCPU < tempCurveCPU[2]:
+            fanCurveCurrent = fanCurve[1]/100
+        elif tempCurrentCPU >= tempCurveCPU[2] and tempCurrentCPU < tempCurveCPU[3]:
+            fanCurveCurrent = fanCurve[2]/100
+        elif tempCurrentCPU >= tempCurveCPU[3] and tempCurrentCPU < tempCurveCPU[4]:
+            fanCurveCurrent = fanCurve[3]/100
+        elif tempCurrentCPU >= tempCurveCPU[4] and tempCurrentCPU < tempCurveCPU[5]:
+            fanCurveCurrent = fanCurve[4]/100
+        elif tempCurrentCPU >= tempCurveCPU[5]:
+            fanCurveCurrent = fanCurve[5]/100
+    else:
+        if tempCurrentGPU >= tempCurveGPU[0] and tempCurrentGPU < tempCurveGPU[1]:
+            fanCurveCurrent = fanCurve[0]/100
+        elif tempCurrentGPU >= tempCurveGPU[1] and tempCurrentGPU < tempCurveGPU[2]:
+            fanCurveCurrent = fanCurve[1]/100
+        elif tempCurrentGPU >= tempCurveGPU[2] and tempCurrentGPU < tempCurveGPU[3]:
+            fanCurveCurrent = fanCurve[2]/100
+        elif tempCurrentGPU >= tempCurveGPU[3] and tempCurrentGPU < tempCurveGPU[4]:
+            fanCurveCurrent = fanCurve[3]/100
+        elif tempCurrentGPU >= tempCurveGPU[4] and tempCurrentGPU < tempCurveGPU[5]:
+            fanCurveCurrent = fanCurve[4]/100
+        elif tempCurrentGPU >= tempCurveGPU[5]:
+            fanCurveCurrent = fanCurve[5]/100
 
-
-    f = open("/sys/module/LegionController/parameters/cFanCurveLeft", "w")
-    f.write(str(fanCurveCurrent))
+    f = open("/sys/module/LegionController/parameters/cFanCurve", "w")
+    f.write(str(fanCurveCurrent)[:-2])
     f.close()
+    
+    root.after(1000, changeFanCurve)
 
 #Images
 #Window icon
@@ -533,28 +558,28 @@ currentDataFrameTemp.place(height=100, width=350, x=350)
 
 
 #Current Data Fan Speed
-currentDataFrameFanSpeedText = CTkLabel(currentDataFrameFanSpeed, text='Current Fan Speed', text_font=("Arial", 15))
-currentDataFrameFanSpeedText.place(rely=0.025, relheight=0.20, relwidth=1)
+currentDataFrameFanSpeedText = CTkLabel(currentDataFrameFanSpeed, text='Current Fan Speed', text_font=("Arial", 17), justify='center')
+currentDataFrameFanSpeedText.place(rely=0.025, relheight=0.3, relwidth=1)
 
-fanSpeedCurrentLabel = CTkLabel(currentDataFrameFanSpeed, text_font=("Arial", 17))
-fanSpeedCurrentLabel.place(relx=0.4, rely=0.30, relheight=0.30, relwidth=0.5)
+fanSpeedCurrentLabel = CTkLabel(currentDataFrameFanSpeed, text_font=("Arial", 17), justify='center', fg_color='#b8b6b0', text_color='black')
+fanSpeedCurrentLabel.place(relx=0.3, rely=0.4, relheight=0.4, relwidth=0.4)
 
 
 #Current Data Temps
-currentDataFrameTempText = CTkLabel(currentDataFrameTemp, text='Current Temps', text_font=("Arial", 15))
-currentDataFrameTempText.place(rely=0.025, relheight=0.20, relwidth=1)
+currentDataFrameTempText = CTkLabel(currentDataFrameTemp, text='Current Temps', text_font=("Arial", 17), justify='center')
+currentDataFrameTempText.place(relheight=0.20, relwidth=1)
 
-currentDataFrameTempCPUText = CTkLabel(currentDataFrameTemp, text='CPU', text_font=("Arial", 15))
-currentDataFrameTempCPUText.place(relx=0.005, rely=0.3, relheight=0.30, relwidth=0.4)
+currentDataFrameTempCPUText = CTkLabel(currentDataFrameTemp, text='CPU', text_font=("Arial", 17), justify='center')
+currentDataFrameTempCPUText.place(rely=0.3, relheight=0.3, relwidth=0.5)
 
-currentDataFrameTempGPUText = CTkLabel(currentDataFrameTemp, text='GPU', text_font=("Arial", 15))
-currentDataFrameTempGPUText.place(relx=0.005, rely=0.65, relheight=0.30, relwidth=0.4)
+currentDataFrameTempGPUText = CTkLabel(currentDataFrameTemp, text='GPU', text_font=("Arial", 17), justify='center')
+currentDataFrameTempGPUText.place(rely=0.65, relheight=0.3, relwidth=0.5)
 
-tempCurrentCPULabel = CTkLabel(currentDataFrameTemp, text_font=("Arial", 17))
-tempCurrentCPULabel.place(relx=0.4, rely=0.30, relheight=0.30, relwidth=0.5)
+tempCurrentCPULabel = CTkLabel(currentDataFrameTemp, text_font=("Arial", 17), justify='center', fg_color='#b8b6b0', text_color='black')
+tempCurrentCPULabel.place(relx=0.55, rely=0.30, relheight=0.3, relwidth=0.40)
 
-tempCurrentGPULabel = CTkLabel(currentDataFrameTemp, text_font=("Arial", 17))
-tempCurrentGPULabel.place(relx=0.4, rely=0.65, relheight=0.30, relwidth=0.5)
+tempCurrentGPULabel = CTkLabel(currentDataFrameTemp, text_font=("Arial", 17), justify='center', fg_color='#b8b6b0', text_color='black')
+tempCurrentGPULabel.place(relx=0.55, rely=0.65, relheight=0.3, relwidth=0.40)
 
 
 # Buttons
@@ -575,5 +600,6 @@ settingsBtn.place(x=500, width=90, height=90, y=5)
 
 getCurrentPowerMode()
 getCurrentData()
+changeFanCurve()
 
 root.mainloop()
