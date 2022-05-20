@@ -472,7 +472,7 @@ fanCurveText.place(x=5, y=15, height=30, width=175)
 tempCurveCPUText = CTkLabel(fanCurveFrame, text='CPU Temp (°C)', text_font=("Arial", 15))
 tempCurveCPUText.place(x=5, y=55, height=30, width=175)
 
-tempCurveGPUText = CTkLabel(fanCurveFrame, text='CPU Temp (°C)', text_font=("Arial", 15))
+tempCurveGPUText = CTkLabel(fanCurveFrame, text='GPU Temp (°C)', text_font=("Arial", 15))
 tempCurveGPUText.place(x=5, y=95, height=30, width=175)
 
 fanCurveEntry1 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
