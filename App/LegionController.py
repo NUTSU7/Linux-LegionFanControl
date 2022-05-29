@@ -38,6 +38,8 @@ fanCurveCurrent = -1
 fanCurveQuiet = []
 fanCurveBalanced = []
 fanCurvePerf = []
+graphRPM = []
+graphTemp = []
 
 #Functions
 def getCurrentPowerMode():
@@ -426,7 +428,40 @@ def updateFanCurve():
     root.after(1000, updateFanCurve)
 
 def updateCanvas():
-    fanCurveCanvas.create_line(0,475,102.77,425, fill='green', width=5)
+    #axes.x = RPM/100*15.554
+    #axes.y = 500-(C*5+25)
+    global graphRPM
+    global graphTemp
+    graphRPM = []
+    graphTemp = []
+
+    fanCurveCanvas.delete("all")
+
+    graphRPM.append(fanCurve[0]/100*15.554)
+    graphRPM.append(fanCurve[1]/100*15.554)
+    graphRPM.append(fanCurve[2]/100*15.554)
+    graphRPM.append(fanCurve[3]/100*15.554)
+    graphRPM.append(fanCurve[4]/100*15.554)
+    graphRPM.append(fanCurve[5]/100*15.554)
+    graphTemp.append(500-(tempCurveCPU[0]*5+25))
+    graphTemp.append(500-(tempCurveCPU[1]*5+25))
+    graphTemp.append(500-(tempCurveCPU[2]*5+25))
+    graphTemp.append(500-(tempCurveCPU[3]*5+25))
+    graphTemp.append(500-(tempCurveCPU[4]*5+25))
+    graphTemp.append(500-(tempCurveCPU[5]*5+25))
+
+    for i in arange(0, 700, 15.554):
+        fanCurveCanvas.create_line([(i, 0), (i, 475)], tag='grid_line', fill='#adaaaa', width=0.5)
+
+    for i in arange(0, 475, 25):
+        fanCurveCanvas.create_line([(0, i), (725, i)], tag='grid_line', fill='#adaaaa', width=0.5)
+
+    fanCurveCanvas.create_line(0,475,graphRPM[0],graphTemp[0], fill='green', width=5)
+    fanCurveCanvas.create_line(graphRPM[0],graphTemp[0],graphRPM[1],graphTemp[1], fill='green', width=5)
+    fanCurveCanvas.create_line(graphRPM[1],graphTemp[1],graphRPM[2],graphTemp[2], fill='green', width=5)
+    fanCurveCanvas.create_line(graphRPM[2],graphTemp[2],graphRPM[3],graphTemp[3], fill='green', width=5)
+    fanCurveCanvas.create_line(graphRPM[3],graphTemp[3],graphRPM[4],graphTemp[4], fill='green', width=5)
+    fanCurveCanvas.create_line(graphRPM[4],graphTemp[4],graphRPM[5],graphTemp[5], fill='green', width=5)
 
 #Images
 #Window icon
@@ -480,15 +515,9 @@ currentDataFrame.place(y=700, height=100, relwidth=1)
 fanCurveCanvas = CTkCanvas(fanCurveGraph)
 fanCurveCanvas.place(y=25, x=50, width=725, height=475)
 
-for i in arange(0, 700, 15.554):
-        fanCurveCanvas.create_line([(i, 0), (i, 475)], tag='grid_line', fill='#adaaaa', width=0.5)
 
-for i in arange(0, 475, 25):
-        fanCurveCanvas.create_line([(0, i), (725, i)], tag='grid_line', fill='#adaaaa', width=0.5)
-
-
-
-#77.77 15.554  RPM = ((axes.x-25)/15.554)*100
+# 77.77 15.554  RPM = ((axes.x-25)/15.554)*100
+# axes.x = RPM/100*15.554
 
 fanCurveLabelRPM1 = CTkLabel(fanCurveGraph, text='0', text_font=("Arial", 12))
 fanCurveLabelRPM1.place(x=25, y=500, height=50, width=50)
@@ -520,7 +549,9 @@ fanCurveLabelRPM9.place(x=647.16, y=500, height=50, width=50)
 fanCurveLabelRPM10 = CTkLabel(fanCurveGraph, text='4500', text_font=("Arial", 12))
 fanCurveLabelRPM10.place(x=725, y=500, height=50, width=50)
 
-# 52.77  5  C = (500-axes.y-25)/5
+# 50  5  C = (500-axes.y-25)/5
+# axes.y = 500-(C*5+25)
+
 fanCurveLabelTemp1 = CTkLabel(fanCurveGraph, text='0', text_font=("Arial", 12))
 fanCurveLabelTemp1.place(y=485, height=30, width=50)
 
