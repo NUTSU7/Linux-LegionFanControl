@@ -1,5 +1,8 @@
 #!/usr/bin/python
 from tkinter import *
+from numpy import *
+from turtle import window_width
+from unittest import TextTestResult
 from customtkinter import *
 from PIL import ImageTk, Image
 import os, time, configparser, customtkinter
@@ -13,7 +16,7 @@ config.add_section('fanCurveBalanced')
 config.add_section('fanCurvePerf')
 
 root = CTk()
-root.geometry('700x700')
+root.geometry('800x900')
 root.title('LegionController')
 root.resizable(False, False)
 root.bind_all("<Button-1>", lambda event: event.widget.focus_set())
@@ -59,7 +62,8 @@ def getCurrentPowerMode():
             balancedBtn.configure(fg_color='#1c94cf')
             quietBtn.configure(fg_color='#2333B4')
         getFanCurve()
-        changeEntryes()
+        updateEntryes()
+        updateCanvas()
     root.after(2000, getCurrentPowerMode)
 
 def perfBtnPressed():
@@ -261,7 +265,7 @@ def getFanCurve():
         
     
 
-def changeEntryes():
+def updateEntryes():
     global fanCurve
     global tempCurveCPU
     global tempCurrentGPU
@@ -380,9 +384,9 @@ def saveBtnPressed():
         config.write(configfile)
 
     getFanCurve()
-    changeEntryes()
+    updateEntryes()
 
-def changeFanCurve():
+def updateFanCurve():
     global fanCurveCurrent
     global fanCurve
     global tempCurrentCPU
@@ -419,7 +423,10 @@ def changeFanCurve():
     f.write(str(fanCurveCurrent)[:-2])
     f.close()
     
-    root.after(1000, changeFanCurve)
+    root.after(1000, updateFanCurve)
+
+def updateCanvas():
+    fanCurveCanvas.create_line(0,475,102.77,425, fill='green', width=5)
 
 #Images
 #Window icon
@@ -452,17 +459,97 @@ loadConfig()
 
 # Main Frames
 page = CTkFrame(root)
-page.place(height=600, width=700)
+page.place(height=800, relwidth=1)
 
 modes = CTkFrame(root)
-modes.place(y=600, height=100, width=700)
+modes.place(y=800, height=100, relwidth=1)
 
 #Page Frames
+
+fanCurveGraph = CTkFrame(page)
+fanCurveGraph.place(width=800, height=550)
+
 fanCurveFrame = CTkFrame(page)
-fanCurveFrame.place(relwidth=1, height=140, y=360)
+fanCurveFrame.place(relwidth=1, height=150, y=550)
 
 currentDataFrame = CTkFrame(page)
-currentDataFrame.place(y=500, height=100, relwidth=1)
+currentDataFrame.place(y=700, height=100, relwidth=1)
+
+# Fan Curve Graph
+
+fanCurveCanvas = CTkCanvas(fanCurveGraph)
+fanCurveCanvas.place(y=25, x=50, width=725, height=475)
+
+for i in arange(0, 700, 15.554):
+        fanCurveCanvas.create_line([(i, 0), (i, 475)], tag='grid_line', fill='#adaaaa', width=0.5)
+
+for i in arange(0, 475, 25):
+        fanCurveCanvas.create_line([(0, i), (725, i)], tag='grid_line', fill='#adaaaa', width=0.5)
+
+
+
+#77.77 15.554  RPM = ((axes.x-25)/15.554)*100
+
+fanCurveLabelRPM1 = CTkLabel(fanCurveGraph, text='0', text_font=("Arial", 12))
+fanCurveLabelRPM1.place(x=25, y=500, height=50, width=50)
+
+fanCurveLabelRPM2 = CTkLabel(fanCurveGraph, text='500', text_font=("Arial", 12))
+fanCurveLabelRPM2.place(x=102.77, y=500, height=50, width=50)
+
+fanCurveLabelRPM3 = CTkLabel(fanCurveGraph, text='1000', text_font=("Arial", 12))
+fanCurveLabelRPM3.place(x=180.54, y=500, height=50, width=50)
+
+fanCurveLabelRPM4 = CTkLabel(fanCurveGraph, text='1500', text_font=("Arial", 12))
+fanCurveLabelRPM4.place(x=258.31, y=500, height=50, width=50)
+
+fanCurveLabelRPM5 = CTkLabel(fanCurveGraph, text='2000', text_font=("Arial", 12))
+fanCurveLabelRPM5.place(x=336.08, y=500, height=50, width=50)
+
+fanCurveLabelRPM6 = CTkLabel(fanCurveGraph, text='2500', text_font=("Arial", 12))
+fanCurveLabelRPM6.place(x=413.85, y=500, height=50, width=50)
+
+fanCurveLabelRPM7 = CTkLabel(fanCurveGraph, text='3000', text_font=("Arial", 12))
+fanCurveLabelRPM7.place(x=491.62, y=500, height=50, width=50)
+
+fanCurveLabelRPM8 = CTkLabel(fanCurveGraph, text='3500', text_font=("Arial", 12))
+fanCurveLabelRPM8.place(x=569.39, y=500, height=50, width=50)
+
+fanCurveLabelRPM9 = CTkLabel(fanCurveGraph, text='4000', text_font=("Arial", 12))
+fanCurveLabelRPM9.place(x=647.16, y=500, height=50, width=50)
+
+fanCurveLabelRPM10 = CTkLabel(fanCurveGraph, text='4500', text_font=("Arial", 12))
+fanCurveLabelRPM10.place(x=725, y=500, height=50, width=50)
+
+# 52.77  5  C = (500-axes.y-25)/5
+fanCurveLabelTemp1 = CTkLabel(fanCurveGraph, text='0', text_font=("Arial", 12))
+fanCurveLabelTemp1.place(y=485, height=30, width=50)
+
+fanCurveLabelTemp2 = CTkLabel(fanCurveGraph, text='10', text_font=("Arial", 12))
+fanCurveLabelTemp2.place(y=425, height=50, width=50)
+
+fanCurveLabelTemp3 = CTkLabel(fanCurveGraph, text='20', text_font=("Arial", 12))
+fanCurveLabelTemp3.place(y=375, height=50, width=50)
+
+fanCurveLabelTemp4 = CTkLabel(fanCurveGraph, text='30', text_font=("Arial", 12))
+fanCurveLabelTemp4.place(y=325, height=50, width=50)
+
+fanCurveLabelTemp5 = CTkLabel(fanCurveGraph, text='40', text_font=("Arial", 12))
+fanCurveLabelTemp5.place(y=275, height=50, width=50)
+
+fanCurveLabelTemp6 = CTkLabel(fanCurveGraph, text='50', text_font=("Arial", 12))
+fanCurveLabelTemp6.place(y=225, height=50, width=50)
+
+fanCurveLabelTemp7 = CTkLabel(fanCurveGraph, text='60', text_font=("Arial", 12))
+fanCurveLabelTemp7.place(y=175, height=50, width=50)
+
+fanCurveLabelTemp8 = CTkLabel(fanCurveGraph, text='80', text_font=("Arial", 12))
+fanCurveLabelTemp8.place(y=125, height=50, width=50)
+
+fanCurveLabelTemp9 = CTkLabel(fanCurveGraph, text='90', text_font=("Arial", 12))
+fanCurveLabelTemp9.place(y=75, height=50, width=50)
+
+fanCurveLabelTemp10 = CTkLabel(fanCurveGraph, text='100', text_font=("Arial", 12))
+fanCurveLabelTemp10.place(y=25, height=50, width=50)
 
 
 # Fan Curve Input Left Frame elements
@@ -533,10 +620,10 @@ tempCurveGPUEntry6.place(x=580, y=95, height=30, width=70)
 
 #Current Data Frame elements
 currentDataFrameFanSpeed = CTkFrame(currentDataFrame)
-currentDataFrameFanSpeed.place(height=100, width=350)
+currentDataFrameFanSpeed.place(height=100, width=400)
 
 currentDataFrameTemp = CTkFrame(currentDataFrame)
-currentDataFrameTemp.place(height=100, width=350, x=350)
+currentDataFrameTemp.place(height=100, width=400, x=400)
 
 
 #Current Data Fan Speed
@@ -566,22 +653,22 @@ tempCurrentGPULabel.place(relx=0.55, rely=0.65, relheight=0.3, relwidth=0.40)
 
 # Buttons
 perfBtn = CTkButton(modes, image=perfIcon, text='', command=perfBtnPressed)
-perfBtn.place(x=100, width=90, height=90, y=5)
+perfBtn.place(x=150, width=90, height=90, y=5)
 
 balancedBtn = CTkButton(modes, image=balancedIcon, text='', command=balancedBtnPressed)
-balancedBtn.place(x=200, width=90, height=90, y=5)
+balancedBtn.place(x=250, width=90, height=90, y=5)
 
 quietBtn = CTkButton(modes, image=quietIcon, text='', command=quietBtnPressed)
-quietBtn.place(x=300, width=90, height=90, y=5)
+quietBtn.place(x=350, width=90, height=90, y=5)
 
 saveBtn = CTkButton(modes, image=saveIcon, text='', command=saveBtnPressed)
-saveBtn.place(x=400, width=90, height=90, y=5)
+saveBtn.place(x=450, width=90, height=90, y=5)
 
 settingsBtn = CTkButton(modes, image=settingsIcon, text='')
-settingsBtn.place(x=500, width=90, height=90, y=5)
+settingsBtn.place(x=550, width=90, height=90, y=5)
 
 getCurrentPowerMode()
 getCurrentData()
-changeFanCurve()
+updateFanCurve()
 
 root.mainloop()
