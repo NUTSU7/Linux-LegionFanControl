@@ -182,12 +182,18 @@ def loadConfig():
         fanCurveQuiet = config['fanCurveQuiet']
 
 def getFanCurve():
+    #axes.x = RPM/100*15.554
+    #axes.y = 500-(C*5+25)
     global fanCurve
     global tempCurve
     global currentPowerMode
     global config
+    global graphX
+    global graphY
     fanCurve = []
     tempCurve = []
+    graphX = []
+    graphY = []
     
     if currentPowerMode == 0:
         fanCurve.append(int(config['fanCurveBalanced']['fanCurve1']))
@@ -228,7 +234,19 @@ def getFanCurve():
         tempCurve.append(int(config['fanCurveQuiet']['tempCurve4']))
         tempCurve.append(int(config['fanCurveQuiet']['tempCurve5']))
         tempCurve.append(int(config['fanCurveQuiet']['tempCurve6']))
-        
+    
+    graphX.append(fanCurve[0]/100*15.554)
+    graphX.append(fanCurve[1]/100*15.554)
+    graphX.append(fanCurve[2]/100*15.554)
+    graphX.append(fanCurve[3]/100*15.554)
+    graphX.append(fanCurve[4]/100*15.554)
+    graphX.append(fanCurve[5]/100*15.554)
+    graphY.append(525-(tempCurve[0]*5))
+    graphY.append(525-(tempCurve[1]*5))
+    graphY.append(525-(tempCurve[2]*5))
+    graphY.append(525-(tempCurve[3]*5))
+    graphY.append(525-(tempCurve[4]*5))
+    graphY.append(525-(tempCurve[5]*5))
     
 
 def updateEntryes():
@@ -353,45 +371,41 @@ def updateFanCurve():
     root.after(1000, updateFanCurve)
 
 def updateCanvas():
-    #axes.x = RPM/100*15.554
-    #axes.y = 500-(C*5+25)
     global graphX
     global graphY
-    graphX = []
-    graphY = []
 
     fanCurveCanvas.delete("all")
 
-    graphX.append(fanCurve[0]/100*15.554)
-    graphX.append(fanCurve[1]/100*15.554)
-    graphX.append(fanCurve[2]/100*15.554)
-    graphX.append(fanCurve[3]/100*15.554)
-    graphX.append(fanCurve[4]/100*15.554)
-    graphX.append(fanCurve[5]/100*15.554)
-    graphY.append(500-(tempCurve[0]*5+25))
-    graphY.append(500-(tempCurve[1]*5+25))
-    graphY.append(500-(tempCurve[2]*5+25))
-    graphY.append(500-(tempCurve[3]*5+25))
-    graphY.append(500-(tempCurve[4]*5+25))
-    graphY.append(500-(tempCurve[5]*5+25))
-
     for i in arange(0, 700, 15.554):
-        fanCurveCanvas.create_line([(i, 0), (i, 475)], tag='grid_line', fill='#adaaaa', width=0.5)
+        fanCurveCanvas.create_line([(i, 0), (i, 525)], tag='grid_line', fill='#adaaaa', width=0.5)
 
-    for i in arange(0, 475, 25):
+    for i in arange(0, 525, 25):
         fanCurveCanvas.create_line([(0, i), (725, i)], tag='grid_line', fill='#adaaaa', width=0.5)
 
-    fanCurveCanvas.create_line(0,475,graphX[0],graphY[0], fill='green', width=5)
+    #fanCurveCanvas.create_line(0,475,graphX[0],graphY[0], fill='green', width=5)
     fanCurveCanvas.create_line(graphX[0],graphY[0],graphX[1],graphY[1], fill='green', width=5, smooth=1)
     fanCurveCanvas.create_line(graphX[1],graphY[1],graphX[2],graphY[2], fill='green', width=5, smooth=1)
     fanCurveCanvas.create_line(graphX[2],graphY[2],graphX[3],graphY[3], fill='green', width=5, smooth=1)
     fanCurveCanvas.create_line(graphX[3],graphY[3],graphX[4],graphY[4], fill='green', width=5, smooth=1)
     fanCurveCanvas.create_line(graphX[4],graphY[4],graphX[5],graphY[5], fill='green', width=5, smooth=1)
 
+    fanCurveCanvas.create_oval(graphX[0]-3,graphY[0]-3,graphX[0]+3,graphY[0]+3,fill="black", width=3)
+    fanCurveCanvas.create_oval(graphX[1]-3,graphY[1]-3,graphX[1]+3,graphY[1]+3,fill="black", width=3)
+    fanCurveCanvas.create_oval(graphX[2]-3,graphY[2]-3,graphX[2]+3,graphY[2]+3,fill="black", width=3)
+    fanCurveCanvas.create_oval(graphX[3]-3,graphY[3]-3,graphX[3]+3,graphY[3]+3,fill="black", width=3)
+    fanCurveCanvas.create_oval(graphX[4]-3,graphY[4]-3,graphX[4]+3,graphY[4]+3,fill="black", width=3)
+    fanCurveCanvas.create_oval(graphX[5]-3,graphY[5]-3,graphX[5]+3,graphY[5]+3,fill="black", width=3)
+
 def inputCanvas(event):
+    global graphX
+    global graphY
+
     x,y = root.winfo_pointerxy()
     widget = root.winfo_containing(x,y)
+
     if(str(widget) == ".!ctkframe.!ctkframe.!ctkcanvas2"):
+        x = event.x
+        y = event.y
         print(widget, ' ', x, ' ', y)
 
 
@@ -434,10 +448,10 @@ modes.place(y=800, height=100, relwidth=1)
 #Page Frames
 
 fanCurveGraph = CTkFrame(page)
-fanCurveGraph.place(width=800, height=550)
+fanCurveGraph.place(width=800, height=600)
 
 fanCurveFrame = CTkFrame(page)
-fanCurveFrame.place(relwidth=1, height=150, y=550)
+fanCurveFrame.place(relwidth=1, height=150, y=600)
 
 currentDataFrame = CTkFrame(page)
 currentDataFrame.place(y=700, height=100, relwidth=1)
@@ -445,65 +459,68 @@ currentDataFrame.place(y=700, height=100, relwidth=1)
 # Fan Curve Graph
 
 fanCurveCanvas = CTkCanvas(fanCurveGraph)
-fanCurveCanvas.place(y=25, x=50, width=725, height=475)
+fanCurveCanvas.place(y=25, x=50, width=725, height=525)
 
 
 # 77.77 15.554  RPM = ((axes.x-25)/15.554)*100
 # axes.x = RPM/100*15.554
 
 fanCurveLabelRPM1 = CTkLabel(fanCurveGraph, text='0', text_font=("Arial", 12))
-fanCurveLabelRPM1.place(x=25, y=500, height=50, width=50)
+fanCurveLabelRPM1.place(x=25, y=550, height=50, width=50)
 
 fanCurveLabelRPM2 = CTkLabel(fanCurveGraph, text='500', text_font=("Arial", 12))
-fanCurveLabelRPM2.place(x=102.77, y=500, height=50, width=50)
+fanCurveLabelRPM2.place(x=102.77, y=550, height=50, width=50)
 
 fanCurveLabelRPM3 = CTkLabel(fanCurveGraph, text='1000', text_font=("Arial", 12))
-fanCurveLabelRPM3.place(x=180.54, y=500, height=50, width=50)
+fanCurveLabelRPM3.place(x=180.54, y=550, height=50, width=50)
 
 fanCurveLabelRPM4 = CTkLabel(fanCurveGraph, text='1500', text_font=("Arial", 12))
-fanCurveLabelRPM4.place(x=258.31, y=500, height=50, width=50)
+fanCurveLabelRPM4.place(x=258.31, y=550, height=50, width=50)
 
 fanCurveLabelRPM5 = CTkLabel(fanCurveGraph, text='2000', text_font=("Arial", 12))
-fanCurveLabelRPM5.place(x=336.08, y=500, height=50, width=50)
+fanCurveLabelRPM5.place(x=336.08, y=550, height=50, width=50)
 
 fanCurveLabelRPM6 = CTkLabel(fanCurveGraph, text='2500', text_font=("Arial", 12))
-fanCurveLabelRPM6.place(x=413.85, y=500, height=50, width=50)
+fanCurveLabelRPM6.place(x=413.85, y=550, height=50, width=50)
 
 fanCurveLabelRPM7 = CTkLabel(fanCurveGraph, text='3000', text_font=("Arial", 12))
-fanCurveLabelRPM7.place(x=491.62, y=500, height=50, width=50)
+fanCurveLabelRPM7.place(x=491.62, y=550, height=50, width=50)
 
 fanCurveLabelRPM8 = CTkLabel(fanCurveGraph, text='3500', text_font=("Arial", 12))
-fanCurveLabelRPM8.place(x=569.39, y=500, height=50, width=50)
+fanCurveLabelRPM8.place(x=569.39, y=550, height=50, width=50)
 
 fanCurveLabelRPM9 = CTkLabel(fanCurveGraph, text='4000', text_font=("Arial", 12))
-fanCurveLabelRPM9.place(x=647.16, y=500, height=50, width=50)
+fanCurveLabelRPM9.place(x=647.16, y=550, height=50, width=50)
 
 fanCurveLabelRPM10 = CTkLabel(fanCurveGraph, text='4500', text_font=("Arial", 12))
-fanCurveLabelRPM10.place(x=725, y=500, height=50, width=50)
+fanCurveLabelRPM10.place(x=725, y=550, height=50, width=50)
 
-# 50  5  C = (500-axes.y-25)/5
-# axes.y = 500-(C*5+25)
+# 50  5  C = (525-axes.y)/5
+# axes.y = 525-(C*5)
 
 fanCurveLabelTemp1 = CTkLabel(fanCurveGraph, text='0', text_font=("Arial", 12))
-fanCurveLabelTemp1.place(y=485, height=30, width=50)
+fanCurveLabelTemp1.place(y=535, height=30, width=50)
 
 fanCurveLabelTemp2 = CTkLabel(fanCurveGraph, text='10', text_font=("Arial", 12))
-fanCurveLabelTemp2.place(y=425, height=50, width=50)
+fanCurveLabelTemp2.place(y=475, height=50, width=50)
 
 fanCurveLabelTemp3 = CTkLabel(fanCurveGraph, text='20', text_font=("Arial", 12))
-fanCurveLabelTemp3.place(y=375, height=50, width=50)
+fanCurveLabelTemp3.place(y=425, height=50, width=50)
 
 fanCurveLabelTemp4 = CTkLabel(fanCurveGraph, text='30', text_font=("Arial", 12))
-fanCurveLabelTemp4.place(y=325, height=50, width=50)
+fanCurveLabelTemp4.place(y=375, height=50, width=50)
 
 fanCurveLabelTemp5 = CTkLabel(fanCurveGraph, text='40', text_font=("Arial", 12))
-fanCurveLabelTemp5.place(y=275, height=50, width=50)
+fanCurveLabelTemp5.place(y=325, height=50, width=50)
 
 fanCurveLabelTemp6 = CTkLabel(fanCurveGraph, text='50', text_font=("Arial", 12))
-fanCurveLabelTemp6.place(y=225, height=50, width=50)
+fanCurveLabelTemp6.place(y=275, height=50, width=50)
 
 fanCurveLabelTemp7 = CTkLabel(fanCurveGraph, text='60', text_font=("Arial", 12))
-fanCurveLabelTemp7.place(y=175, height=50, width=50)
+fanCurveLabelTemp7.place(y=225, height=50, width=50)
+
+fanCurveLabelTemp8 = CTkLabel(fanCurveGraph, text='70', text_font=("Arial", 12))
+fanCurveLabelTemp8.place(y=175, height=50, width=50)
 
 fanCurveLabelTemp8 = CTkLabel(fanCurveGraph, text='80', text_font=("Arial", 12))
 fanCurveLabelTemp8.place(y=125, height=50, width=50)
