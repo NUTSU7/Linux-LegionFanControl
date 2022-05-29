@@ -19,7 +19,8 @@ root = CTk()
 root.geometry('800x900')
 root.title('LegionController')
 root.resizable(False, False)
-root.bind_all("<Button-1>", lambda event: event.widget.focus_set())
+
+root.bind("<Button-1>", lambda event: event.widget.focus_set())
 
 #Vars
 cwd=os.getcwd()
@@ -29,17 +30,18 @@ perfBtnPressedValue = False
 balancedBtnPressedValue = False
 quietBtnPressedValue = False
 fanSpeedCurrent = -1
+tempCurrent = -1
 tempCurrentCPU = -1
 tempCurrentGPU = -1
 fanCurve = []
-tempCurveCPU = []
-tempCurveGPU = []
+tempCurve = []
 fanCurveCurrent = -1
 fanCurveQuiet = []
 fanCurveBalanced = []
 fanCurvePerf = []
-graphRPM = []
-graphTemp = []
+graphX = []
+graphY = []
+useTempCPU = True
 
 #Functions
 def getCurrentPowerMode():
@@ -138,18 +140,12 @@ def loadConfig():
         config.set('fanCurveBalanced', 'fanCurve4', '2600')
         config.set('fanCurveBalanced', 'fanCurve5', '3500')
         config.set('fanCurveBalanced', 'fanCurve6', '3800')
-        config.set('fanCurveBalanced', 'tempCurveCPU1', '0')
-        config.set('fanCurveBalanced', 'tempCurveCPU2', '45')
-        config.set('fanCurveBalanced', 'tempCurveCPU3', '55')
-        config.set('fanCurveBalanced', 'tempCurveCPU4', '68')
-        config.set('fanCurveBalanced', 'tempCurveCPU5', '78')
-        config.set('fanCurveBalanced', 'tempCurveCPU6', '85')
-        config.set('fanCurveBalanced', 'tempCurveGPU1', '0')
-        config.set('fanCurveBalanced', 'tempCurveGPU2', '45')
-        config.set('fanCurveBalanced', 'tempCurveGPU3', '55')
-        config.set('fanCurveBalanced', 'tempCurveGPU4', '68')
-        config.set('fanCurveBalanced', 'tempCurveGPU5', '78')
-        config.set('fanCurveBalanced', 'tempCurveGPU6', '85')
+        config.set('fanCurveBalanced', 'tempCurve1', '0')
+        config.set('fanCurveBalanced', 'tempCurve2', '45')
+        config.set('fanCurveBalanced', 'tempCurve3', '55')
+        config.set('fanCurveBalanced', 'tempCurve4', '70')
+        config.set('fanCurveBalanced', 'tempCurve5', '80')
+        config.set('fanCurveBalanced', 'tempCurve6', '85')
 
         config.set('fanCurvePerf', 'fanCurve1', '0')
         config.set('fanCurvePerf', 'fanCurve2', '1800')
@@ -157,18 +153,12 @@ def loadConfig():
         config.set('fanCurvePerf', 'fanCurve4', '2600')
         config.set('fanCurvePerf', 'fanCurve5', '3500')
         config.set('fanCurvePerf', 'fanCurve6', '4400')
-        config.set('fanCurvePerf', 'tempCurveCPU1', '0')
-        config.set('fanCurvePerf', 'tempCurveCPU2', '45')
-        config.set('fanCurvePerf', 'tempCurveCPU3', '55')
-        config.set('fanCurvePerf', 'tempCurveCPU4', '68')
-        config.set('fanCurvePerf', 'tempCurveCPU5', '78')
-        config.set('fanCurvePerf', 'tempCurveCPU6', '91')
-        config.set('fanCurvePerf', 'tempCurveGPU1', '0')
-        config.set('fanCurvePerf', 'tempCurveGPU2', '45')
-        config.set('fanCurvePerf', 'tempCurveGPU3', '55')
-        config.set('fanCurvePerf', 'tempCurveGPU4', '68')
-        config.set('fanCurvePerf', 'tempCurveGPU5', '78')
-        config.set('fanCurvePerf', 'tempCurveGPU6', '91')
+        config.set('fanCurvePerf', 'tempCurve1', '0')
+        config.set('fanCurvePerf', 'tempCurve2', '45')
+        config.set('fanCurvePerf', 'tempCurve3', '55')
+        config.set('fanCurvePerf', 'tempCurve4', '70')
+        config.set('fanCurvePerf', 'tempCurve5', '80')
+        config.set('fanCurvePerf', 'tempCurve6', '90')
 
         config.set('fanCurveQuiet', 'fanCurve1', '0')
         config.set('fanCurveQuiet', 'fanCurve2', '1800')
@@ -176,18 +166,12 @@ def loadConfig():
         config.set('fanCurveQuiet', 'fanCurve4', '2600')
         config.set('fanCurveQuiet', 'fanCurve5', '2900')
         config.set('fanCurveQuiet', 'fanCurve6', '3500')
-        config.set('fanCurveQuiet', 'tempCurveCPU1', '0')
-        config.set('fanCurveQuiet', 'tempCurveCPU2', '45')
-        config.set('fanCurveQuiet', 'tempCurveCPU3', '55')
-        config.set('fanCurveQuiet', 'tempCurveCPU4', '68')
-        config.set('fanCurveQuiet', 'tempCurveCPU5', '72')
-        config.set('fanCurveQuiet', 'tempCurveCPU6', '78')
-        config.set('fanCurveQuiet', 'tempCurveGPU1', '0')
-        config.set('fanCurveQuiet', 'tempCurveGPU2', '45')
-        config.set('fanCurveQuiet', 'tempCurveGPU3', '55')
-        config.set('fanCurveQuiet', 'tempCurveGPU4', '68')
-        config.set('fanCurveQuiet', 'tempCurveGPU5', '72')
-        config.set('fanCurveQuiet', 'tempCurveGPU6', '78')
+        config.set('fanCurveQuiet', 'tempCurve1', '0')
+        config.set('fanCurveQuiet', 'tempCurve2', '45')
+        config.set('fanCurveQuiet', 'tempCurve3', '55')
+        config.set('fanCurveQuiet', 'tempCurve4', '70')
+        config.set('fanCurveQuiet', 'tempCurve5', '75')
+        config.set('fanCurveQuiet', 'tempCurve6', '80')
 
         with open(cwd+r"/config.ini", 'w') as configfile:
             config.write(configfile)
@@ -199,13 +183,11 @@ def loadConfig():
 
 def getFanCurve():
     global fanCurve
-    global tempCurveCPU
-    global tempCurveGPU
+    global tempCurve
     global currentPowerMode
     global config
     fanCurve = []
-    tempCurveCPU = []
-    tempCurveGPU = []
+    tempCurve = []
     
     if currentPowerMode == 0:
         fanCurve.append(int(config['fanCurveBalanced']['fanCurve1']))
@@ -214,18 +196,12 @@ def getFanCurve():
         fanCurve.append(int(config['fanCurveBalanced']['fanCurve4']))
         fanCurve.append(int(config['fanCurveBalanced']['fanCurve5']))
         fanCurve.append(int(config['fanCurveBalanced']['fanCurve6']))
-        tempCurveCPU.append(int(config['fanCurveBalanced']['tempCurveCPU1']))
-        tempCurveCPU.append(int(config['fanCurveBalanced']['tempCurveCPU2']))
-        tempCurveCPU.append(int(config['fanCurveBalanced']['tempCurveCPU3']))
-        tempCurveCPU.append(int(config['fanCurveBalanced']['tempCurveCPU4']))
-        tempCurveCPU.append(int(config['fanCurveBalanced']['tempCurveCPU5']))
-        tempCurveCPU.append(int(config['fanCurveBalanced']['tempCurveCPU6']))
-        tempCurveGPU.append(int(config['fanCurveBalanced']['tempCurveGPU1']))
-        tempCurveGPU.append(int(config['fanCurveBalanced']['tempCurveGPU2']))
-        tempCurveGPU.append(int(config['fanCurveBalanced']['tempCurveGPU3']))
-        tempCurveGPU.append(int(config['fanCurveBalanced']['tempCurveGPU4']))
-        tempCurveGPU.append(int(config['fanCurveBalanced']['tempCurveGPU5']))
-        tempCurveGPU.append(int(config['fanCurveBalanced']['tempCurveGPU6']))
+        tempCurve.append(int(config['fanCurveBalanced']['tempCurve1']))
+        tempCurve.append(int(config['fanCurveBalanced']['tempCurve2']))
+        tempCurve.append(int(config['fanCurveBalanced']['tempCurve3']))
+        tempCurve.append(int(config['fanCurveBalanced']['tempCurve4']))
+        tempCurve.append(int(config['fanCurveBalanced']['tempCurve5']))
+        tempCurve.append(int(config['fanCurveBalanced']['tempCurve6']))
     elif currentPowerMode == 1:
         fanCurve.append(int(config['fanCurvePerf']['fanCurve1']))
         fanCurve.append(int(config['fanCurvePerf']['fanCurve2']))
@@ -233,18 +209,12 @@ def getFanCurve():
         fanCurve.append(int(config['fanCurvePerf']['fanCurve4']))
         fanCurve.append(int(config['fanCurvePerf']['fanCurve5']))
         fanCurve.append(int(config['fanCurvePerf']['fanCurve6']))
-        tempCurveCPU.append(int(config['fanCurvePerf']['tempCurveCPU1']))
-        tempCurveCPU.append(int(config['fanCurvePerf']['tempCurveCPU2']))
-        tempCurveCPU.append(int(config['fanCurvePerf']['tempCurveCPU3']))
-        tempCurveCPU.append(int(config['fanCurvePerf']['tempCurveCPU4']))
-        tempCurveCPU.append(int(config['fanCurvePerf']['tempCurveCPU5']))
-        tempCurveCPU.append(int(config['fanCurvePerf']['tempCurveCPU6']))
-        tempCurveGPU.append(int(config['fanCurvePerf']['tempCurveGPU1']))
-        tempCurveGPU.append(int(config['fanCurvePerf']['tempCurveGPU2']))
-        tempCurveGPU.append(int(config['fanCurvePerf']['tempCurveGPU3']))
-        tempCurveGPU.append(int(config['fanCurvePerf']['tempCurveGPU4']))
-        tempCurveGPU.append(int(config['fanCurvePerf']['tempCurveGPU5']))
-        tempCurveGPU.append(int(config['fanCurvePerf']['tempCurveGPU6']))
+        tempCurve.append(int(config['fanCurvePerf']['tempCurve1']))
+        tempCurve.append(int(config['fanCurvePerf']['tempCurve2']))
+        tempCurve.append(int(config['fanCurvePerf']['tempCurve3']))
+        tempCurve.append(int(config['fanCurvePerf']['tempCurve4']))
+        tempCurve.append(int(config['fanCurvePerf']['tempCurve5']))
+        tempCurve.append(int(config['fanCurvePerf']['tempCurve6']))
     elif currentPowerMode == 2:
         fanCurve.append(int(config['fanCurveQuiet']['fanCurve1']))
         fanCurve.append(int(config['fanCurveQuiet']['fanCurve2']))
@@ -252,24 +222,18 @@ def getFanCurve():
         fanCurve.append(int(config['fanCurveQuiet']['fanCurve4']))
         fanCurve.append(int(config['fanCurveQuiet']['fanCurve5']))
         fanCurve.append(int(config['fanCurveQuiet']['fanCurve6']))
-        tempCurveCPU.append(int(config['fanCurveQuiet']['tempCurveCPU1']))
-        tempCurveCPU.append(int(config['fanCurveQuiet']['tempCurveCPU2']))
-        tempCurveCPU.append(int(config['fanCurveQuiet']['tempCurveCPU3']))
-        tempCurveCPU.append(int(config['fanCurveQuiet']['tempCurveCPU4']))
-        tempCurveCPU.append(int(config['fanCurveQuiet']['tempCurveCPU5']))
-        tempCurveCPU.append(int(config['fanCurveQuiet']['tempCurveCPU6']))
-        tempCurveGPU.append(int(config['fanCurveQuiet']['tempCurveGPU1']))
-        tempCurveGPU.append(int(config['fanCurveQuiet']['tempCurveGPU2']))
-        tempCurveGPU.append(int(config['fanCurveQuiet']['tempCurveGPU3']))
-        tempCurveGPU.append(int(config['fanCurveQuiet']['tempCurveGPU4']))
-        tempCurveGPU.append(int(config['fanCurveQuiet']['tempCurveGPU5']))
-        tempCurveGPU.append(int(config['fanCurveQuiet']['tempCurveGPU6']))
+        tempCurve.append(int(config['fanCurveQuiet']['tempCurve1']))
+        tempCurve.append(int(config['fanCurveQuiet']['tempCurve2']))
+        tempCurve.append(int(config['fanCurveQuiet']['tempCurve3']))
+        tempCurve.append(int(config['fanCurveQuiet']['tempCurve4']))
+        tempCurve.append(int(config['fanCurveQuiet']['tempCurve5']))
+        tempCurve.append(int(config['fanCurveQuiet']['tempCurve6']))
         
     
 
 def updateEntryes():
     global fanCurve
-    global tempCurveCPU
+    global tempCurve
     global tempCurrentGPU
 
     fanCurveEntry1.delete(0, END)
@@ -279,19 +243,13 @@ def updateEntryes():
     fanCurveEntry5.delete(0, END)
     fanCurveEntry6.delete(0, END)
 
-    tempCurveCPUEntry1.delete(0, END)
-    tempCurveCPUEntry2.delete(0, END)
-    tempCurveCPUEntry3.delete(0, END)
-    tempCurveCPUEntry4.delete(0, END)
-    tempCurveCPUEntry5.delete(0, END)
-    tempCurveCPUEntry6.delete(0, END)
+    tempCurveEntry1.delete(0, END)
+    tempCurveEntry2.delete(0, END)
+    tempCurveEntry3.delete(0, END)
+    tempCurveEntry4.delete(0, END)
+    tempCurveEntry5.delete(0, END)
+    tempCurveEntry6.delete(0, END)
 
-    tempCurveGPUEntry1.delete(0, END)
-    tempCurveGPUEntry2.delete(0, END)
-    tempCurveGPUEntry3.delete(0, END)
-    tempCurveGPUEntry4.delete(0, END)
-    tempCurveGPUEntry5.delete(0, END)
-    tempCurveGPUEntry6.delete(0, END)
 
     fanCurveEntry1.insert(0, fanCurve[0])
     fanCurveEntry2.insert(0, fanCurve[1])
@@ -300,24 +258,16 @@ def updateEntryes():
     fanCurveEntry5.insert(0, fanCurve[4])
     fanCurveEntry6.insert(0, fanCurve[5])
 
-    tempCurveCPUEntry1.insert(0, tempCurveCPU[0])
-    tempCurveCPUEntry2.insert(0, tempCurveCPU[1])
-    tempCurveCPUEntry3.insert(0, tempCurveCPU[2])
-    tempCurveCPUEntry4.insert(0, tempCurveCPU[3])
-    tempCurveCPUEntry5.insert(0, tempCurveCPU[4])
-    tempCurveCPUEntry6.insert(0, tempCurveCPU[5])
-
-    tempCurveGPUEntry1.insert(0, tempCurveGPU[0])
-    tempCurveGPUEntry2.insert(0, tempCurveGPU[1])
-    tempCurveGPUEntry3.insert(0, tempCurveGPU[2])
-    tempCurveGPUEntry4.insert(0, tempCurveGPU[3])
-    tempCurveGPUEntry5.insert(0, tempCurveGPU[4])
-    tempCurveGPUEntry6.insert(0, tempCurveGPU[5])
+    tempCurveEntry1.insert(0, tempCurve[0])
+    tempCurveEntry2.insert(0, tempCurve[1])
+    tempCurveEntry3.insert(0, tempCurve[2])
+    tempCurveEntry4.insert(0, tempCurve[3])
+    tempCurveEntry5.insert(0, tempCurve[4])
+    tempCurveEntry6.insert(0, tempCurve[5])
 
 def saveBtnPressed():
     global fanCurve
-    global tempCurveCPU
-    global tempCurveGPU
+    global tempCurve
     global currentPowerMode
     global config
 
@@ -331,18 +281,12 @@ def saveBtnPressed():
         config['fanCurveBalanced']['fanCurve4'] = fanCurveEntry4.get()
         config['fanCurveBalanced']['fanCurve5'] = fanCurveEntry5.get() 
         config['fanCurveBalanced']['fanCurve6'] = fanCurveEntry6.get()
-        config['fanCurveBalanced']['tempCurveCPU1'] = tempCurveCPUEntry1.get()
-        config['fanCurveBalanced']['tempCurveCPU2'] = tempCurveCPUEntry2.get()
-        config['fanCurveBalanced']['tempCurveCPU3'] = tempCurveCPUEntry3.get()
-        config['fanCurveBalanced']['tempCurveCPU4'] = tempCurveCPUEntry4.get()
-        config['fanCurveBalanced']['tempCurveCPU5'] = tempCurveCPUEntry5.get()
-        config['fanCurveBalanced']['tempCurveCPU6'] = tempCurveCPUEntry6.get()
-        config['fanCurveBalanced']['tempCurveGPU1'] = tempCurveGPUEntry1.get()
-        config['fanCurveBalanced']['tempCurveGPU2'] = tempCurveGPUEntry2.get()
-        config['fanCurveBalanced']['tempCurveGPU3'] = tempCurveGPUEntry3.get()
-        config['fanCurveBalanced']['tempCurveGPU4'] = tempCurveGPUEntry4.get()
-        config['fanCurveBalanced']['tempCurveGPU5'] = tempCurveGPUEntry5.get()
-        config['fanCurveBalanced']['tempCurveGPU6'] = tempCurveGPUEntry6.get()
+        config['fanCurveBalanced']['tempCurve1'] = tempCurveEntry1.get()
+        config['fanCurveBalanced']['tempCurve2'] = tempCurveEntry2.get()
+        config['fanCurveBalanced']['tempCurve3'] = tempCurveEntry3.get()
+        config['fanCurveBalanced']['tempCurve4'] = tempCurveEntry4.get()
+        config['fanCurveBalanced']['tempCurve5'] = tempCurveEntry5.get()
+        config['fanCurveBalanced']['tempCurve6'] = tempCurveEntry6.get()
     elif currentPowerMode == 1:
         config['fanCurvePerf']['fanCurve1'] = fanCurveEntry1.get()
         config['fanCurvePerf']['fanCurve2'] = fanCurveEntry2.get()
@@ -350,18 +294,12 @@ def saveBtnPressed():
         config['fanCurvePerf']['fanCurve4'] = fanCurveEntry4.get()
         config['fanCurvePerf']['fanCurve5'] = fanCurveEntry5.get() 
         config['fanCurvePerf']['fanCurve6'] = fanCurveEntry6.get()
-        config['fanCurvePerf']['tempCurveCPU1'] = tempCurveCPUEntry1.get()
-        config['fanCurvePerf']['tempCurveCPU2'] = tempCurveCPUEntry2.get()
-        config['fanCurvePerf']['tempCurveCPU3'] = tempCurveCPUEntry3.get()
-        config['fanCurvePerf']['tempCurveCPU4'] = tempCurveCPUEntry4.get()
-        config['fanCurvePerf']['tempCurveCPU5'] = tempCurveCPUEntry5.get()
-        config['fanCurvePerf']['tempCurveCPU6'] = tempCurveCPUEntry6.get()
-        config['fanCurvePerf']['tempCurveGPU1'] = tempCurveGPUEntry1.get()
-        config['fanCurvePerf']['tempCurveGPU2'] = tempCurveGPUEntry2.get()
-        config['fanCurvePerf']['tempCurveGPU3'] = tempCurveGPUEntry3.get()
-        config['fanCurvePerf']['tempCurveGPU4'] = tempCurveGPUEntry4.get()
-        config['fanCurvePerf']['tempCurveGPU5'] = tempCurveGPUEntry5.get()
-        config['fanCurvePerf']['tempCurveGPU6'] = tempCurveGPUEntry6.get()
+        config['fanCurvePerf']['tempCurve1'] = tempCurveEntry1.get()
+        config['fanCurvePerf']['tempCurve2'] = tempCurveEntry2.get()
+        config['fanCurvePerf']['tempCurve3'] = tempCurveEntry3.get()
+        config['fanCurvePerf']['tempCurve4'] = tempCurveEntry4.get()
+        config['fanCurvePerf']['tempCurve5'] = tempCurveEntry5.get()
+        config['fanCurvePerf']['tempCurve6'] = tempCurveEntry6.get()
     elif currentPowerMode == 2:
         config['fanCurveQuiet']['fanCurve1'] = fanCurveEntry1.get()
         config['fanCurveQuiet']['fanCurve2'] = fanCurveEntry2.get()
@@ -369,18 +307,12 @@ def saveBtnPressed():
         config['fanCurveQuiet']['fanCurve4'] = fanCurveEntry4.get()
         config['fanCurveQuiet']['fanCurve5'] = fanCurveEntry5.get() 
         config['fanCurveQuiet']['fanCurve6'] = fanCurveEntry6.get()
-        config['fanCurveQuiet']['tempCurveCPU1'] = tempCurveCPUEntry1.get()
-        config['fanCurveQuiet']['tempCurveCPU2'] = tempCurveCPUEntry2.get()
-        config['fanCurveQuiet']['tempCurveCPU3'] = tempCurveCPUEntry3.get()
-        config['fanCurveQuiet']['tempCurveCPU4'] = tempCurveCPUEntry4.get()
-        config['fanCurveQuiet']['tempCurveCPU5'] = tempCurveCPUEntry5.get()
-        config['fanCurveQuiet']['tempCurveCPU6'] = tempCurveCPUEntry6.get()
-        config['fanCurveQuiet']['tempCurveGPU1'] = tempCurveGPUEntry1.get()
-        config['fanCurveQuiet']['tempCurveGPU2'] = tempCurveGPUEntry2.get()
-        config['fanCurveQuiet']['tempCurveGPU3'] = tempCurveGPUEntry3.get()
-        config['fanCurveQuiet']['tempCurveGPU4'] = tempCurveGPUEntry4.get()
-        config['fanCurveQuiet']['tempCurveGPU5'] = tempCurveGPUEntry5.get()
-        config['fanCurveQuiet']['tempCurveGPU6'] = tempCurveGPUEntry6.get()
+        config['fanCurveQuiet']['tempCurve1'] = tempCurveEntry1.get()
+        config['fanCurveQuiet']['tempCurve2'] = tempCurveEntry2.get()
+        config['fanCurveQuiet']['tempCurve3'] = tempCurveEntry3.get()
+        config['fanCurveQuiet']['tempCurve4'] = tempCurveEntry4.get()
+        config['fanCurveQuiet']['tempCurve5'] = tempCurveEntry5.get()
+        config['fanCurveQuiet']['tempCurve6'] = tempCurveEntry6.get()
 
     with open(cwd+r"/config.ini", 'w') as configfile:
         config.write(configfile)
@@ -391,35 +323,28 @@ def saveBtnPressed():
 def updateFanCurve():
     global fanCurveCurrent
     global fanCurve
+    global useTempCPU
+    global tempCurrent
     global tempCurrentCPU
-    global tempCurveGPU
+    global tempCurrentGPU
 
-    if tempCurrentCPU >= tempCurrentGPU:
-        if tempCurrentCPU >= tempCurveCPU[0] and tempCurrentCPU < tempCurveCPU[1]:
-            fanCurveCurrent = fanCurve[0]/100
-        elif tempCurrentCPU >= tempCurveCPU[1] and tempCurrentCPU < tempCurveCPU[2]:
-            fanCurveCurrent = fanCurve[1]/100
-        elif tempCurrentCPU >= tempCurveCPU[2] and tempCurrentCPU < tempCurveCPU[3]:
-            fanCurveCurrent = fanCurve[2]/100
-        elif tempCurrentCPU >= tempCurveCPU[3] and tempCurrentCPU < tempCurveCPU[4]:
-            fanCurveCurrent = fanCurve[3]/100
-        elif tempCurrentCPU >= tempCurveCPU[4] and tempCurrentCPU < tempCurveCPU[5]:
-            fanCurveCurrent = fanCurve[4]/100
-        elif tempCurrentCPU >= tempCurveCPU[5]:
-            fanCurveCurrent = fanCurve[5]/100
+    if useTempCPU:
+        tempCurrent = tempCurrentCPU
     else:
-        if tempCurrentGPU >= tempCurveGPU[0] and tempCurrentGPU < tempCurveGPU[1]:
-            fanCurveCurrent = fanCurve[0]/100
-        elif tempCurrentGPU >= tempCurveGPU[1] and tempCurrentGPU < tempCurveGPU[2]:
-            fanCurveCurrent = fanCurve[1]/100
-        elif tempCurrentGPU >= tempCurveGPU[2] and tempCurrentGPU < tempCurveGPU[3]:
-            fanCurveCurrent = fanCurve[2]/100
-        elif tempCurrentGPU >= tempCurveGPU[3] and tempCurrentGPU < tempCurveGPU[4]:
-            fanCurveCurrent = fanCurve[3]/100
-        elif tempCurrentGPU >= tempCurveGPU[4] and tempCurrentGPU < tempCurveGPU[5]:
-            fanCurveCurrent = fanCurve[4]/100
-        elif tempCurrentGPU >= tempCurveGPU[5]:
-            fanCurveCurrent = fanCurve[5]/100
+        tempCurrent = tempCurrentGPU
+
+    if tempCurrent >= tempCurve[0] and tempCurrent < tempCurve[1]:
+        fanCurveCurrent = fanCurve[0]/100
+    elif tempCurrent >= tempCurve[1] and tempCurrent < tempCurve[2]:
+        fanCurveCurrent = fanCurve[1]/100
+    elif tempCurrent >= tempCurve[2] and tempCurrent < tempCurve[3]:
+        fanCurveCurrent = fanCurve[2]/100
+    elif tempCurrent >= tempCurve[3] and tempCurrent < tempCurve[4]:
+        fanCurveCurrent = fanCurve[3]/100
+    elif tempCurrent >= tempCurve[4] and tempCurrent < tempCurve[5]:
+        fanCurveCurrent = fanCurve[4]/100
+    elif tempCurrent >= tempCurve[5]:
+        fanCurveCurrent = fanCurve[5]/100
 
     f = open("/sys/module/LegionController/parameters/cFanCurve", "w")
     f.write(str(fanCurveCurrent)[:-2])
@@ -430,25 +355,25 @@ def updateFanCurve():
 def updateCanvas():
     #axes.x = RPM/100*15.554
     #axes.y = 500-(C*5+25)
-    global graphRPM
-    global graphTemp
-    graphRPM = []
-    graphTemp = []
+    global graphX
+    global graphY
+    graphX = []
+    graphY = []
 
     fanCurveCanvas.delete("all")
 
-    graphRPM.append(fanCurve[0]/100*15.554)
-    graphRPM.append(fanCurve[1]/100*15.554)
-    graphRPM.append(fanCurve[2]/100*15.554)
-    graphRPM.append(fanCurve[3]/100*15.554)
-    graphRPM.append(fanCurve[4]/100*15.554)
-    graphRPM.append(fanCurve[5]/100*15.554)
-    graphTemp.append(500-(tempCurveCPU[0]*5+25))
-    graphTemp.append(500-(tempCurveCPU[1]*5+25))
-    graphTemp.append(500-(tempCurveCPU[2]*5+25))
-    graphTemp.append(500-(tempCurveCPU[3]*5+25))
-    graphTemp.append(500-(tempCurveCPU[4]*5+25))
-    graphTemp.append(500-(tempCurveCPU[5]*5+25))
+    graphX.append(fanCurve[0]/100*15.554)
+    graphX.append(fanCurve[1]/100*15.554)
+    graphX.append(fanCurve[2]/100*15.554)
+    graphX.append(fanCurve[3]/100*15.554)
+    graphX.append(fanCurve[4]/100*15.554)
+    graphX.append(fanCurve[5]/100*15.554)
+    graphY.append(500-(tempCurve[0]*5+25))
+    graphY.append(500-(tempCurve[1]*5+25))
+    graphY.append(500-(tempCurve[2]*5+25))
+    graphY.append(500-(tempCurve[3]*5+25))
+    graphY.append(500-(tempCurve[4]*5+25))
+    graphY.append(500-(tempCurve[5]*5+25))
 
     for i in arange(0, 700, 15.554):
         fanCurveCanvas.create_line([(i, 0), (i, 475)], tag='grid_line', fill='#adaaaa', width=0.5)
@@ -456,12 +381,19 @@ def updateCanvas():
     for i in arange(0, 475, 25):
         fanCurveCanvas.create_line([(0, i), (725, i)], tag='grid_line', fill='#adaaaa', width=0.5)
 
-    fanCurveCanvas.create_line(0,475,graphRPM[0],graphTemp[0], fill='green', width=5)
-    fanCurveCanvas.create_line(graphRPM[0],graphTemp[0],graphRPM[1],graphTemp[1], fill='green', width=5)
-    fanCurveCanvas.create_line(graphRPM[1],graphTemp[1],graphRPM[2],graphTemp[2], fill='green', width=5)
-    fanCurveCanvas.create_line(graphRPM[2],graphTemp[2],graphRPM[3],graphTemp[3], fill='green', width=5)
-    fanCurveCanvas.create_line(graphRPM[3],graphTemp[3],graphRPM[4],graphTemp[4], fill='green', width=5)
-    fanCurveCanvas.create_line(graphRPM[4],graphTemp[4],graphRPM[5],graphTemp[5], fill='green', width=5)
+    fanCurveCanvas.create_line(0,475,graphX[0],graphY[0], fill='green', width=5)
+    fanCurveCanvas.create_line(graphX[0],graphY[0],graphX[1],graphY[1], fill='green', width=5, smooth=1)
+    fanCurveCanvas.create_line(graphX[1],graphY[1],graphX[2],graphY[2], fill='green', width=5, smooth=1)
+    fanCurveCanvas.create_line(graphX[2],graphY[2],graphX[3],graphY[3], fill='green', width=5, smooth=1)
+    fanCurveCanvas.create_line(graphX[3],graphY[3],graphX[4],graphY[4], fill='green', width=5, smooth=1)
+    fanCurveCanvas.create_line(graphX[4],graphY[4],graphX[5],graphY[5], fill='green', width=5, smooth=1)
+
+def inputCanvas(event):
+    x,y = root.winfo_pointerxy()
+    widget = root.winfo_containing(x,y)
+    if(str(widget) == ".!ctkframe.!ctkframe.!ctkcanvas2"):
+        print(widget, ' ', x, ' ', y)
+
 
 #Images
 #Window icon
@@ -587,11 +519,9 @@ fanCurveLabelTemp10.place(y=25, height=50, width=50)
 fanCurveText = CTkLabel(fanCurveFrame, text='Fan Speed (RPM)', text_font=("Arial", 15))
 fanCurveText.place(x=5, y=15, height=30, width=175)
 
-tempCurveCPUText = CTkLabel(fanCurveFrame, text='CPU Temp (°C)', text_font=("Arial", 15))
-tempCurveCPUText.place(x=5, y=55, height=30, width=175)
+tempCurveText = CTkLabel(fanCurveFrame, text='Temp (°C)', text_font=("Arial", 15))
+tempCurveText.place(x=5, y=55, height=30, width=175)
 
-tempCurveGPUText = CTkLabel(fanCurveFrame, text='GPU Temp (°C)', text_font=("Arial", 15))
-tempCurveGPUText.place(x=5, y=95, height=30, width=175)
 
 fanCurveEntry1 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
 fanCurveEntry1.place(x=180, y=15, height=30, width=70)
@@ -612,41 +542,23 @@ fanCurveEntry6 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='cente
 fanCurveEntry6.place(x=580, y=15, height=30, width=70)
 
 
-tempCurveCPUEntry1 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-tempCurveCPUEntry1.place(x=180, y=55, height=30, width=70)
+tempCurveEntry1 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
+tempCurveEntry1.place(x=180, y=55, height=30, width=70)
 
-tempCurveCPUEntry2 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-tempCurveCPUEntry2.place(x=260, y=55, height=30, width=70)
+tempCurveEntry2 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
+tempCurveEntry2.place(x=260, y=55, height=30, width=70)
 
-tempCurveCPUEntry3 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-tempCurveCPUEntry3.place(x=340, y=55, height=30, width=70)
+tempCurveEntry3 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
+tempCurveEntry3.place(x=340, y=55, height=30, width=70)
 
-tempCurveCPUEntry4 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-tempCurveCPUEntry4.place(x=420, y=55, height=30, width=70)
+tempCurveEntry4 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
+tempCurveEntry4.place(x=420, y=55, height=30, width=70)
 
-tempCurveCPUEntry5 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-tempCurveCPUEntry5.place(x=500, y=55, height=30, width=70)
+tempCurveEntry5 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
+tempCurveEntry5.place(x=500, y=55, height=30, width=70)
 
-tempCurveCPUEntry6 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-tempCurveCPUEntry6.place(x=580, y=55, height=30, width=70)
-
-tempCurveGPUEntry1 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-tempCurveGPUEntry1.place(x=180, y=95, height=30, width=70)
-
-tempCurveGPUEntry2 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-tempCurveGPUEntry2.place(x=260, y=95, height=30, width=70)
-
-tempCurveGPUEntry3 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-tempCurveGPUEntry3.place(x=340, y=95, height=30, width=70)
-
-tempCurveGPUEntry4 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-tempCurveGPUEntry4.place(x=420, y=95, height=30, width=70)
-
-tempCurveGPUEntry5 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-tempCurveGPUEntry5.place(x=500, y=95, height=30, width=70)
-
-tempCurveGPUEntry6 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-tempCurveGPUEntry6.place(x=580, y=95, height=30, width=70)
+tempCurveEntry6 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
+tempCurveEntry6.place(x=580, y=55, height=30, width=70)
 
 
 #Current Data Frame elements
@@ -701,5 +613,6 @@ settingsBtn.place(x=550, width=90, height=90, y=5)
 getCurrentPowerMode()
 getCurrentData()
 updateFanCurve()
+root.bind("<ButtonRelease-1>", inputCanvas)
 
 root.mainloop()
