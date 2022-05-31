@@ -184,7 +184,7 @@ def loadConfig():
 
 def getFanCurve():
     #axes.x = RPM/100*15.554
-    #axes.y = 500-(C*5+25)
+    #axes.y = 500-(C*5)
     global fanCurve
     global tempCurve
     global currentPowerMode
@@ -383,7 +383,6 @@ def updateCanvas():
     for i in arange(0, 525, 25):
         fanCurveCanvas.create_line([(0, i), (725, i)], tag='grid_line', fill='#adaaaa', width=0.5)
 
-    #fanCurveCanvas.create_line(0,475,graphX[0],graphY[0], fill='green', width=5)
     fanCurveCanvas.create_line(graphX[0],graphY[0],graphX[1],graphY[1], fill='green', width=5, smooth=1)
     fanCurveCanvas.create_line(graphX[1],graphY[1],graphX[2],graphY[2], fill='green', width=5, smooth=1)
     fanCurveCanvas.create_line(graphX[2],graphY[2],graphX[3],graphY[3], fill='green', width=5, smooth=1)
@@ -418,6 +417,8 @@ def getCurrentPoint(event):
                 currentPoint = i
 
 def inputCanvas(event):
+    #RPM = (axes.x/15.554)*100
+    #C = (525-axes.y)/5
     global graphX
     global graphY
     global currentPoint
@@ -429,6 +430,9 @@ def inputCanvas(event):
         if currentPoint != -1:
             graphX[currentPoint] = (15.554 * round(event.x / 15.554))
             graphY[currentPoint] = (25 * round(event.y / 25))
+            fanCurve[currentPoint] = int(graphX[currentPoint] / 15.554 * 100)
+            tempCurve[currentPoint] = int((525 - graphY[currentPoint]) / 5)
+            updateEntryes()
             updateCanvas()
 
 
