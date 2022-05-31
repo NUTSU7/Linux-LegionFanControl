@@ -1,8 +1,6 @@
 #!/usr/bin/python
 from tkinter import *
 from numpy import *
-from turtle import window_width
-from unittest import TextTestResult
 from customtkinter import *
 from PIL import ImageTk, Image
 import os, time, configparser, customtkinter
@@ -42,6 +40,9 @@ fanCurvePerf = []
 graphX = []
 graphY = []
 useTempCPU = True
+gridPointsX = [0.0, 15.554, 31.108, 46.662, 62.216, 77.77, 93.324, 108.878, 124.432, 139.986, 155.54, 171.094, 186.648, 202.202, 217.756, 233.31, 248.864, 264.418, 279.972, 295.526, 311.08, 326.634, 342.188, 357.742, 373.296, 388.85, 404.404, 419.958, 435.512, 451.06600000000003, 466.62, 482.17400000000004, 497.728, 513.282, 528.836, 544.39, 559.944, 575.498, 591.052, 606.606, 622.16, 637.714, 653.268, 668.822, 684.376, 699.9300000000001]
+gridPointsY = [0, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500]
+currentPoint = -1
 
 #Functions
 def getCurrentPowerMode():
@@ -396,17 +397,38 @@ def updateCanvas():
     fanCurveCanvas.create_oval(graphX[4]-3,graphY[4]-3,graphX[4]+3,graphY[4]+3,fill="black", width=3)
     fanCurveCanvas.create_oval(graphX[5]-3,graphY[5]-3,graphX[5]+3,graphY[5]+3,fill="black", width=3)
 
-def inputCanvas(event):
+def getCurrentPoint(event):
     global graphX
     global graphY
+    global gridPointsX
+    global gridPointsY
+    global currentPoint
+
+    currentPoint = -1
 
     x,y = root.winfo_pointerxy()
     widget = root.winfo_containing(x,y)
 
     if(str(widget) == ".!ctkframe.!ctkframe.!ctkcanvas2"):
-        x = event.x
-        y = event.y
-        print(widget, ' ', x, ' ', y)
+        x = (15.554 * round(event.x / 15.554))
+        y = (25 * round(event.y / 25))
+
+        for i in range(0, 6):
+            if x == graphX[i] and y == graphY[i]:
+                currentPoint = i
+
+def inputCanvas(event):
+    global graphX
+    global graphY
+    global currentPoint
+
+    x,y = root.winfo_pointerxy()
+    widget = root.winfo_containing(x,y)
+
+    if(str(widget) == ".!ctkframe.!ctkframe.!ctkcanvas2"):
+        graphX[currentPoint] = (15.554 * round(event.x / 15.554))
+        graphY[currentPoint] = (25 * round(event.y / 25))
+        updateCanvas()
 
 
 #Images
@@ -630,6 +652,7 @@ settingsBtn.place(x=550, width=90, height=90, y=5)
 getCurrentPowerMode()
 getCurrentData()
 updateFanCurve()
+root.bind("<ButtonPress-1>", getCurrentPoint)
 root.bind("<ButtonRelease-1>", inputCanvas)
 
 root.mainloop()
