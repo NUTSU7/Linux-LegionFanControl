@@ -426,9 +426,10 @@ def inputCanvas(event):
     widget = root.winfo_containing(x,y)
 
     if(str(widget) == ".!ctkframe.!ctkframe.!ctkcanvas2"):
-        graphX[currentPoint] = (15.554 * round(event.x / 15.554))
-        graphY[currentPoint] = (25 * round(event.y / 25))
-        updateCanvas()
+        if currentPoint != -1:
+            graphX[currentPoint] = (15.554 * round(event.x / 15.554))
+            graphY[currentPoint] = (25 * round(event.y / 25))
+            updateCanvas()
 
 
 #Images
