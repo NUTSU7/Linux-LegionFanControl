@@ -382,6 +382,7 @@ def getCurrentPoint(event):
             if x == graphX[i] and y == graphY[i]:
                 currentPoint = i
 
+
 def inputCanvas(event):
     #RPM = (axes.x/15.554)*100
     #C = (525-axes.y)/5
@@ -394,11 +395,24 @@ def inputCanvas(event):
 
     if(str(widget) == ".!ctkframe.!ctkframe.!ctkcanvas2"):
         if currentPoint != -1:
-            graphX[currentPoint] = (15.554 * round(event.x / 15.554))
-            graphY[currentPoint] = (25 * round(event.y / 25))
-            fanCurve[currentPoint] = int(graphX[currentPoint] / 15.554 * 100)
-            tempCurve[currentPoint] = int((525 - graphY[currentPoint]) / 5)
+            x = (15.554 * round(event.x / 15.554))
+            y = (25 * round(event.y / 25))
+            if currentPoint != 0:
+                if (x >= graphX[currentPoint-1] and y <= graphY[currentPoint-1]) and (x <= graphX[currentPoint+1] and y >= graphY[currentPoint+1]):
+                    if (x != graphX[currentPoint-1] and y != graphY[currentPoint-1]) or (x == graphX[currentPoint-1] and y != graphY[currentPoint-1]) or (x != graphX[currentPoint-1] and y == graphY[currentPoint-1]):
+                        if (x != graphX[currentPoint+1] and y != graphY[currentPoint+1]) or (x == graphX[currentPoint+1] and y != graphY[currentPoint+1]) or (x != graphX[currentPoint+1] and y == graphY[currentPoint+1]):
+                            graphX[currentPoint] = x
+                            graphY[currentPoint] = y
+                            fanCurve[currentPoint] = int(graphX[currentPoint] / 15.554 * 100)
+                            tempCurve[currentPoint] = int((525 - graphY[currentPoint]) / 5)
+            elif currentPoint == 0:
+                graphX[currentPoint] = x
+                graphY[currentPoint] = y
+                fanCurve[currentPoint] = int(graphX[currentPoint] / 15.554 * 100)
+                tempCurve[currentPoint] = int((525 - graphY[currentPoint]) / 5)
+
             updateCanvas()
+
 
 def insertModule():
     global moduleDir
