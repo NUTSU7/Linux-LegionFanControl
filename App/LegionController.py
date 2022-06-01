@@ -56,10 +56,10 @@ def getCurrentPowerMode():
     if previousPowerMode != currentPowerMode:
         if currentPowerMode == 0: 
             perfBtn.configure(fg_color='#1c94cf')
-            balancedBtn.configure(fg_color='#2333B4')
+            balancedBtn.configure(fg_color='#7DC8E9')
             quietBtn.configure(fg_color='#1c94cf')
         elif currentPowerMode == 1: 
-            perfBtn.configure(fg_color='#2333B4')
+            perfBtn.configure(fg_color='#F11515')
             balancedBtn.configure(fg_color='#1c94cf')
             quietBtn.configure(fg_color='#1c94cf')
         elif currentPowerMode == 2: 
