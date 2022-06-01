@@ -32,7 +32,7 @@ struct DEVICE_DATA GKCN =
 };
 
 uint8_t *virt;
-int i, pFanCurve;
+int i, pFanCurve, startUpPowerMode;
 
 static int cPowerMode = -1;
 static int cFanCurve = -1;
@@ -194,12 +194,14 @@ int init_module(void)
     pr_info("Creating hwmon binding");
 
     /* A non 0 return means init_module failed; module can't be loaded. */
+    startUpPowerMode = *(virt + biosModel->powerMode);
     return 0;
 }
 
 void cleanup_module(void)
 
 {
+    *(virt + biosModel->powerMode) = startUpPowerMode;
     kobject_put(LegionController);
     pr_info("Legion Fan %s Unloaded \n", LegionControllerVer);
 }
