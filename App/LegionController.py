@@ -14,7 +14,7 @@ config.add_section('fanCurveBalanced')
 config.add_section('fanCurvePerf')
 
 root = CTk()
-root.geometry('800x900')
+root.geometry('800x800')
 root.title('LegionController')
 root.resizable(False, False)
 
@@ -67,7 +67,6 @@ def getCurrentPowerMode():
             balancedBtn.configure(fg_color='#1c94cf')
             quietBtn.configure(fg_color='#2333B4')
         getFanCurve()
-        updateEntryes()
         updateCanvas()
     root.after(2000, getCurrentPowerMode)
 
@@ -250,40 +249,6 @@ def getFanCurve():
     graphY.append(525-(tempCurve[5]*5))
     
 
-def updateEntryes():
-    global fanCurve
-    global tempCurve
-    global tempCurrentGPU
-
-    fanCurveEntry1.delete(0, END)
-    fanCurveEntry2.delete(0, END)
-    fanCurveEntry3.delete(0, END)
-    fanCurveEntry4.delete(0, END)
-    fanCurveEntry5.delete(0, END)
-    fanCurveEntry6.delete(0, END)
-
-    tempCurveEntry1.delete(0, END)
-    tempCurveEntry2.delete(0, END)
-    tempCurveEntry3.delete(0, END)
-    tempCurveEntry4.delete(0, END)
-    tempCurveEntry5.delete(0, END)
-    tempCurveEntry6.delete(0, END)
-
-
-    fanCurveEntry1.insert(0, fanCurve[0])
-    fanCurveEntry2.insert(0, fanCurve[1])
-    fanCurveEntry3.insert(0, fanCurve[2])
-    fanCurveEntry4.insert(0, fanCurve[3])
-    fanCurveEntry5.insert(0, fanCurve[4])
-    fanCurveEntry6.insert(0, fanCurve[5])
-
-    tempCurveEntry1.insert(0, tempCurve[0])
-    tempCurveEntry2.insert(0, tempCurve[1])
-    tempCurveEntry3.insert(0, tempCurve[2])
-    tempCurveEntry4.insert(0, tempCurve[3])
-    tempCurveEntry5.insert(0, tempCurve[4])
-    tempCurveEntry6.insert(0, tempCurve[5])
-
 def saveBtnPressed():
     global fanCurve
     global tempCurve
@@ -294,50 +259,49 @@ def saveBtnPressed():
     root.after(500, lambda: saveBtn.configure(fg_color='#1c94cf'))
 
     if currentPowerMode == 0:
-        config['fanCurveBalanced']['fanCurve1'] = fanCurveEntry1.get()
-        config['fanCurveBalanced']['fanCurve2'] = fanCurveEntry2.get()
-        config['fanCurveBalanced']['fanCurve3'] = fanCurveEntry3.get()
-        config['fanCurveBalanced']['fanCurve4'] = fanCurveEntry4.get()
-        config['fanCurveBalanced']['fanCurve5'] = fanCurveEntry5.get() 
-        config['fanCurveBalanced']['fanCurve6'] = fanCurveEntry6.get()
-        config['fanCurveBalanced']['tempCurve1'] = tempCurveEntry1.get()
-        config['fanCurveBalanced']['tempCurve2'] = tempCurveEntry2.get()
-        config['fanCurveBalanced']['tempCurve3'] = tempCurveEntry3.get()
-        config['fanCurveBalanced']['tempCurve4'] = tempCurveEntry4.get()
-        config['fanCurveBalanced']['tempCurve5'] = tempCurveEntry5.get()
-        config['fanCurveBalanced']['tempCurve6'] = tempCurveEntry6.get()
+        config['fanCurveBalanced']['fanCurve1'] = str(fanCurve[0])
+        config['fanCurveBalanced']['fanCurve2'] = str(fanCurve[1])
+        config['fanCurveBalanced']['fanCurve3'] = str(fanCurve[2])
+        config['fanCurveBalanced']['fanCurve4'] = str(fanCurve[3])
+        config['fanCurveBalanced']['fanCurve5'] = str(fanCurve[4]) 
+        config['fanCurveBalanced']['fanCurve6'] = str(fanCurve[5])
+        config['fanCurveBalanced']['tempCurve1'] = str(tempCurve[0])
+        config['fanCurveBalanced']['tempCurve2'] = str(tempCurve[1])
+        config['fanCurveBalanced']['tempCurve3'] = str(tempCurve[2])
+        config['fanCurveBalanced']['tempCurve4'] = str(tempCurve[3])
+        config['fanCurveBalanced']['tempCurve5'] = str(tempCurve[4])
+        config['fanCurveBalanced']['tempCurve6'] = str(tempCurve[5])
     elif currentPowerMode == 1:
-        config['fanCurvePerf']['fanCurve1'] = fanCurveEntry1.get()
-        config['fanCurvePerf']['fanCurve2'] = fanCurveEntry2.get()
-        config['fanCurvePerf']['fanCurve3'] = fanCurveEntry3.get()
-        config['fanCurvePerf']['fanCurve4'] = fanCurveEntry4.get()
-        config['fanCurvePerf']['fanCurve5'] = fanCurveEntry5.get() 
-        config['fanCurvePerf']['fanCurve6'] = fanCurveEntry6.get()
-        config['fanCurvePerf']['tempCurve1'] = tempCurveEntry1.get()
-        config['fanCurvePerf']['tempCurve2'] = tempCurveEntry2.get()
-        config['fanCurvePerf']['tempCurve3'] = tempCurveEntry3.get()
-        config['fanCurvePerf']['tempCurve4'] = tempCurveEntry4.get()
-        config['fanCurvePerf']['tempCurve5'] = tempCurveEntry5.get()
-        config['fanCurvePerf']['tempCurve6'] = tempCurveEntry6.get()
+        config['fanCurvePerf']['fanCurve1'] = str(fanCurve[0])
+        config['fanCurvePerf']['fanCurve2'] = str(fanCurve[1])
+        config['fanCurvePerf']['fanCurve3'] = str(fanCurve[2])
+        config['fanCurvePerf']['fanCurve4'] = str(fanCurve[3])
+        config['fanCurvePerf']['fanCurve5'] = str(fanCurve[4]) 
+        config['fanCurvePerf']['fanCurve6'] = str(fanCurve[5])
+        config['fanCurvePerf']['tempCurve1'] = str(tempCurve[0])
+        config['fanCurvePerf']['tempCurve2'] = str(tempCurve[1])
+        config['fanCurvePerf']['tempCurve3'] = str(tempCurve[2])
+        config['fanCurvePerf']['tempCurve4'] = str(tempCurve[3])
+        config['fanCurvePerf']['tempCurve5'] = str(tempCurve[4])
+        config['fanCurvePerf']['tempCurve6'] = str(tempCurve[5])
     elif currentPowerMode == 2:
-        config['fanCurveQuiet']['fanCurve1'] = fanCurveEntry1.get()
-        config['fanCurveQuiet']['fanCurve2'] = fanCurveEntry2.get()
-        config['fanCurveQuiet']['fanCurve3'] = fanCurveEntry3.get()
-        config['fanCurveQuiet']['fanCurve4'] = fanCurveEntry4.get()
-        config['fanCurveQuiet']['fanCurve5'] = fanCurveEntry5.get() 
-        config['fanCurveQuiet']['fanCurve6'] = fanCurveEntry6.get()
-        config['fanCurveQuiet']['tempCurve1'] = tempCurveEntry1.get()
-        config['fanCurveQuiet']['tempCurve2'] = tempCurveEntry2.get()
-        config['fanCurveQuiet']['tempCurve3'] = tempCurveEntry3.get()
-        config['fanCurveQuiet']['tempCurve4'] = tempCurveEntry4.get()
-        config['fanCurveQuiet']['tempCurve5'] = tempCurveEntry5.get()
-        config['fanCurveQuiet']['tempCurve6'] = tempCurveEntry6.get()
+        config['fanCurveQuiet']['fanCurve1'] = str(fanCurve[0])
+        config['fanCurveQuiet']['fanCurve2'] = str(fanCurve[1])
+        config['fanCurveQuiet']['fanCurve3'] = str(fanCurve[2])
+        config['fanCurveQuiet']['fanCurve4'] = str(fanCurve[3])
+        config['fanCurveQuiet']['fanCurve5'] = str(fanCurve[4]) 
+        config['fanCurveQuiet']['fanCurve6'] = str(fanCurve[5])
+        config['fanCurveQuiet']['tempCurve1'] = str(tempCurve[0])
+        config['fanCurveQuiet']['tempCurve2'] = str(tempCurve[1])
+        config['fanCurveQuiet']['tempCurve3'] = str(tempCurve[2])
+        config['fanCurveQuiet']['tempCurve4'] = str(tempCurve[3])
+        config['fanCurveQuiet']['tempCurve5'] = str(tempCurve[4])
+        config['fanCurveQuiet']['tempCurve6'] = str(tempCurve[5])
 
     with open(cwd+r"/config.ini", 'w') as configfile:
         config.write(configfile)
 
     getFanCurve()
-    updateEntryes()
 
 def updateFanCurve():
     global fanCurveCurrent
@@ -432,7 +396,6 @@ def inputCanvas(event):
             graphY[currentPoint] = (25 * round(event.y / 25))
             fanCurve[currentPoint] = int(graphX[currentPoint] / 15.554 * 100)
             tempCurve[currentPoint] = int((525 - graphY[currentPoint]) / 5)
-            updateEntryes()
             updateCanvas()
 
 
@@ -467,21 +430,18 @@ loadConfig()
 
 # Main Frames
 page = CTkFrame(root)
-page.place(height=800, relwidth=1)
+page.place(height=700, relwidth=1)
 
 modes = CTkFrame(root)
-modes.place(y=800, height=100, relwidth=1)
+modes.place(y=700, height=100, relwidth=1)
 
 #Page Frames
 
 fanCurveGraph = CTkFrame(page)
 fanCurveGraph.place(width=800, height=600)
 
-fanCurveFrame = CTkFrame(page)
-fanCurveFrame.place(relwidth=1, height=150, y=600)
-
 currentDataFrame = CTkFrame(page)
-currentDataFrame.place(y=700, height=100, relwidth=1)
+currentDataFrame.place(y=600, height=100, relwidth=1)
 
 # Fan Curve Graph
 
@@ -557,52 +517,6 @@ fanCurveLabelTemp9.place(y=75, height=50, width=50)
 
 fanCurveLabelTemp10 = CTkLabel(fanCurveGraph, text='100', text_font=("Arial", 12))
 fanCurveLabelTemp10.place(y=25, height=50, width=50)
-
-
-# Fan Curve Input Left Frame elements
-fanCurveText = CTkLabel(fanCurveFrame, text='Fan Speed (RPM)', text_font=("Arial", 15))
-fanCurveText.place(x=5, y=15, height=30, width=175)
-
-tempCurveText = CTkLabel(fanCurveFrame, text='Temp (°C)', text_font=("Arial", 15))
-tempCurveText.place(x=5, y=55, height=30, width=175)
-
-
-fanCurveEntry1 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-fanCurveEntry1.place(x=180, y=15, height=30, width=70)
-
-fanCurveEntry2 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-fanCurveEntry2.place(x=260, y=15, height=30, width=70)
-
-fanCurveEntry3 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-fanCurveEntry3.place(x=340, y=15, height=30, width=70)
-
-fanCurveEntry4 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-fanCurveEntry4.place(x=420, y=15, height=30, width=70)
-
-fanCurveEntry5 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-fanCurveEntry5.place(x=500, y=15, height=30, width=70)
-
-fanCurveEntry6 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-fanCurveEntry6.place(x=580, y=15, height=30, width=70)
-
-
-tempCurveEntry1 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-tempCurveEntry1.place(x=180, y=55, height=30, width=70)
-
-tempCurveEntry2 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-tempCurveEntry2.place(x=260, y=55, height=30, width=70)
-
-tempCurveEntry3 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-tempCurveEntry3.place(x=340, y=55, height=30, width=70)
-
-tempCurveEntry4 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-tempCurveEntry4.place(x=420, y=55, height=30, width=70)
-
-tempCurveEntry5 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-tempCurveEntry5.place(x=500, y=55, height=30, width=70)
-
-tempCurveEntry6 = CTkEntry(fanCurveFrame, text_font=("Arial", 15), justify='center')
-tempCurveEntry6.place(x=580, y=55, height=30, width=70)
 
 
 #Current Data Frame elements
