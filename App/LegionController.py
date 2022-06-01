@@ -347,11 +347,11 @@ def updateCanvas():
     for i in arange(0, 525, 25):
         fanCurveCanvas.create_line([(0, i), (725, i)], tag='grid_line', fill='#000000', width=0.5)
 
-    fanCurveCanvas.create_line(graphX[0],graphY[0],graphX[1],graphY[1], fill='green', width=5, smooth=1)
-    fanCurveCanvas.create_line(graphX[1],graphY[1],graphX[2],graphY[2], fill='green', width=5, smooth=1)
-    fanCurveCanvas.create_line(graphX[2],graphY[2],graphX[3],graphY[3], fill='green', width=5, smooth=1)
-    fanCurveCanvas.create_line(graphX[3],graphY[3],graphX[4],graphY[4], fill='green', width=5, smooth=1)
-    fanCurveCanvas.create_line(graphX[4],graphY[4],graphX[5],graphY[5], fill='green', width=5, smooth=1)
+    fanCurveCanvas.create_line(graphX[0],graphY[0],graphX[1],graphY[1], fill='#1c94cf', width=5, smooth=1)
+    fanCurveCanvas.create_line(graphX[1],graphY[1],graphX[2],graphY[2], fill='#1c94cf', width=5, smooth=1)
+    fanCurveCanvas.create_line(graphX[2],graphY[2],graphX[3],graphY[3], fill='#1c94cf', width=5, smooth=1)
+    fanCurveCanvas.create_line(graphX[3],graphY[3],graphX[4],graphY[4], fill='#1c94cf', width=5, smooth=1)
+    fanCurveCanvas.create_line(graphX[4],graphY[4],graphX[5],graphY[5], fill='#1c94cf', width=5, smooth=1)
 
     fanCurveCanvas.create_oval(graphX[0]-3,graphY[0]-3,graphX[0]+3,graphY[0]+3,fill="black", width=3)
     fanCurveCanvas.create_oval(graphX[1]-3,graphY[1]-3,graphX[1]+3,graphY[1]+3,fill="black", width=3)
@@ -394,9 +394,9 @@ def inputCanvas(event):
             x = (15.554 * round(event.x / 15.554))
             y = (25 * round(event.y / 25))
             if (currentPoint == 0) or (x >= graphX[currentPoint-1] and y <= graphY[currentPoint-1]):
-                if (x <= graphX[currentPoint+1] and y >= graphY[currentPoint+1]):
-                    if (currentPoint ==0) or ((x != graphX[currentPoint-1] and y != graphY[currentPoint-1]) or (x == graphX[currentPoint-1] and y != graphY[currentPoint-1]) or (x != graphX[currentPoint-1] and y == graphY[currentPoint-1])):
-                        if (x != graphX[currentPoint+1] and y != graphY[currentPoint+1]) or (x == graphX[currentPoint+1] and y != graphY[currentPoint+1]) or (x != graphX[currentPoint+1] and y == graphY[currentPoint+1]):
+                if (currentPoint == 5) or (x <= graphX[currentPoint+1] and y >= graphY[currentPoint+1]):
+                    if (currentPoint == 0) or ((x != graphX[currentPoint-1] and y != graphY[currentPoint-1]) or (x == graphX[currentPoint-1] and y != graphY[currentPoint-1]) or (x != graphX[currentPoint-1] and y == graphY[currentPoint-1])):
+                        if (currentPoint == 5) or ((x != graphX[currentPoint+1] and y != graphY[currentPoint+1]) or (x == graphX[currentPoint+1] and y != graphY[currentPoint+1]) or (x != graphX[currentPoint+1] and y == graphY[currentPoint+1])):
                             graphX[currentPoint] = x
                             graphY[currentPoint] = y
                             fanCurve[currentPoint] = int(graphX[currentPoint] / 15.554 * 100)
@@ -466,7 +466,7 @@ currentDataFrame.place(y=600, height=100, relwidth=1)
 
 # Fan Curve Graph
 
-fanCurveCanvas = CTkCanvas(fanCurveGraph, bg='#A4A4A9')
+fanCurveCanvas = CTkCanvas(fanCurveGraph, bg='#b8b6b0')
 fanCurveCanvas.place(y=25, x=50, width=725, height=525)
 
 
