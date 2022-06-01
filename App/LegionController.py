@@ -397,19 +397,14 @@ def inputCanvas(event):
         if currentPoint != -1:
             x = (15.554 * round(event.x / 15.554))
             y = (25 * round(event.y / 25))
-            if currentPoint != 0:
-                if (x >= graphX[currentPoint-1] and y <= graphY[currentPoint-1]) and (x <= graphX[currentPoint+1] and y >= graphY[currentPoint+1]):
-                    if (x != graphX[currentPoint-1] and y != graphY[currentPoint-1]) or (x == graphX[currentPoint-1] and y != graphY[currentPoint-1]) or (x != graphX[currentPoint-1] and y == graphY[currentPoint-1]):
+            if (currentPoint == 0) or (x >= graphX[currentPoint-1] and y <= graphY[currentPoint-1]):
+                if (x <= graphX[currentPoint+1] and y >= graphY[currentPoint+1]):
+                    if (currentPoint ==0) or ((x != graphX[currentPoint-1] and y != graphY[currentPoint-1]) or (x == graphX[currentPoint-1] and y != graphY[currentPoint-1]) or (x != graphX[currentPoint-1] and y == graphY[currentPoint-1])):
                         if (x != graphX[currentPoint+1] and y != graphY[currentPoint+1]) or (x == graphX[currentPoint+1] and y != graphY[currentPoint+1]) or (x != graphX[currentPoint+1] and y == graphY[currentPoint+1]):
                             graphX[currentPoint] = x
                             graphY[currentPoint] = y
                             fanCurve[currentPoint] = int(graphX[currentPoint] / 15.554 * 100)
                             tempCurve[currentPoint] = int((525 - graphY[currentPoint]) / 5)
-            elif currentPoint == 0:
-                graphX[currentPoint] = x
-                graphY[currentPoint] = y
-                fanCurve[currentPoint] = int(graphX[currentPoint] / 15.554 * 100)
-                tempCurve[currentPoint] = int((525 - graphY[currentPoint]) / 5)
 
             updateCanvas()
 
