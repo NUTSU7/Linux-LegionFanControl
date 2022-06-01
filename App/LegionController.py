@@ -4,6 +4,7 @@ from numpy import *
 from customtkinter import *
 from PIL import ImageTk, Image
 import os, time, configparser, customtkinter
+import atexit
 
 customtkinter.set_appearance_mode("Dark")
 customtkinter.set_default_color_theme("blue")
@@ -22,6 +23,7 @@ root.bind("<Button-1>", lambda event: event.widget.focus_set())
 
 #Vars
 cwd=os.getcwd()
+moduleDir = os.getcwd()[:-4]+'/Module'
 currentPowerMode = -1
 previousPowerMode = -1
 perfBtnPressedValue = False
@@ -340,12 +342,12 @@ def updateCanvas():
     global graphY
 
     fanCurveCanvas.delete("all")
-
+    ##adaaaa
     for i in arange(0, 700, 15.554):
-        fanCurveCanvas.create_line([(i, 0), (i, 525)], tag='grid_line', fill='#adaaaa', width=0.5)
+        fanCurveCanvas.create_line([(i, 0), (i, 525)], tag='grid_line', fill='#000000', width=0.5)
 
     for i in arange(0, 525, 25):
-        fanCurveCanvas.create_line([(0, i), (725, i)], tag='grid_line', fill='#adaaaa', width=0.5)
+        fanCurveCanvas.create_line([(0, i), (725, i)], tag='grid_line', fill='#000000', width=0.5)
 
     fanCurveCanvas.create_line(graphX[0],graphY[0],graphX[1],graphY[1], fill='green', width=5, smooth=1)
     fanCurveCanvas.create_line(graphX[1],graphY[1],graphX[2],graphY[2], fill='green', width=5, smooth=1)
@@ -398,6 +400,20 @@ def inputCanvas(event):
             tempCurve[currentPoint] = int((525 - graphY[currentPoint]) / 5)
             updateCanvas()
 
+def insertModule():
+    global moduleDir
+
+    temp = 'sudo insmod ' + moduleDir + '/LegionController.ko'
+
+    os.system(temp)
+
+
+def exit():
+    global moduleDir
+
+    temp = 'sudo rmmod ' + moduleDir + '/LegionController.ko'
+
+    os.system(temp)
 
 #Images
 #Window icon
@@ -425,8 +441,8 @@ img = Image.open(cwd+"/img/settings.png")
 img.thumbnail((70,70), Image.ANTIALIAS)
 settingsIcon = ImageTk.PhotoImage(img)
 
+insertModule()
 loadConfig()
-
 
 # Main Frames
 page = CTkFrame(root)
@@ -445,7 +461,7 @@ currentDataFrame.place(y=600, height=100, relwidth=1)
 
 # Fan Curve Graph
 
-fanCurveCanvas = CTkCanvas(fanCurveGraph)
+fanCurveCanvas = CTkCanvas(fanCurveGraph, bg='#A4A4A9')
 fanCurveCanvas.place(y=25, x=50, width=725, height=525)
 
 
@@ -571,7 +587,10 @@ settingsBtn.place(x=550, width=80, height=80, y=5)
 getCurrentPowerMode()
 getCurrentData()
 updateFanCurve()
+
 root.bind("<ButtonPress-1>", getCurrentPoint)
 root.bind("<ButtonRelease-1>", inputCanvas)
+
+atexit.register(exit)
 
 root.mainloop()
