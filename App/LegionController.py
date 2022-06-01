@@ -316,23 +316,23 @@ def updateFanCurve():
     else:
         tempCurrent = tempCurrentGPU
 
-    if tempCurrent >= tempCurve[0] and tempCurrent < tempCurve[1]:
-        fanCurveCurrent = fanCurve[0]/100
+    if tempCurrent >= 0 and tempCurrent < tempCurve[1]:
+        fanCurveCurrent = int(fanCurve[0]/100)
     elif tempCurrent >= tempCurve[1] and tempCurrent < tempCurve[2]:
-        fanCurveCurrent = fanCurve[1]/100
+        fanCurveCurrent = int(fanCurve[1]/100)
     elif tempCurrent >= tempCurve[2] and tempCurrent < tempCurve[3]:
-        fanCurveCurrent = fanCurve[2]/100
+        fanCurveCurrent = int(fanCurve[2]/100)
     elif tempCurrent >= tempCurve[3] and tempCurrent < tempCurve[4]:
-        fanCurveCurrent = fanCurve[3]/100
+        fanCurveCurrent = int(fanCurve[3]/100)
     elif tempCurrent >= tempCurve[4] and tempCurrent < tempCurve[5]:
-        fanCurveCurrent = fanCurve[4]/100
+        fanCurveCurrent = int(fanCurve[4]/100)
     elif tempCurrent >= tempCurve[5]:
-        fanCurveCurrent = fanCurve[5]/100
+        fanCurveCurrent = int(fanCurve[5]/100)
 
     f = open("/sys/module/LegionController/parameters/cFanCurve", "w")
-    f.write(str(fanCurveCurrent)[:-2])
+    f.write(str(fanCurveCurrent))
     f.close()
-    
+    #print(fanCurve, ' ', tempCurve, ' ', fanCurveCurrent, ' ',tempCurrent)
     root.after(1000, updateFanCurve)
 
 def updateCanvas():
@@ -406,23 +406,23 @@ mainIcon = ImageTk.PhotoImage(img)
 root.tk.call('wm', 'iconphoto', root._w, mainIcon)
 #Performance Mode Icon
 img = Image.open(cwd+"/img/perf.png") 
-img.thumbnail((80,80), Image.ANTIALIAS)
+img.thumbnail((70,70), Image.ANTIALIAS)
 perfIcon = ImageTk.PhotoImage(img)
 #Balanced Mode Icon
 img = Image.open(cwd+"/img/balanced.png") 
-img.thumbnail((80,80), Image.ANTIALIAS)
+img.thumbnail((70,70), Image.ANTIALIAS)
 balancedIcon = ImageTk.PhotoImage(img)
 #Quiet Mode Icon
 img = Image.open(cwd+"/img/quiet.png") 
-img.thumbnail((80,80), Image.ANTIALIAS)
+img.thumbnail((70,70), Image.ANTIALIAS)
 quietIcon = ImageTk.PhotoImage(img)
 #Save Icon
 img = Image.open(cwd+"/img/save.png") 
-img.thumbnail((80,80), Image.ANTIALIAS)
+img.thumbnail((70,70), Image.ANTIALIAS)
 saveIcon = ImageTk.PhotoImage(img)
 #Settings Icon
 img = Image.open(cwd+"/img/settings.png") 
-img.thumbnail((75,75), Image.ANTIALIAS)
+img.thumbnail((70,70), Image.ANTIALIAS)
 settingsIcon = ImageTk.PhotoImage(img)
 
 loadConfig()
@@ -554,19 +554,19 @@ tempCurrentGPULabel.place(relx=0.55, rely=0.65, relheight=0.3, relwidth=0.40)
 
 # Buttons
 perfBtn = CTkButton(modes, image=perfIcon, text='', command=perfBtnPressed)
-perfBtn.place(x=150, width=90, height=90, y=5)
+perfBtn.place(x=150, width=80, height=80, y=5)
 
 balancedBtn = CTkButton(modes, image=balancedIcon, text='', command=balancedBtnPressed)
-balancedBtn.place(x=250, width=90, height=90, y=5)
+balancedBtn.place(x=250, width=80, height=80, y=5)
 
 quietBtn = CTkButton(modes, image=quietIcon, text='', command=quietBtnPressed)
-quietBtn.place(x=350, width=90, height=90, y=5)
+quietBtn.place(x=350, width=80, height=80, y=5)
 
 saveBtn = CTkButton(modes, image=saveIcon, text='', command=saveBtnPressed)
-saveBtn.place(x=450, width=90, height=90, y=5)
+saveBtn.place(x=450, width=80, height=80, y=5)
 
 settingsBtn = CTkButton(modes, image=settingsIcon, text='')
-settingsBtn.place(x=550, width=90, height=90, y=5)
+settingsBtn.place(x=550, width=80, height=80, y=5)
 
 getCurrentPowerMode()
 getCurrentData()
