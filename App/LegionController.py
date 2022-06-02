@@ -402,6 +402,8 @@ def inputCanvas(event):
     global graphY
     global currentPoint
 
+    maxGraphX = 699.9300000000001
+    maxGraphY = 10
     x,y = root.winfo_pointerxy()
     widget = root.winfo_containing(x,y)
 
@@ -414,11 +416,12 @@ def inputCanvas(event):
                 if (currentPoint == 5) or (x <= graphX[currentPoint+1] and y >= graphY[currentPoint+1]):
                     if (currentPoint == 0) or ((x != graphX[currentPoint-1] and y != graphY[currentPoint-1]) or (x == graphX[currentPoint-1] and y != graphY[currentPoint-1]) or (x != graphX[currentPoint-1] and y == graphY[currentPoint-1])):
                         if (currentPoint == 5) or ((x != graphX[currentPoint+1] and y != graphY[currentPoint+1]) or (x == graphX[currentPoint+1] and y != graphY[currentPoint+1]) or (x != graphX[currentPoint+1] and y == graphY[currentPoint+1])):
-                            graphX[currentPoint] = x
-                            graphY[currentPoint] = y
-                            fanCurve[currentPoint] = int(graphX[currentPoint] / 15.554 * 100)
-                            tempCurve[currentPoint] = int((510 - graphY[currentPoint]) / 5)
-                            #print(tempCurve[currentPoint],' ',fanCurve[currentPoint])
+                            if x <= maxGraphX and y >= maxGraphY:
+                                graphX[currentPoint] = x
+                                graphY[currentPoint] = y
+                                fanCurve[currentPoint] = int(graphX[currentPoint] / 15.554 * 100)
+                                tempCurve[currentPoint] = int((510 - graphY[currentPoint]) / 5)
+                                #print(tempCurve[currentPoint],' ',fanCurve[currentPoint])
 
             updateCanvas()
 
