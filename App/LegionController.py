@@ -188,7 +188,7 @@ def loadConfig():
 
 def getFanCurve():
     #axes.x = RPM/100*15.554
-    #axes.y = 500-(C*5)
+    #axes.y = 510-(C*5)
     global fanCurve
     global tempCurve
     global currentPowerMode
@@ -246,12 +246,12 @@ def getFanCurve():
     graphX.append(fanCurve[3]/100*15.554)
     graphX.append(fanCurve[4]/100*15.554)
     graphX.append(fanCurve[5]/100*15.554)
-    graphY.append(525-(tempCurve[0]*5))
-    graphY.append(525-(tempCurve[1]*5))
-    graphY.append(525-(tempCurve[2]*5))
-    graphY.append(525-(tempCurve[3]*5))
-    graphY.append(525-(tempCurve[4]*5))
-    graphY.append(525-(tempCurve[5]*5))
+    graphY.append(510-(tempCurve[0]*5))
+    graphY.append(510-(tempCurve[1]*5))
+    graphY.append(510-(tempCurve[2]*5))
+    graphY.append(510-(tempCurve[3]*5))
+    graphY.append(510-(tempCurve[4]*5))
+    graphY.append(510-(tempCurve[5]*5))
     
 
 def saveBtnPressed():
@@ -348,15 +348,15 @@ def updateCanvas():
     fanCurveCanvas.delete("all")
     #15.554
     #stipple="gray50"
-    for i in arange(0, 725, 15.554):
+    for i in arange(0, 710, 15.554):
         if int((i % 77.77)) == 0:
-            fanCurveCanvas.create_line([(i, 0), (i, 525)], tag='grid_line', fill='white', width=0.5)
+            fanCurveCanvas.create_line([(i, 0), (i, 510)], tag='grid_line', fill='white', width=0.5)
         else:
-            fanCurveCanvas.create_line([(i, 515), (i, 525)], tag='grid_line', fill='white', width=0.5)
+            fanCurveCanvas.create_line([(i, 500), (i, 510)], tag='grid_line', fill='white', width=0.5)
     #25
-    for i in arange(25, 525, 25):
-        if int(((i-25) % 50)) == 0:
-            fanCurveCanvas.create_line([(0, i), (725, i)], tag='grid_line', fill='white', width=0.5)
+    for i in arange(10, 510, 25):
+        if int(((i-10) % 50)) == 0:
+            fanCurveCanvas.create_line([(0, i), (710, i)], tag='grid_line', fill='white', width=0.5)
         else:
             fanCurveCanvas.create_line([(0, i), (10, i)], tag='grid_line', fill='white', width=0.5)
 
@@ -383,19 +383,21 @@ def getCurrentPoint(event):
 
     x,y = root.winfo_pointerxy()
     widget = root.winfo_containing(x,y)
-
+    #print(graphX)
+    #print(graphY)
     if(str(widget) == ".!ctkframe.!ctkframe.!ctkcanvas2"):
         x = (15.554 * round(event.x / 15.554))
-        y = (25 * round(event.y / 25))
+        y = (25 * round(event.y / 25))+10
 
         for i in range(0, 6):
             if x == graphX[i] and y == graphY[i]:
                 currentPoint = i
+        #print(x,' ',y)
 
 
 def inputCanvas(event):
     #RPM = (axes.x/15.554)*100
-    #C = (525-axes.y)/5
+    #C = ((510-axes.y)/5)+10
     global graphX
     global graphY
     global currentPoint
@@ -406,7 +408,8 @@ def inputCanvas(event):
     if(str(widget) == ".!ctkframe.!ctkframe.!ctkcanvas2"):
         if currentPoint != -1:
             x = (15.554 * round(event.x / 15.554))
-            y = (25 * round(event.y / 25))
+            y = (25 * round(event.y / 25))+10
+            #print(x,' ',y)
             if (currentPoint == 0) or (x >= graphX[currentPoint-1] and y <= graphY[currentPoint-1]):
                 if (currentPoint == 5) or (x <= graphX[currentPoint+1] and y >= graphY[currentPoint+1]):
                     if (currentPoint == 0) or ((x != graphX[currentPoint-1] and y != graphY[currentPoint-1]) or (x == graphX[currentPoint-1] and y != graphY[currentPoint-1]) or (x != graphX[currentPoint-1] and y == graphY[currentPoint-1])):
@@ -414,7 +417,8 @@ def inputCanvas(event):
                             graphX[currentPoint] = x
                             graphY[currentPoint] = y
                             fanCurve[currentPoint] = int(graphX[currentPoint] / 15.554 * 100)
-                            tempCurve[currentPoint] = int((525 - graphY[currentPoint]) / 5)
+                            tempCurve[currentPoint] = int((510 - graphY[currentPoint]) / 5)
+                            #print(tempCurve[currentPoint],' ',fanCurve[currentPoint])
 
             updateCanvas()
 
@@ -481,11 +485,14 @@ currentDataFrame.place(y=600, height=100, relwidth=1)
 # Fan Curve Graph
 #b8b6b0
 fanCurveCanvas = CTkCanvas(fanCurveGraph, bg='#383838')
-fanCurveCanvas.place(y=25, x=50, width=725, height=525)
+fanCurveCanvas.place(y=40, x=50, width=710, height=510)
 
 
 # 77.77 15.554  RPM = ((axes.x-25)/15.554)*100
 # axes.x = RPM/100*15.554
+
+fanCurveLabelRPM = CTkLabel(fanCurveGraph, text='Fan Speed(RPM)', text_font=("Arial", 15))
+fanCurveLabelRPM.place(x=315, y=0, height=35, width=170)
 
 fanCurveLabelRPM1 = CTkLabel(fanCurveGraph, text='0', text_font=("Arial", 12))
 fanCurveLabelRPM1.place(x=25, y=550, height=50, width=50)
@@ -519,6 +526,10 @@ fanCurveLabelRPM10.place(x=725, y=550, height=50, width=50)
 
 # 50  5  C = (525-axes.y)/5
 # axes.y = 525-(C*5)
+
+fanCurveCanvasTemp = CTkCanvas(fanCurveGraph, bg='#383838', highlightthickness=0)
+fanCurveCanvasTemp.create_text((4, 4), angle='270', anchor='sw', text='Temperature(°C)', fill="white", font=("Arial", 15))
+fanCurveCanvasTemp.place(x=765, y=217.5, height=155, width=35)
 
 fanCurveLabelTemp1 = CTkLabel(fanCurveGraph, text='0', text_font=("Arial", 12))
 fanCurveLabelTemp1.place(y=535, height=30, width=50)
