@@ -43,11 +43,13 @@ graphX = []
 graphY = []
 useTempCPU = True
 currentPoint = -1
+currentModeColor = ''
 
 #Functions
 def getCurrentPowerMode():
     global currentPowerMode
     global previousPowerMode
+    global currentModeColor
 
     previousPowerMode=currentPowerMode
     f = open("/sys/kernel/LegionController/powerMode", "r")
@@ -55,17 +57,20 @@ def getCurrentPowerMode():
     f.close
     if previousPowerMode != currentPowerMode:
         if currentPowerMode == 0: 
+            currentModeColor = '#7DC8E9'
             perfBtn.configure(fg_color='#1c94cf')
-            balancedBtn.configure(fg_color='#7DC8E9')
+            balancedBtn.configure(fg_color=currentModeColor)
             quietBtn.configure(fg_color='#1c94cf')
         elif currentPowerMode == 1: 
-            perfBtn.configure(fg_color='#F11515')
+            currentModeColor = '#F11515'
+            perfBtn.configure(fg_color=currentModeColor)
             balancedBtn.configure(fg_color='#1c94cf')
             quietBtn.configure(fg_color='#1c94cf')
         elif currentPowerMode == 2: 
+            currentModeColor = '#2333B4'
             perfBtn.configure(fg_color='#1c94cf')
             balancedBtn.configure(fg_color='#1c94cf')
-            quietBtn.configure(fg_color='#2333B4')
+            quietBtn.configure(fg_color=currentModeColor)
         getFanCurve()
         updateCanvas()
     root.after(2000, getCurrentPowerMode)
@@ -338,27 +343,36 @@ def updateFanCurve():
 def updateCanvas():
     global graphX
     global graphY
+    global currentModeColor
 
     fanCurveCanvas.delete("all")
-    ##adaaaa
-    for i in arange(0, 700, 15.554):
-        fanCurveCanvas.create_line([(i, 0), (i, 525)], tag='grid_line', fill='#000000', width=0.5)
+    #15.554
+    #stipple="gray50"
+    for i in arange(0, 725, 15.554):
+        if int((i % 77.77)) == 0:
+            fanCurveCanvas.create_line([(i, 0), (i, 525)], tag='grid_line', fill='white', width=0.5)
+        else:
+            fanCurveCanvas.create_line([(i, 515), (i, 525)], tag='grid_line', fill='white', width=0.5)
+    #25
+    for i in arange(25, 525, 25):
+        if int(((i-25) % 50)) == 0:
+            fanCurveCanvas.create_line([(0, i), (725, i)], tag='grid_line', fill='white', width=0.5)
+        else:
+            fanCurveCanvas.create_line([(0, i), (10, i)], tag='grid_line', fill='white', width=0.5)
 
-    for i in arange(0, 525, 25):
-        fanCurveCanvas.create_line([(0, i), (725, i)], tag='grid_line', fill='#000000', width=0.5)
+    #1c94cf
+    fanCurveCanvas.create_line(graphX[0],graphY[0],graphX[1],graphY[1], fill=currentModeColor, width=7, smooth=1)
+    fanCurveCanvas.create_line(graphX[1],graphY[1],graphX[2],graphY[2], fill=currentModeColor, width=7, smooth=1)
+    fanCurveCanvas.create_line(graphX[2],graphY[2],graphX[3],graphY[3], fill=currentModeColor, width=7, smooth=1)
+    fanCurveCanvas.create_line(graphX[3],graphY[3],graphX[4],graphY[4], fill=currentModeColor, width=7, smooth=1)
+    fanCurveCanvas.create_line(graphX[4],graphY[4],graphX[5],graphY[5], fill=currentModeColor, width=7, smooth=1)
 
-    fanCurveCanvas.create_line(graphX[0],graphY[0],graphX[1],graphY[1], fill='#1c94cf', width=5, smooth=1)
-    fanCurveCanvas.create_line(graphX[1],graphY[1],graphX[2],graphY[2], fill='#1c94cf', width=5, smooth=1)
-    fanCurveCanvas.create_line(graphX[2],graphY[2],graphX[3],graphY[3], fill='#1c94cf', width=5, smooth=1)
-    fanCurveCanvas.create_line(graphX[3],graphY[3],graphX[4],graphY[4], fill='#1c94cf', width=5, smooth=1)
-    fanCurveCanvas.create_line(graphX[4],graphY[4],graphX[5],graphY[5], fill='#1c94cf', width=5, smooth=1)
-
-    fanCurveCanvas.create_oval(graphX[0]-3,graphY[0]-3,graphX[0]+3,graphY[0]+3,fill="black", width=3)
-    fanCurveCanvas.create_oval(graphX[1]-3,graphY[1]-3,graphX[1]+3,graphY[1]+3,fill="black", width=3)
-    fanCurveCanvas.create_oval(graphX[2]-3,graphY[2]-3,graphX[2]+3,graphY[2]+3,fill="black", width=3)
-    fanCurveCanvas.create_oval(graphX[3]-3,graphY[3]-3,graphX[3]+3,graphY[3]+3,fill="black", width=3)
-    fanCurveCanvas.create_oval(graphX[4]-3,graphY[4]-3,graphX[4]+3,graphY[4]+3,fill="black", width=3)
-    fanCurveCanvas.create_oval(graphX[5]-3,graphY[5]-3,graphX[5]+3,graphY[5]+3,fill="black", width=3)
+    fanCurveCanvas.create_oval(graphX[1]-5,graphY[1]-5,graphX[1]+5,graphY[1]+5,fill="White", width=3)
+    fanCurveCanvas.create_oval(graphX[0]-5,graphY[0]-5,graphX[0]+5,graphY[0]+5,fill="White", width=3)
+    fanCurveCanvas.create_oval(graphX[2]-5,graphY[2]-5,graphX[2]+5,graphY[2]+5,fill="White", width=3)
+    fanCurveCanvas.create_oval(graphX[3]-5,graphY[3]-5,graphX[3]+5,graphY[3]+5,fill="White", width=3)
+    fanCurveCanvas.create_oval(graphX[4]-5,graphY[4]-5,graphX[4]+5,graphY[4]+5,fill="White", width=3)
+    fanCurveCanvas.create_oval(graphX[5]-5,graphY[5]-5,graphX[5]+5,graphY[5]+5,fill="White", width=3)
 
 def getCurrentPoint(event):
     global graphX
@@ -465,8 +479,8 @@ currentDataFrame = CTkFrame(page)
 currentDataFrame.place(y=600, height=100, relwidth=1)
 
 # Fan Curve Graph
-
-fanCurveCanvas = CTkCanvas(fanCurveGraph, bg='#b8b6b0')
+#b8b6b0
+fanCurveCanvas = CTkCanvas(fanCurveGraph, bg='#383838')
 fanCurveCanvas.place(y=25, x=50, width=725, height=525)
 
 
