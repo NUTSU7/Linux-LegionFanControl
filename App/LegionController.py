@@ -511,77 +511,77 @@ fanCurveCanvas.place(y=40, x=50, width=710, height=510)
 # 77.77 15.554  RPM = ((axes.x-25)/15.554)*100
 # axes.x = RPM/100*15.554
 
-fanCurveLabelRPM = CTkLabel(fanCurveGraph, text='Fan Speed (RPM)', text_font=("Arial", 15))
+fanCurveLabelRPM = CTkLabel(fanCurveGraph, text='Fan Speed (RPM)', text_font=("SF UI Display", 14))
 fanCurveLabelRPM.place(x=312.5, y=0, height=35, width=175)
 
-fanCurveLabelRPM1 = CTkLabel(fanCurveGraph, text='0', text_font=("Arial", 12))
+fanCurveLabelRPM1 = CTkLabel(fanCurveGraph, text='0', text_font=("SF UI Display", 12))
 fanCurveLabelRPM1.place(x=25, y=550, height=50, width=50)
 
-fanCurveLabelRPM2 = CTkLabel(fanCurveGraph, text='500', text_font=("Arial", 12))
+fanCurveLabelRPM2 = CTkLabel(fanCurveGraph, text='500', text_font=("SF UI Display", 12))
 fanCurveLabelRPM2.place(x=102.77, y=550, height=50, width=50)
 
-fanCurveLabelRPM3 = CTkLabel(fanCurveGraph, text='1000', text_font=("Arial", 12))
+fanCurveLabelRPM3 = CTkLabel(fanCurveGraph, text='1000', text_font=("SF UI Display", 12))
 fanCurveLabelRPM3.place(x=180.54, y=550, height=50, width=50)
 
-fanCurveLabelRPM4 = CTkLabel(fanCurveGraph, text='1500', text_font=("Arial", 12))
+fanCurveLabelRPM4 = CTkLabel(fanCurveGraph, text='1500', text_font=("SF UI Display", 12))
 fanCurveLabelRPM4.place(x=258.31, y=550, height=50, width=50)
 
-fanCurveLabelRPM5 = CTkLabel(fanCurveGraph, text='2000', text_font=("Arial", 12))
+fanCurveLabelRPM5 = CTkLabel(fanCurveGraph, text='2000', text_font=("SF UI Display", 12))
 fanCurveLabelRPM5.place(x=336.08, y=550, height=50, width=50)
 
-fanCurveLabelRPM6 = CTkLabel(fanCurveGraph, text='2500', text_font=("Arial", 12))
+fanCurveLabelRPM6 = CTkLabel(fanCurveGraph, text='2500', text_font=("SF UI Display", 12))
 fanCurveLabelRPM6.place(x=413.85, y=550, height=50, width=50)
 
-fanCurveLabelRPM7 = CTkLabel(fanCurveGraph, text='3000', text_font=("Arial", 12))
+fanCurveLabelRPM7 = CTkLabel(fanCurveGraph, text='3000', text_font=("SF UI Display", 12))
 fanCurveLabelRPM7.place(x=491.62, y=550, height=50, width=50)
 
-fanCurveLabelRPM8 = CTkLabel(fanCurveGraph, text='3500', text_font=("Arial", 12))
+fanCurveLabelRPM8 = CTkLabel(fanCurveGraph, text='3500', text_font=("SF UI Display", 12))
 fanCurveLabelRPM8.place(x=569.39, y=550, height=50, width=50)
 
-fanCurveLabelRPM9 = CTkLabel(fanCurveGraph, text='4000', text_font=("Arial", 12))
+fanCurveLabelRPM9 = CTkLabel(fanCurveGraph, text='4000', text_font=("SF UI Display", 12))
 fanCurveLabelRPM9.place(x=647.16, y=550, height=50, width=50)
 
-fanCurveLabelRPM10 = CTkLabel(fanCurveGraph, text='4500', text_font=("Arial", 12))
+fanCurveLabelRPM10 = CTkLabel(fanCurveGraph, text='4500', text_font=("SF UI Display", 12))
 fanCurveLabelRPM10.place(x=725, y=550, height=50, width=50)
 
 # 50  5  C = (525-axes.y)/5
 # axes.y = 525-(C*5)
 
 fanCurveCanvasTemp = CTkCanvas(fanCurveGraph, bg='#383838', highlightthickness=0)
-fanCurveCanvasTemp.create_text((4, 4), angle='270', anchor='sw', text='Temperature (°C)', fill="white", font=("Arial", 15))
+fanCurveCanvasTemp.create_text((4, 4), angle='270', anchor='sw', text='Temperature (°C)', fill="white", font=("SF UI Display", 14))
 fanCurveCanvasTemp.place(x=765, y=220, height=160, width=35)
 
-fanCurveLabelTemp1 = CTkLabel(fanCurveGraph, text='0', text_font=("Arial", 12))
+fanCurveLabelTemp1 = CTkLabel(fanCurveGraph, text='0', text_font=("SF UI Display", 12))
 fanCurveLabelTemp1.place(y=535, height=30, width=50)
 
-fanCurveLabelTemp2 = CTkLabel(fanCurveGraph, text='10', text_font=("Arial", 12))
+fanCurveLabelTemp2 = CTkLabel(fanCurveGraph, text='10', text_font=("SF UI Display", 12))
 fanCurveLabelTemp2.place(y=475, height=50, width=50)
 
-fanCurveLabelTemp3 = CTkLabel(fanCurveGraph, text='20', text_font=("Arial", 12))
+fanCurveLabelTemp3 = CTkLabel(fanCurveGraph, text='20', text_font=("SF UI Display", 12))
 fanCurveLabelTemp3.place(y=425, height=50, width=50)
 
-fanCurveLabelTemp4 = CTkLabel(fanCurveGraph, text='30', text_font=("Arial", 12))
+fanCurveLabelTemp4 = CTkLabel(fanCurveGraph, text='30', text_font=("SF UI Display", 12))
 fanCurveLabelTemp4.place(y=375, height=50, width=50)
 
-fanCurveLabelTemp5 = CTkLabel(fanCurveGraph, text='40', text_font=("Arial", 12))
+fanCurveLabelTemp5 = CTkLabel(fanCurveGraph, text='40', text_font=("SF UI Display", 12))
 fanCurveLabelTemp5.place(y=325, height=50, width=50)
 
-fanCurveLabelTemp6 = CTkLabel(fanCurveGraph, text='50', text_font=("Arial", 12))
+fanCurveLabelTemp6 = CTkLabel(fanCurveGraph, text='50', text_font=("SF UI Display", 12))
 fanCurveLabelTemp6.place(y=275, height=50, width=50)
 
-fanCurveLabelTemp7 = CTkLabel(fanCurveGraph, text='60', text_font=("Arial", 12))
+fanCurveLabelTemp7 = CTkLabel(fanCurveGraph, text='60', text_font=("SF UI Display", 12))
 fanCurveLabelTemp7.place(y=225, height=50, width=50)
 
-fanCurveLabelTemp8 = CTkLabel(fanCurveGraph, text='70', text_font=("Arial", 12))
+fanCurveLabelTemp8 = CTkLabel(fanCurveGraph, text='70', text_font=("SF UI Display", 12))
 fanCurveLabelTemp8.place(y=175, height=50, width=50)
 
-fanCurveLabelTemp8 = CTkLabel(fanCurveGraph, text='80', text_font=("Arial", 12))
+fanCurveLabelTemp8 = CTkLabel(fanCurveGraph, text='80', text_font=("SF UI Display", 12))
 fanCurveLabelTemp8.place(y=125, height=50, width=50)
 
-fanCurveLabelTemp9 = CTkLabel(fanCurveGraph, text='90', text_font=("Arial", 12))
+fanCurveLabelTemp9 = CTkLabel(fanCurveGraph, text='90', text_font=("SF UI Display", 12))
 fanCurveLabelTemp9.place(y=75, height=50, width=50)
 
-fanCurveLabelTemp10 = CTkLabel(fanCurveGraph, text='100', text_font=("Arial", 12))
+fanCurveLabelTemp10 = CTkLabel(fanCurveGraph, text='100', text_font=("SF UI Display", 12))
 fanCurveLabelTemp10.place(y=25, height=50, width=50)
 
 
@@ -594,45 +594,45 @@ currentDataFrameTemp.place(height=100, width=400, x=400)
 
 
 #Current Data Fan Speed
-currentDataFrameFanSpeedText = CTkLabel(currentDataFrameFanSpeed, text='Current Fan Speed', text_font=("Arial", 17), justify='center')
+currentDataFrameFanSpeedText = CTkLabel(currentDataFrameFanSpeed, text='Current Fan Speed', text_font=("SF UI Display", 15), justify='center')
 currentDataFrameFanSpeedText.place(rely=0.025, relheight=0.3, relwidth=1)
 
-fanSpeedCurrentLabel = CTkLabel(currentDataFrameFanSpeed, text_font=("Arial", 17), justify='center', fg_color='#b8b6b0', text_color='black')
+fanSpeedCurrentLabel = CTkLabel(currentDataFrameFanSpeed, text_font=("SF UI Display", 17), justify='center', fg_color='#b8b6b0', text_color='black')
 fanSpeedCurrentLabel.place(relx=0.3, rely=0.4, relheight=0.4, relwidth=0.4)
 
 
 #Current Data Temps
-currentDataFrameTempText = CTkLabel(currentDataFrameTemp, text='Current Temps', text_font=("Arial", 17), justify='center')
-currentDataFrameTempText.place(relheight=0.20, relwidth=1)
+currentDataFrameTempText = CTkLabel(currentDataFrameTemp, text='Current Temps', text_font=("SF UI Display", 15), justify='center')
+currentDataFrameTempText.place(rely=0.025, relheight=0.20, relwidth=1)
 
-currentDataFrameTempCPUText = CTkLabel(currentDataFrameTemp, text='CPU', text_font=("Arial", 17), justify='center')
-currentDataFrameTempCPUText.place(rely=0.3, relheight=0.3, relwidth=0.5)
+currentDataFrameTempCPUText = CTkLabel(currentDataFrameTemp, text='CPU', text_font=("SF UI Display", 15), justify='center')
+currentDataFrameTempCPUText.place(rely=0.35, relheight=0.25, relwidth=0.5)
 
-currentDataFrameTempGPUText = CTkLabel(currentDataFrameTemp, text='GPU', text_font=("Arial", 17), justify='center')
-currentDataFrameTempGPUText.place(rely=0.65, relheight=0.3, relwidth=0.5)
+currentDataFrameTempGPUText = CTkLabel(currentDataFrameTemp, text='GPU', text_font=("SF UI Display", 15), justify='center')
+currentDataFrameTempGPUText.place(rely=0.65, relheight=0.25, relwidth=0.5)
 
-tempCurrentCPULabel = CTkLabel(currentDataFrameTemp, text_font=("Arial", 17), justify='center', fg_color='#b8b6b0', text_color='black')
-tempCurrentCPULabel.place(relx=0.55, rely=0.30, relheight=0.3, relwidth=0.40)
+tempCurrentCPULabel = CTkLabel(currentDataFrameTemp, text_font=("SF UI Display", 15), justify='center', fg_color='#b8b6b0', text_color='black')
+tempCurrentCPULabel.place(relx=0.55, rely=0.35, relheight=0.25, relwidth=0.35)
 
-tempCurrentGPULabel = CTkLabel(currentDataFrameTemp, text_font=("Arial", 17), justify='center', fg_color='#b8b6b0', text_color='black')
-tempCurrentGPULabel.place(relx=0.55, rely=0.65, relheight=0.3, relwidth=0.40)
+tempCurrentGPULabel = CTkLabel(currentDataFrameTemp, text_font=("SF UI Display", 15), justify='center', fg_color='#b8b6b0', text_color='black')
+tempCurrentGPULabel.place(relx=0.55, rely=0.65, relheight=0.25, relwidth=0.35)
 
 
 # Buttons
 perfBtn = CTkButton(modes, image=perfIcon, text='', command=perfBtnPressed)
-perfBtn.place(x=150, width=80, height=80, y=5)
+perfBtn.place(x=50, width=80, height=80, y=10)
 
 balancedBtn = CTkButton(modes, image=balancedIcon, text='', command=balancedBtnPressed)
-balancedBtn.place(x=250, width=80, height=80, y=5)
+balancedBtn.place(x=150, width=80, height=80, y=10)
 
 quietBtn = CTkButton(modes, image=quietIcon, text='', command=quietBtnPressed)
-quietBtn.place(x=350, width=80, height=80, y=5)
+quietBtn.place(x=250, width=80, height=80, y=10)
 
 saveBtn = CTkButton(modes, image=saveIcon, text='', command=saveBtnPressed)
-saveBtn.place(x=450, width=80, height=80, y=5)
+saveBtn.place(x=550, width=80, height=80, y=10)
 
 settingsBtn = CTkButton(modes, image=settingsIcon, text='', command=settingsFrameShowHide)
-settingsBtn.place(x=550, width=80, height=80, y=5)
+settingsBtn.place(x=650, width=80, height=80, y=10)
 
 
 settingsFrame = CTkFrame(page)
@@ -640,7 +640,7 @@ settingsFrame = CTkFrame(page)
 useTempFrame = CTkFrame(settingsFrame)
 useTempFrame.place(width=400, height=50)
 
-useTempLabel = CTkLabel(useTempFrame, text='Used Temperature', text_font=("Arial", 12), justify='center')
+useTempLabel = CTkLabel(useTempFrame, text='Used Temperature', text_font=("SF UI Display", 12), justify='center')
 useTempLabel.place(x=20, y=15,width=150, height=20)
 
 useTempCPURB = CTkRadioButton(useTempFrame, text="CPU", variable=useTempVar, value=True)
