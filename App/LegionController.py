@@ -511,8 +511,8 @@ fanCurveCanvas.place(y=40, x=50, width=710, height=510)
 # 77.77 15.554  RPM = ((axes.x-25)/15.554)*100
 # axes.x = RPM/100*15.554
 
-fanCurveLabelRPM = CTkLabel(fanCurveGraph, text='Fan Speed(RPM)', text_font=("Arial", 15))
-fanCurveLabelRPM.place(x=315, y=0, height=35, width=170)
+fanCurveLabelRPM = CTkLabel(fanCurveGraph, text='Fan Speed (RPM)', text_font=("Arial", 15))
+fanCurveLabelRPM.place(x=312.5, y=0, height=35, width=175)
 
 fanCurveLabelRPM1 = CTkLabel(fanCurveGraph, text='0', text_font=("Arial", 12))
 fanCurveLabelRPM1.place(x=25, y=550, height=50, width=50)
@@ -548,8 +548,8 @@ fanCurveLabelRPM10.place(x=725, y=550, height=50, width=50)
 # axes.y = 525-(C*5)
 
 fanCurveCanvasTemp = CTkCanvas(fanCurveGraph, bg='#383838', highlightthickness=0)
-fanCurveCanvasTemp.create_text((4, 4), angle='270', anchor='sw', text='Temperature(°C)', fill="white", font=("Arial", 15))
-fanCurveCanvasTemp.place(x=765, y=217.5, height=155, width=35)
+fanCurveCanvasTemp.create_text((4, 4), angle='270', anchor='sw', text='Temperature (°C)', fill="white", font=("Arial", 15))
+fanCurveCanvasTemp.place(x=765, y=220, height=160, width=35)
 
 fanCurveLabelTemp1 = CTkLabel(fanCurveGraph, text='0', text_font=("Arial", 12))
 fanCurveLabelTemp1.place(y=535, height=30, width=50)
