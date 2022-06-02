@@ -595,27 +595,27 @@ currentDataFrameTemp.place(height=100, width=400, x=400)
 
 #Current Data Fan Speed
 currentDataFrameFanSpeedText = CTkLabel(currentDataFrameFanSpeed, text='Current Fan Speed', text_font=("SF UI Display", 15), justify='center')
-currentDataFrameFanSpeedText.place(rely=0.025, relheight=0.3, relwidth=1)
+currentDataFrameFanSpeedText.place(y=2.5, height=30, relwidth=1)
 
 fanSpeedCurrentLabel = CTkLabel(currentDataFrameFanSpeed, text_font=("SF UI Display", 17), justify='center', fg_color='#b8b6b0', text_color='black')
-fanSpeedCurrentLabel.place(relx=0.3, rely=0.4, relheight=0.4, relwidth=0.4)
+fanSpeedCurrentLabel.place(x=120, y=40, height=40, width=160)
 
 
 #Current Data Temps
 currentDataFrameTempText = CTkLabel(currentDataFrameTemp, text='Current Temps', text_font=("SF UI Display", 15), justify='center')
-currentDataFrameTempText.place(rely=0.025, relheight=0.20, relwidth=1)
+currentDataFrameTempText.place(y=2.5, height=30, relwidth=1)
 
 currentDataFrameTempCPUText = CTkLabel(currentDataFrameTemp, text='CPU', text_font=("SF UI Display", 15), justify='center')
-currentDataFrameTempCPUText.place(rely=0.35, relheight=0.25, relwidth=0.5)
+currentDataFrameTempCPUText.place(x=102.6, y=35, height=20, width=75)
 
 currentDataFrameTempGPUText = CTkLabel(currentDataFrameTemp, text='GPU', text_font=("SF UI Display", 15), justify='center')
-currentDataFrameTempGPUText.place(rely=0.65, relheight=0.25, relwidth=0.5)
+currentDataFrameTempGPUText.place(x=222.5, y=35, height=20, width=75)
 
 tempCurrentCPULabel = CTkLabel(currentDataFrameTemp, text_font=("SF UI Display", 15), justify='center', fg_color='#b8b6b0', text_color='black')
-tempCurrentCPULabel.place(relx=0.55, rely=0.35, relheight=0.25, relwidth=0.35)
+tempCurrentCPULabel.place(x=102.5, y=65, height=25, width=75)
 
 tempCurrentGPULabel = CTkLabel(currentDataFrameTemp, text_font=("SF UI Display", 15), justify='center', fg_color='#b8b6b0', text_color='black')
-tempCurrentGPULabel.place(relx=0.55, rely=0.65, relheight=0.25, relwidth=0.35)
+tempCurrentGPULabel.place(x=222.5, y=65, height=25, width=75)
 
 
 # Buttons
@@ -641,10 +641,10 @@ useTempFrame = CTkFrame(settingsFrame)
 useTempFrame.place(width=400, height=50)
 
 useTempLabel = CTkLabel(useTempFrame, text='Used Temperature', text_font=("SF UI Display", 12), justify='center')
-useTempLabel.place(x=20, y=15,width=150, height=20)
+useTempLabel.place(x=20, y=15,width=180, height=20)
 
 useTempCPURB = CTkRadioButton(useTempFrame, text="CPU", variable=useTempVar, value=True)
-useTempCPURB.place(x=200, y=15)
+useTempCPURB.place(x=220, y=15)
 
 useTempGPURB = CTkRadioButton(useTempFrame, text="GPU", variable=useTempVar, value=False)
 useTempGPURB.place(x=300, y=15)
