@@ -6,6 +6,8 @@ from customtkinter import *
 from PIL import ImageTk, Image
 import os, time, configparser, customtkinter
 import atexit
+#import pystray
+#from pystray import MenuItem as item
 
 customtkinter.set_appearance_mode("Dark")
 customtkinter.set_default_color_theme("blue")
@@ -456,7 +458,21 @@ def settingsFrameShowHide():
         settingsFrame.place(y=600, height=100, relwidth=1)
         settingsBtn.configure(fg_color='#2333B4')
         settingsBtnPressedvalue = True
-    
+#Attempt to add tray icon support
+#def quitWindow(icon, item):
+#   icon.stop()
+#   root.destroy()
+#
+#def showWindow(icon, item):
+#   icon.stop()
+#   root.after(0,root.deiconify())
+#
+#def hideWindow():
+#   root.withdraw()
+#   #image=Image.open("favicon.ico")
+#   menu=(item('Quit', quitWindow), item('Show', showWindow))
+#   icon=pystray.Icon("name", mainIcon, "My System Tray Icon", menu)
+#   icon.run()
 
 #Images
 #Window icon
@@ -628,10 +644,10 @@ balancedBtn.place(x=150, width=80, height=80, y=10)
 quietBtn = CTkButton(modes, image=quietIcon, text='', command=quietBtnPressed)
 quietBtn.place(x=250, width=80, height=80, y=10)
 
-saveBtn = CTkButton(modes, image=saveIcon, text='', command=saveBtnPressed)
+saveBtn = CTkButton(modes, image=saveIcon, text='', command=saveBtnPressed, fg_color='#1c94cf')
 saveBtn.place(x=550, width=80, height=80, y=10)
 
-settingsBtn = CTkButton(modes, image=settingsIcon, text='', command=settingsFrameShowHide)
+settingsBtn = CTkButton(modes, image=settingsIcon, text='', command=settingsFrameShowHide, fg_color='#1c94cf')
 settingsBtn.place(x=650, width=80, height=80, y=10)
 
 
@@ -656,6 +672,8 @@ updateFanCurve()
 
 root.bind("<ButtonPress-1>", getCurrentPoint)
 root.bind("<ButtonRelease-1>", inputCanvas)
+
+#root.protocol('WM_DELETE_WINDOW', hideWindow)
 
 atexit.register(exit)
 
