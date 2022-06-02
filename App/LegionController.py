@@ -1,5 +1,6 @@
 #!/usr/bin/python
 from tkinter import *
+from xmlrpc.client import boolean
 from numpy import *
 from customtkinter import *
 from PIL import ImageTk, Image
@@ -29,6 +30,7 @@ previousPowerMode = -1
 perfBtnPressedValue = False
 balancedBtnPressedValue = False
 quietBtnPressedValue = False
+settingsBtnPressedvalue = False
 fanSpeedCurrent = -1
 tempCurrent = -1
 tempCurrentCPU = -1
@@ -41,7 +43,7 @@ fanCurveBalanced = []
 fanCurvePerf = []
 graphX = []
 graphY = []
-useTempCPU = True
+useTempVar = BooleanVar(None, True)
 currentPoint = -1
 currentModeColor = ''
 
@@ -311,12 +313,14 @@ def saveBtnPressed():
 def updateFanCurve():
     global fanCurveCurrent
     global fanCurve
-    global useTempCPU
+    global useTemp
     global tempCurrent
     global tempCurrentCPU
     global tempCurrentGPU
 
-    if useTempCPU:
+    useTemp = bool(useTempVar.get())
+
+    if useTemp:
         tempCurrent = tempCurrentCPU
     else:
         tempCurrent = tempCurrentGPU
@@ -440,6 +444,19 @@ def exit():
     temp = 'sudo rmmod ' + moduleDir + '/LegionController.ko'
 
     os.system(temp)
+
+def settingsFrameShowHide():
+    global settingsBtnPressedvalue
+
+    if settingsBtnPressedvalue:
+        settingsFrame.place_forget()
+        settingsBtn.configure(fg_color='#1c94cf')
+        settingsBtnPressedvalue = False
+    else:
+        settingsFrame.place(y=600, height=100, relwidth=1)
+        settingsBtn.configure(fg_color='#2333B4')
+        settingsBtnPressedvalue = True
+    
 
 #Images
 #Window icon
@@ -614,8 +631,24 @@ quietBtn.place(x=350, width=80, height=80, y=5)
 saveBtn = CTkButton(modes, image=saveIcon, text='', command=saveBtnPressed)
 saveBtn.place(x=450, width=80, height=80, y=5)
 
-settingsBtn = CTkButton(modes, image=settingsIcon, text='')
+settingsBtn = CTkButton(modes, image=settingsIcon, text='', command=settingsFrameShowHide)
 settingsBtn.place(x=550, width=80, height=80, y=5)
+
+
+settingsFrame = CTkFrame(page)
+
+useTempFrame = CTkFrame(settingsFrame)
+useTempFrame.place(width=400, height=50)
+
+useTempLabel = CTkLabel(useTempFrame, text='Used Temperature', text_font=("Arial", 12), justify='center')
+useTempLabel.place(x=20, y=15,width=150, height=20)
+
+useTempCPURB = CTkRadioButton(useTempFrame, text="CPU", variable=useTempVar, value=True)
+useTempCPURB.place(x=200, y=15)
+
+useTempGPURB = CTkRadioButton(useTempFrame, text="GPU", variable=useTempVar, value=False)
+useTempGPURB.place(x=300, y=15)
+
 
 getCurrentPowerMode()
 getCurrentData()
