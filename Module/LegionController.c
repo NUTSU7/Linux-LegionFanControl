@@ -5,6 +5,7 @@
 #include <asm/io.h>
 #include <linux/loop.h>
 #include <linux/dmi.h>
+#include <linux/delay.h>
 
 #define LegionControllerVer "V0.3"
 
@@ -216,7 +217,22 @@ int init_module(void)
 void cleanup_module(void)
 
 {
-    *(virt + biosModel->powerMode) = startUpPowerMode;
+    if (*(virt + biosModel->powerMode) != startUpPowerMode)
+    {
+        *(virt + biosModel->powerMode) = startUpPowerMode;
+    }
+    else if (startUpPowerMode == 0)
+    {
+        *(virt + biosModel->powerMode) = 1;
+        mdelay(1000);
+        *(virt + biosModel->powerMode) = startUpPowerMode;
+    }
+    else
+    {
+        *(virt + biosModel->powerMode) = 0;
+        mdelay(1000);
+        *(virt + biosModel->powerMode) = startUpPowerMode;
+    }
     kobject_put(LegionController);
     pr_info("Legion Fan %s Unloaded \n", LegionControllerVer);
 }
