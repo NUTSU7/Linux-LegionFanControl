@@ -15,7 +15,9 @@
     uint16_t tempCurrentCPU; // CPU temp
     uint16_t tempCurrentGPU; // GPU temp
     uint16_t fanCurve[22];
-    uint8_t curveLen;
+    uint16_t fanOffThreshold[6];
+    uint8_t fanCurveLen;
+    uint8_t fanOffThresholdLen;
     uint8_t powerMode;
 };
 
@@ -26,7 +28,9 @@ struct DEVICE_DATA GKCN =
         .tempCurrentCPU = 0x138,
         .tempCurrentGPU = 0x139,
         .fanCurve = {0x140, 0x141, 0x142, 0x143, 0x144, 0x145, 0x146, 0x147, 0x148, 0x149, 0x14A, 0x150, 0x151, 0x152, 0x153, 0x154, 0x155, 0x156, 0x157, 0x158, 0x159, 0x15A},
-        .curveLen = 22,
+        .fanOffThreshold = {0x1C0, 0x1C1, 0x1C2, 0x1D1, 0x1D2, 0x1D3},
+        .fanCurveLen = 22,
+        .fanOffThresholdLen = 6,
         .powerMode = 0x20,
 
 };
@@ -44,8 +48,10 @@ struct DEVICE_DATA *biosModel;
 
 static struct kobject *LegionController;
 static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf);
+
 void writeFanCurve(void);
 void writePowerMode(void);
+void writeFanOffThreshold(void);
 
 struct kobj_attribute fanSpeedCurrent = __ATTR(fanSpeedCurrent, 0444, sysfs_show, NULL);
 struct kobj_attribute tempCurrentCPU = __ATTR(tempCurrentCPU, 0444, sysfs_show, NULL);
@@ -122,7 +128,7 @@ static ssize_t sysfs_show(struct kobject *kobj, struct kobj_attribute *attr, cha
 
 void writeFanCurve(void)
 {
-    for (i = 0; i < biosModel->curveLen; i++)
+    for (i = 0; i < biosModel->fanCurveLen; i++)
     {
         if (cFanCurve >= 0 && cFanCurve != pFanCurve && cFanCurve <= 45)
         {
@@ -141,6 +147,14 @@ void writePowerMode(void)
         *(virt + biosModel->powerMode) = cPowerMode;
     }
     cPowerMode = -1;
+}
+
+void writeFanOffThreshold(void)
+{
+    for (i = 0; i < biosModel->fanOffThresholdLen; i++)
+    {
+        *(virt + biosModel->fanOffThreshold[i]) = 0;
+    }
 }
 
 int init_module(void)
@@ -195,6 +209,7 @@ int init_module(void)
 
     /* A non 0 return means init_module failed; module can't be loaded. */
     startUpPowerMode = *(virt + biosModel->powerMode);
+    writeFanOffThreshold();
     return 0;
 }
 
