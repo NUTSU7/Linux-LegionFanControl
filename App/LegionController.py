@@ -344,7 +344,7 @@ def updateFanCurve():
     f.write(str(fanCurveCurrent))
     f.close()
     #print(fanCurve, ' ', tempCurve, ' ', fanCurveCurrent, ' ',tempCurrent)
-    root.after(1000, updateFanCurve)
+    root.after(5000, updateFanCurve)
 
 def updateCanvas():
     global graphX
@@ -527,38 +527,38 @@ fanCurveCanvas.place(y=40, x=50, width=710, height=510)
 # 77.77 15.554  RPM = ((axes.x-25)/15.554)*100
 # axes.x = RPM/100*15.554
 
-fanCurveLabelRPM = CTkLabel(fanCurveGraph, text='Fan Speed (RPM)', text_font=("SF UI Display", 14))
+fanCurveLabelRPM = CTkLabel(fanCurveGraph, text='Fan Speed (RPM)', text_font=("SF UI Display", 14), justify='center')
 fanCurveLabelRPM.place(x=312.5, y=0, height=35, width=175)
 
-fanCurveLabelRPM1 = CTkLabel(fanCurveGraph, text='0', text_font=("SF UI Display", 12))
-fanCurveLabelRPM1.place(x=25, y=550, height=50, width=50)
+fanCurveLabelRPM1 = CTkLabel(fanCurveGraph, text='0', text_font=("SF UI Display", 12), justify='center')
+fanCurveLabelRPM1.place(x=25, y=550, height=50, width=60)
 
-fanCurveLabelRPM2 = CTkLabel(fanCurveGraph, text='500', text_font=("SF UI Display", 12))
-fanCurveLabelRPM2.place(x=102.77, y=550, height=50, width=50)
+fanCurveLabelRPM2 = CTkLabel(fanCurveGraph, text='500', text_font=("SF UI Display", 12), justify='center')
+fanCurveLabelRPM2.place(x=97.77, y=550, height=50, width=60)
 
-fanCurveLabelRPM3 = CTkLabel(fanCurveGraph, text='1000', text_font=("SF UI Display", 12))
-fanCurveLabelRPM3.place(x=180.54, y=550, height=50, width=50)
+fanCurveLabelRPM3 = CTkLabel(fanCurveGraph, text='1000', text_font=("SF UI Display", 12), justify='center')
+fanCurveLabelRPM3.place(x=175.54, y=550, height=50, width=60)
 
-fanCurveLabelRPM4 = CTkLabel(fanCurveGraph, text='1500', text_font=("SF UI Display", 12))
-fanCurveLabelRPM4.place(x=258.31, y=550, height=50, width=50)
+fanCurveLabelRPM4 = CTkLabel(fanCurveGraph, text='1500', text_font=("SF UI Display", 12), justify='center')
+fanCurveLabelRPM4.place(x=253.31, y=550, height=50, width=60)
 
-fanCurveLabelRPM5 = CTkLabel(fanCurveGraph, text='2000', text_font=("SF UI Display", 12))
-fanCurveLabelRPM5.place(x=336.08, y=550, height=50, width=50)
+fanCurveLabelRPM5 = CTkLabel(fanCurveGraph, text='2000', text_font=("SF UI Display", 12), justify='center')
+fanCurveLabelRPM5.place(x=331.08, y=550, height=50, width=60)
 
-fanCurveLabelRPM6 = CTkLabel(fanCurveGraph, text='2500', text_font=("SF UI Display", 12))
-fanCurveLabelRPM6.place(x=413.85, y=550, height=50, width=50)
+fanCurveLabelRPM6 = CTkLabel(fanCurveGraph, text='2500', text_font=("SF UI Display", 12), justify='center')
+fanCurveLabelRPM6.place(x=408.85, y=550, height=50, width=60)
 
-fanCurveLabelRPM7 = CTkLabel(fanCurveGraph, text='3000', text_font=("SF UI Display", 12))
-fanCurveLabelRPM7.place(x=491.62, y=550, height=50, width=50)
+fanCurveLabelRPM7 = CTkLabel(fanCurveGraph, text='3000', text_font=("SF UI Display", 12), justify='center')
+fanCurveLabelRPM7.place(x=486.62, y=550, height=50, width=60)
 
-fanCurveLabelRPM8 = CTkLabel(fanCurveGraph, text='3500', text_font=("SF UI Display", 12))
-fanCurveLabelRPM8.place(x=569.39, y=550, height=50, width=50)
+fanCurveLabelRPM8 = CTkLabel(fanCurveGraph, text='3500', text_font=("SF UI Display", 12), justify='center')
+fanCurveLabelRPM8.place(x=564.39, y=550, height=50, width=60)
 
-fanCurveLabelRPM9 = CTkLabel(fanCurveGraph, text='4000', text_font=("SF UI Display", 12))
-fanCurveLabelRPM9.place(x=647.16, y=550, height=50, width=50)
+fanCurveLabelRPM9 = CTkLabel(fanCurveGraph, text='4000', text_font=("SF UI Display", 12), justify='center')
+fanCurveLabelRPM9.place(x=642.16, y=550, height=50, width=60)
 
-fanCurveLabelRPM10 = CTkLabel(fanCurveGraph, text='4500', text_font=("SF UI Display", 12))
-fanCurveLabelRPM10.place(x=725, y=550, height=50, width=50)
+fanCurveLabelRPM10 = CTkLabel(fanCurveGraph, text='4500', text_font=("SF UI Display", 12), justify='center')
+fanCurveLabelRPM10.place(x=720, y=550, height=50, width=60)
 
 # 50  5  C = (525-axes.y)/5
 # axes.y = 525-(C*5)
