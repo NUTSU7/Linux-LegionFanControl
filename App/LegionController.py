@@ -1,5 +1,4 @@
 #!/usr/bin/python
-from http.client import OK
 from tkinter import *
 from xmlrpc.client import boolean
 from numpy import *
@@ -188,7 +187,7 @@ def loadConfig():
         config.set('fanCurveQuiet', 'tempCurve5', '75')
         config.set('fanCurveQuiet', 'tempCurve6', '80')
 
-    if not configFileExist:
+    if (not configFileExist) or (resetSelection == 0) or (resetSelection == 1) or (resetSelection == 2):
         with open(cwd+r"/config.ini", 'w') as configfile:
             config.write(configfile)
     else:
@@ -351,7 +350,7 @@ def updateFanCurve():
     f.write(str(fanCurveCurrent))
     f.close()
     #print(fanCurve, ' ', tempCurve, ' ', fanCurveCurrent, ' ',tempCurrent)
-    root.after(5000, updateFanCurve)
+    root.after(2000, updateFanCurve)
 
 def updateCanvas():
     global graphX
@@ -468,10 +467,6 @@ def settingsFrameShowHide():
 
 def resetBtnPressed():
     global currentPowerMode
-    global fanCurveQuiet
-    global fanCurveBalanced
-    global fanCurvePerf
-    global config
     global resetSelection
 
     if currentPowerMode == 0:
