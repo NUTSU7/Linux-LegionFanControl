@@ -1,4 +1,5 @@
 #!/usr/bin/python
+from http.client import OK
 from tkinter import *
 from xmlrpc.client import boolean
 from numpy import *
@@ -48,6 +49,7 @@ graphY = []
 useTempVar = BooleanVar(None, True)
 currentPoint = -1
 currentModeColor = ''
+resetSelection = -1
 
 #Functions
 def getCurrentPowerMode():
@@ -140,9 +142,11 @@ def loadConfig():
     global fanCurveBalanced
     global fanCurvePerf
     global config
+    global resetSelection
+
     configFileExist = os.path.exists(cwd+"/config.ini")
-    
-    if not configFileExist:
+
+    if (not configFileExist) or (resetSelection == 0):
         config.set('fanCurveBalanced', 'fanCurve1', '0')
         config.set('fanCurveBalanced', 'fanCurve2', '1800')
         config.set('fanCurveBalanced', 'fanCurve3', '2200')
@@ -155,7 +159,8 @@ def loadConfig():
         config.set('fanCurveBalanced', 'tempCurve4', '70')
         config.set('fanCurveBalanced', 'tempCurve5', '80')
         config.set('fanCurveBalanced', 'tempCurve6', '85')
-
+    
+    if (not configFileExist) or (resetSelection == 1):
         config.set('fanCurvePerf', 'fanCurve1', '0')
         config.set('fanCurvePerf', 'fanCurve2', '1800')
         config.set('fanCurvePerf', 'fanCurve3', '2200')
@@ -169,6 +174,7 @@ def loadConfig():
         config.set('fanCurvePerf', 'tempCurve5', '80')
         config.set('fanCurvePerf', 'tempCurve6', '90')
 
+    if (not configFileExist) or (resetSelection == 2):
         config.set('fanCurveQuiet', 'fanCurve1', '0')
         config.set('fanCurveQuiet', 'fanCurve2', '1800')
         config.set('fanCurveQuiet', 'fanCurve3', '2200')
@@ -182,6 +188,7 @@ def loadConfig():
         config.set('fanCurveQuiet', 'tempCurve5', '75')
         config.set('fanCurveQuiet', 'tempCurve6', '80')
 
+    if not configFileExist:
         with open(cwd+r"/config.ini", 'w') as configfile:
             config.write(configfile)
     else:
@@ -458,6 +465,30 @@ def settingsFrameShowHide():
         settingsFrame.place(y=600, height=100, relwidth=1)
         settingsBtn.configure(fg_color='#2333B4')
         settingsBtnPressedvalue = True
+
+def resetBtnPressed():
+    global currentPowerMode
+    global fanCurveQuiet
+    global fanCurveBalanced
+    global fanCurvePerf
+    global config
+    global resetSelection
+
+    if currentPowerMode == 0:
+        resetSelection = 0
+    elif currentPowerMode == 1:
+        resetSelection = 1
+    elif currentPowerMode == 2:
+        resetSelection = 2
+
+    loadConfig()
+
+    resetSelection = -1
+
+    getFanCurve()
+    updateCanvas()
+
+
 #Attempt to add tray icon support
 #def quitWindow(icon, item):
 #   icon.stop()
@@ -636,19 +667,22 @@ tempCurrentGPULabel.place(x=222.5, y=65, height=25, width=75)
 
 # Buttons
 perfBtn = CTkButton(modes, image=perfIcon, text='', command=perfBtnPressed)
-perfBtn.place(x=50, width=80, height=80, y=10)
+perfBtn.place(x=60, width=80, height=80, y=10)
 
 balancedBtn = CTkButton(modes, image=balancedIcon, text='', command=balancedBtnPressed)
-balancedBtn.place(x=150, width=80, height=80, y=10)
+balancedBtn.place(x=160, width=80, height=80, y=10)
 
 quietBtn = CTkButton(modes, image=quietIcon, text='', command=quietBtnPressed)
-quietBtn.place(x=250, width=80, height=80, y=10)
+quietBtn.place(x=260, width=80, height=80, y=10)
 
 saveBtn = CTkButton(modes, image=saveIcon, text='', command=saveBtnPressed, fg_color='#1c94cf')
-saveBtn.place(x=550, width=80, height=80, y=10)
+saveBtn.place(x=460, width=80, height=80, y=10)
+
+resetBtn = CTkButton(modes, text='Reset\nCurve', command=resetBtnPressed, fg_color='#1c94cf', text_font=("SF UI Display", 17), text_color='black')
+resetBtn.place(x=560, width=80, height=80, y=10)
 
 settingsBtn = CTkButton(modes, image=settingsIcon, text='', command=settingsFrameShowHide, fg_color='#1c94cf')
-settingsBtn.place(x=650, width=80, height=80, y=10)
+settingsBtn.place(x=660, width=80, height=80, y=10)
 
 
 settingsFrame = CTkFrame(page)
