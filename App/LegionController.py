@@ -25,8 +25,8 @@ root.resizable(False, False)
 root.bind("<Button-1>", lambda event: event.widget.focus_set())
 
 #Vars
-cwd=os.getcwd()
-moduleDir = os.getcwd()[:-4]+'/Module'
+cwd= sys._MEIPASS
+moduleDir = sys._MEIPASS + '/Module/'
 currentPowerMode = -1
 previousPowerMode = -1
 perfBtnPressedValue = False
@@ -45,10 +45,12 @@ fanCurveBalanced = []
 fanCurvePerf = []
 graphX = []
 graphY = []
-useTempVar = BooleanVar(None, True)
+useTemp = True
+useTempVar = BooleanVar(None, useTemp)
 currentPoint = -1
 currentModeColor = ''
 resetSelection = -1
+setting = []
 
 #Functions
 def getCurrentPowerMode():
@@ -187,7 +189,7 @@ def loadConfig():
         config.set('fanCurveQuiet', 'tempCurve5', '75')
         config.set('fanCurveQuiet', 'tempCurve6', '80')
 
-    if (not configFileExist) or (resetSelection == 0) or (resetSelection == 1) or (resetSelection == 2):
+    if (not configFileExist) or (resetSelection == 0) or (resetSelection == 1 ) or (resetSelection == 2):
         with open(cwd+r"/config.ini", 'w') as configfile:
             config.write(configfile)
     else:
@@ -502,7 +504,7 @@ def resetBtnPressed():
 
 #Images
 #Window icon
-img = Image.open(cwd+"/img/main.xbm") # .ico for windows, .xbm for linux
+img = Image.open(cwd+"/img/main.png") # .ico for windows, .xbm for linux
 mainIcon = ImageTk.PhotoImage(img)
 root.tk.call('wm', 'iconphoto', root._w, mainIcon)
 #Performance Mode Icon
