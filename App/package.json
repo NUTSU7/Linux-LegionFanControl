@@ -1,0 +1,14 @@
+{
+  "name": "legioncontroller",
+  "version": "1.0.0",
+  "description": "Legion Controller in Electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "NUTSU7",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^19.0.4"
+  }
+}

@@ -5,3 +5,4 @@ Module.symvers
 *.mod.*
 *.ko
 .*
+App/node_modules
