@@ -1,11 +1,12 @@
 #!/usr/bin/python
 from tkinter import *
-from xmlrpc.client import boolean
 from numpy import *
 from customtkinter import *
 from PIL import ImageTk, Image
 import os, time, configparser, customtkinter
 import atexit
+
+
 #import pystray
 #from pystray import MenuItem as item
 
