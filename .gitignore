@@ -5,4 +5,5 @@ Module.symvers
 *.mod.*
 *.ko
 .*
-App/node_modules
+node_modules
+assets/css/output.css
