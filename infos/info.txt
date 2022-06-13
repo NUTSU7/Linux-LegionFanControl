@@ -25,4 +25,5 @@ Power Mode - 0x10 (read only)
 sudo -E python3 LegionController.py // run the python script as sudo
 pip install matplotlib, pillow
 
-cxfreeze -c LegionController.py --include-files=img/balanced.png,img/main.xbm,img/perf.png,img/quiet.png,img/save.png,img/settings.png --target-dir=/home/nutsu7/LegionController/build
+
+pyinstaller LegionController.py --workpath /home/nutsu7/LegionController/build/temp --distpath=/home/nutsu7/LegionController/build/App --collect-all="customtkinter" --collect-all="PIL" --onefile --add-data="img/main.png:img" --add-data="img/perf.png:img" --add-data="img/balanced.png:img" --add-data="img/quiet.png:img" --add-data="img/save.png:img" --add-data="img/settings.png:img" --add-data="/home/nutsu7/LegionController/Module/LegionController.ko:Module"
