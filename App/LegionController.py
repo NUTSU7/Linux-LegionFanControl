@@ -191,10 +191,11 @@ def loadConfig():
         config.set('fanCurveQuiet', 'tempCurve5', '75')
         config.set('fanCurveQuiet', 'tempCurve6', '80')
 
-    if not configFileExist:
+    if (not configFileExist) or (resetSelection == 3):
         config.set('setting', 'useTemp', 'cpu')
+        getSettings()
 
-    if (not configFileExist) or (resetSelection == 0) or (resetSelection == 1 ) or (resetSelection == 2):
+    if (not configFileExist) or (resetSelection == 0) or (resetSelection == 1 ) or (resetSelection == 2) or (resetSelection == 3):
         with open(configDir+r"/LegionController.ini", 'w') as configfile:
             config.write(configfile)
     else:
@@ -472,7 +473,7 @@ def settingsFrameShowHide():
         settingsBtn.configure(fg_color='#2333B4')
         settingsBtnPressedvalue = True
 
-def resetBtnPressed():
+def resetCurveBtnPressed():
     global currentPowerMode
     global resetSelection
 
@@ -494,6 +495,13 @@ def getSettings():
     global setting
     
     useTempVar.set(str(config['setting']['useTemp']))
+
+def resetSettingsBtnPressed():
+    global resetSelection
+    
+    resetSelection = 3
+    loadConfig()
+    resetSelection = -1
 
 #Attempt to add tray icon support
 #def quitWindow(icon, item):
@@ -684,8 +692,8 @@ quietBtn.place(x=260, width=80, height=80, y=10)
 saveBtn = CTkButton(modes, image=saveIcon, text='', command=saveBtnPressed, fg_color='#1c94cf')
 saveBtn.place(x=460, width=80, height=80, y=10)
 
-resetBtn = CTkButton(modes, text='Reset\nCurve', command=resetBtnPressed, fg_color='#1c94cf', text_font=("SF UI Display", 17), text_color='black')
-resetBtn.place(x=560, width=80, height=80, y=10)
+resetCurveBtn = CTkButton(modes, text='Reset\nCurve', command=resetCurveBtnPressed, fg_color='#1c94cf', text_font=("SF UI Display", 17), text_color='black')
+resetCurveBtn.place(x=560, width=80, height=80, y=10)
 
 settingsBtn = CTkButton(modes, image=settingsIcon, text='', command=settingsFrameShowHide, fg_color='#1c94cf')
 settingsBtn.place(x=660, width=80, height=80, y=10)
@@ -705,6 +713,9 @@ useTempCPURB.place(x=220, y=15)
 
 useTempGPURB = CTkRadioButton(useTempFrame, text="GPU", variable=useTempVar, value='gpu')
 useTempGPURB.place(x=300, y=15)
+
+resetSettingsBtn = CTkButton(settingsFrame, text='Reset\nSettings', command=resetSettingsBtnPressed, fg_color='#1c94cf', text_font=("SF UI Display", 12), text_color='black')
+resetSettingsBtn.place(x=710, y=5 ,width=80, height=40)
 
 getCurrentPowerMode()
 getCurrentData()
