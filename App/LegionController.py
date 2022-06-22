@@ -25,7 +25,8 @@ root.resizable(False, False)
 root.bind("<Button-1>", lambda event: event.widget.focus_set())
 
 #Vars
-cwd= sys._MEIPASS
+configDir = '/etc/'
+imgDir = sys._MEIPASS + '/img/'
 moduleDir = sys._MEIPASS + '/Module/'
 currentPowerMode = -1
 previousPowerMode = -1
@@ -145,7 +146,7 @@ def loadConfig():
     global config
     global resetSelection
 
-    configFileExist = os.path.exists(cwd+"/config.ini")
+    configFileExist = os.path.exists(configDir+"/LegionController.ini")
 
     if (not configFileExist) or (resetSelection == 0):
         config.set('fanCurveBalanced', 'fanCurve1', '0')
@@ -190,10 +191,10 @@ def loadConfig():
         config.set('fanCurveQuiet', 'tempCurve6', '80')
 
     if (not configFileExist) or (resetSelection == 0) or (resetSelection == 1 ) or (resetSelection == 2):
-        with open(cwd+r"/config.ini", 'w') as configfile:
+        with open(configDir+r"/LegionController.ini", 'w') as configfile:
             config.write(configfile)
     else:
-        config.read(cwd+'/config.ini')
+        config.read(configDir+'/LegionController.ini')
         fanCurveBalanced = config['fanCurveBalanced']
         fanCurvePerf = config['fanCurvePerf']
         fanCurveQuiet = config['fanCurveQuiet']
@@ -315,7 +316,7 @@ def saveBtnPressed():
         config['fanCurveQuiet']['tempCurve5'] = str(tempCurve[4])
         config['fanCurveQuiet']['tempCurve6'] = str(tempCurve[5])
 
-    with open(cwd+r"/config.ini", 'w') as configfile:
+    with open(configDir+r"/LegionController.ini", 'w') as configfile:
         config.write(configfile)
 
     getFanCurve()
@@ -504,27 +505,27 @@ def resetBtnPressed():
 
 #Images
 #Window icon
-img = Image.open(cwd+"/img/main.png") # .ico for windows, .xbm for linux
+img = Image.open(imgDir+"/img/main.png") # .ico for windows, .xbm for linux
 mainIcon = ImageTk.PhotoImage(img)
 root.tk.call('wm', 'iconphoto', root._w, mainIcon)
 #Performance Mode Icon
-img = Image.open(cwd+"/img/perf.png") 
+img = Image.open(imgDir+"/img/perf.png") 
 img.thumbnail((70,70), Image.ANTIALIAS)
 perfIcon = ImageTk.PhotoImage(img)
 #Balanced Mode Icon
-img = Image.open(cwd+"/img/balanced.png") 
+img = Image.open(imgDir+"/img/balanced.png") 
 img.thumbnail((70,70), Image.ANTIALIAS)
 balancedIcon = ImageTk.PhotoImage(img)
 #Quiet Mode Icon
-img = Image.open(cwd+"/img/quiet.png") 
+img = Image.open(imgDir+"/img/quiet.png") 
 img.thumbnail((70,70), Image.ANTIALIAS)
 quietIcon = ImageTk.PhotoImage(img)
 #Save Icon
-img = Image.open(cwd+"/img/save.png") 
+img = Image.open(imgDir+"/img/save.png") 
 img.thumbnail((70,70), Image.ANTIALIAS)
 saveIcon = ImageTk.PhotoImage(img)
 #Settings Icon
-img = Image.open(cwd+"/img/settings.png") 
+img = Image.open(imgDir+"/img/settings.png") 
 img.thumbnail((70,70), Image.ANTIALIAS)
 settingsIcon = ImageTk.PhotoImage(img)
 
