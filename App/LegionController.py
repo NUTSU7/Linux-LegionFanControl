@@ -26,9 +26,9 @@ root.resizable(False, False)
 root.bind("<Button-1>", lambda event: event.widget.focus_set())
 
 #Vars
-configDir = '/etc/'
+configDir = '~/.lc'
 imgDir = sys._MEIPASS + '/img/'
-moduleDir = sys._MEIPASS + '/Module/'
+moduleDir = '~/.lc/'
 currentPowerMode = -1
 previousPowerMode = -1
 perfBtnPressedValue = False
@@ -194,7 +194,7 @@ def loadConfig():
     if (not configFileExist) or (resetSelection == 3):
         config.set('setting', 'useTemp', 'cpu')
         getSettings()
-
+    
     if (not configFileExist) or (resetSelection == 0) or (resetSelection == 1 ) or (resetSelection == 2) or (resetSelection == 3):
         with open(configDir+r"/LegionController.ini", 'w') as configfile:
             config.write(configfile)
