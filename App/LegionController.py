@@ -16,6 +16,7 @@ config = configparser.ConfigParser()
 config.add_section('fanCurveQuiet')
 config.add_section('fanCurveBalanced')
 config.add_section('fanCurvePerf')
+config.add_section('setting')
 
 root = CTk()
 root.geometry('800x800')
@@ -46,8 +47,7 @@ fanCurveBalanced = []
 fanCurvePerf = []
 graphX = []
 graphY = []
-useTemp = True
-useTempVar = BooleanVar(None, useTemp)
+useTempVar = StringVar(None, None)
 currentPoint = -1
 currentModeColor = ''
 resetSelection = -1
@@ -144,6 +144,7 @@ def loadConfig():
     global fanCurveBalanced
     global fanCurvePerf
     global config
+    global setting
     global resetSelection
 
     configFileExist = os.path.exists(configDir+"/LegionController.ini")
@@ -190,6 +191,9 @@ def loadConfig():
         config.set('fanCurveQuiet', 'tempCurve5', '75')
         config.set('fanCurveQuiet', 'tempCurve6', '80')
 
+    if not configFileExist:
+        config.set('setting', 'useTemp', 'cpu')
+
     if (not configFileExist) or (resetSelection == 0) or (resetSelection == 1 ) or (resetSelection == 2):
         with open(configDir+r"/LegionController.ini", 'w') as configfile:
             config.write(configfile)
@@ -198,6 +202,7 @@ def loadConfig():
         fanCurveBalanced = config['fanCurveBalanced']
         fanCurvePerf = config['fanCurvePerf']
         fanCurveQuiet = config['fanCurveQuiet']
+        setting = config['setting']
 
 def getFanCurve():
     #axes.x = RPM/100*15.554
@@ -315,6 +320,8 @@ def saveBtnPressed():
         config['fanCurveQuiet']['tempCurve4'] = str(tempCurve[3])
         config['fanCurveQuiet']['tempCurve5'] = str(tempCurve[4])
         config['fanCurveQuiet']['tempCurve6'] = str(tempCurve[5])
+    
+    config['setting']['useTemp'] = str(useTempVar.get())
 
     with open(configDir+r"/LegionController.ini", 'w') as configfile:
         config.write(configfile)
@@ -324,14 +331,11 @@ def saveBtnPressed():
 def updateFanCurve():
     global fanCurveCurrent
     global fanCurve
-    global useTemp
     global tempCurrent
     global tempCurrentCPU
     global tempCurrentGPU
 
-    useTemp = bool(useTempVar.get())
-
-    if useTemp:
+    if str(useTempVar.get()) == 'cpu':
         tempCurrent = tempCurrentCPU
     else:
         tempCurrent = tempCurrentGPU
@@ -444,7 +448,7 @@ def inputCanvas(event):
 def insertModule():
     global moduleDir
 
-    temp = 'sudo insmod ' + moduleDir + '/LegionController.ko'
+    temp = 'sudo insmod ' + moduleDir + 'LegionController.ko'
 
     os.system(temp)
 
@@ -452,7 +456,7 @@ def insertModule():
 def exit():
     global moduleDir
 
-    temp = 'sudo rmmod ' + moduleDir + '/LegionController.ko'
+    temp = 'sudo rmmod ' + moduleDir + 'LegionController.ko'
 
     os.system(temp)
 
@@ -486,6 +490,10 @@ def resetBtnPressed():
     getFanCurve()
     updateCanvas()
 
+def getSettings():
+    global setting
+    
+    useTempVar.set(str(config['setting']['useTemp']))
 
 #Attempt to add tray icon support
 #def quitWindow(icon, item):
@@ -505,27 +513,27 @@ def resetBtnPressed():
 
 #Images
 #Window icon
-img = Image.open(imgDir+"/img/main.png") # .ico for windows, .xbm for linux
+img = Image.open(imgDir+"main.png") # .ico for windows, .xbm for linux
 mainIcon = ImageTk.PhotoImage(img)
 root.tk.call('wm', 'iconphoto', root._w, mainIcon)
 #Performance Mode Icon
-img = Image.open(imgDir+"/img/perf.png") 
+img = Image.open(imgDir+"perf.png") 
 img.thumbnail((70,70), Image.ANTIALIAS)
 perfIcon = ImageTk.PhotoImage(img)
 #Balanced Mode Icon
-img = Image.open(imgDir+"/img/balanced.png") 
+img = Image.open(imgDir+"balanced.png") 
 img.thumbnail((70,70), Image.ANTIALIAS)
 balancedIcon = ImageTk.PhotoImage(img)
 #Quiet Mode Icon
-img = Image.open(imgDir+"/img/quiet.png") 
+img = Image.open(imgDir+"quiet.png") 
 img.thumbnail((70,70), Image.ANTIALIAS)
 quietIcon = ImageTk.PhotoImage(img)
 #Save Icon
-img = Image.open(imgDir+"/img/save.png") 
+img = Image.open(imgDir+"save.png") 
 img.thumbnail((70,70), Image.ANTIALIAS)
 saveIcon = ImageTk.PhotoImage(img)
 #Settings Icon
-img = Image.open(imgDir+"/img/settings.png") 
+img = Image.open(imgDir+"settings.png") 
 img.thumbnail((70,70), Image.ANTIALIAS)
 settingsIcon = ImageTk.PhotoImage(img)
 
@@ -682,6 +690,7 @@ resetBtn.place(x=560, width=80, height=80, y=10)
 settingsBtn = CTkButton(modes, image=settingsIcon, text='', command=settingsFrameShowHide, fg_color='#1c94cf')
 settingsBtn.place(x=660, width=80, height=80, y=10)
 
+getSettings()
 
 settingsFrame = CTkFrame(page)
 
@@ -691,12 +700,11 @@ useTempFrame.place(width=400, height=50)
 useTempLabel = CTkLabel(useTempFrame, text='Used Temperature', text_font=("SF UI Display", 12), justify='center')
 useTempLabel.place(x=20, y=15,width=180, height=20)
 
-useTempCPURB = CTkRadioButton(useTempFrame, text="CPU", variable=useTempVar, value=True)
+useTempCPURB = CTkRadioButton(useTempFrame, text="CPU", variable=useTempVar, value='cpu')
 useTempCPURB.place(x=220, y=15)
 
-useTempGPURB = CTkRadioButton(useTempFrame, text="GPU", variable=useTempVar, value=False)
+useTempGPURB = CTkRadioButton(useTempFrame, text="GPU", variable=useTempVar, value='gpu')
 useTempGPURB.place(x=300, y=15)
-
 
 getCurrentPowerMode()
 getCurrentData()
