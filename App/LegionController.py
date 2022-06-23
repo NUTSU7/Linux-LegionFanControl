@@ -26,9 +26,11 @@ root.resizable(False, False)
 root.bind("<Button-1>", lambda event: event.widget.focus_set())
 
 #Vars
-configDir = '~/.lc'
+username = os.environ.get('SUDO_USER', os.environ.get('USERNAME'))
+homeDir = os.path.expanduser(f'~{username}')
+configDir = homeDir + '/.lc'
 imgDir = sys._MEIPASS + '/img/'
-moduleDir = '~/.lc/'
+moduleDir = homeDir + '/.lc/'
 currentPowerMode = -1
 previousPowerMode = -1
 perfBtnPressedValue = False
