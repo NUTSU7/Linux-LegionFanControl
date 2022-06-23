@@ -13,4 +13,6 @@ Module/*.mod.*.cmd
 Module/*.ko.cmd
 Module/.*.cmd
 node_modules
+assets
 build
+App/*.spec
