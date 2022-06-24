@@ -151,7 +151,9 @@ def loadConfig():
 
     configFileExist = os.path.exists(configDir+"/LegionController.ini")
 
-    if (not configFileExist) or (resetSelection == 0):
+    configFileSize = os.path.getsize(configDir+"/LegionController.ini")
+
+    if (not configFileExist) or (resetSelection == 0) or (configFileSize <= 1):
         config.set('fanCurveBalanced', 'fanCurve1', '0')
         config.set('fanCurveBalanced', 'fanCurve2', '1800')
         config.set('fanCurveBalanced', 'fanCurve3', '2200')
@@ -165,7 +167,7 @@ def loadConfig():
         config.set('fanCurveBalanced', 'tempCurve5', '80')
         config.set('fanCurveBalanced', 'tempCurve6', '85')
     
-    if (not configFileExist) or (resetSelection == 1):
+    if (not configFileExist) or (resetSelection == 1) or (configFileSize <= 1):
         config.set('fanCurvePerf', 'fanCurve1', '0')
         config.set('fanCurvePerf', 'fanCurve2', '1800')
         config.set('fanCurvePerf', 'fanCurve3', '2200')
@@ -179,7 +181,7 @@ def loadConfig():
         config.set('fanCurvePerf', 'tempCurve5', '80')
         config.set('fanCurvePerf', 'tempCurve6', '90')
 
-    if (not configFileExist) or (resetSelection == 2):
+    if (not configFileExist) or (resetSelection == 2) or (configFileSize <= 1):
         config.set('fanCurveQuiet', 'fanCurve1', '0')
         config.set('fanCurveQuiet', 'fanCurve2', '1800')
         config.set('fanCurveQuiet', 'fanCurve3', '2200')
@@ -193,11 +195,11 @@ def loadConfig():
         config.set('fanCurveQuiet', 'tempCurve5', '75')
         config.set('fanCurveQuiet', 'tempCurve6', '80')
 
-    if (not configFileExist) or (resetSelection == 3):
+    if (not configFileExist) or (resetSelection == 3) or (configFileSize <= 1):
         config.set('setting', 'useTemp', 'cpu')
         getSettings()
     
-    if (not configFileExist) or (resetSelection == 0) or (resetSelection == 1 ) or (resetSelection == 2) or (resetSelection == 3):
+    if (not configFileExist) or (resetSelection == 0) or (resetSelection == 1 ) or (resetSelection == 2) or (resetSelection == 3) or (configFileSize <= 1):
         with open(configDir+r"/LegionController.ini", 'w') as configfile:
             config.write(configfile)
     else:
@@ -330,6 +332,7 @@ def saveBtnPressed():
         config.write(configfile)
 
     getFanCurve()
+    getSettings()
 
 def updateFanCurve():
     global fanCurveCurrent
@@ -504,6 +507,8 @@ def resetSettingsBtnPressed():
     resetSelection = 3
     loadConfig()
     resetSelection = -1
+
+    getSettings()
 
 #Attempt to add tray icon support
 #def quitWindow(icon, item):
@@ -700,7 +705,6 @@ resetCurveBtn.place(x=560, width=80, height=80, y=10)
 settingsBtn = CTkButton(modes, image=settingsIcon, text='', command=settingsFrameShowHide, fg_color='#1c94cf')
 settingsBtn.place(x=660, width=80, height=80, y=10)
 
-getSettings()
 
 settingsFrame = CTkFrame(page)
 
@@ -720,6 +724,7 @@ resetSettingsBtn = CTkButton(settingsFrame, text='Reset\nSettings', command=rese
 resetSettingsBtn.place(x=710, y=5 ,width=80, height=40)
 
 getCurrentPowerMode()
+getSettings()
 getCurrentData()
 updateFanCurve()
 
