@@ -1,0 +1,11 @@
+pyinstaller LegionController.py --onefile \
+--workpath="/home/nutsu7/LegionController/build/temp" \
+--distpath="/home/nutsu7/LegionController/build/App" \
+--collect-all="customtkinter" \
+--collect-submodules="PIL" \
+--add-data="img/main.png:img" \
+--add-data="img/perf.png:img" \
+--add-data="img/balanced.png:img" \
+--add-data="img/quiet.png:img" \
+--add-data="img/save.png:img" \
+--add-data="img/settings.png:img" \
