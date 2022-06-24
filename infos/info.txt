@@ -21,9 +21,3 @@ GPU Temp Trigger Point - 0x90 row
 Left Fan Speed - 0x20 row
 Right Fan Speed - 0x30 row
 Power Mode - 0x10 (read only)
-
-sudo -E python3 LegionController.py // run the python script as sudo
-pip install matplotlib, pillow
-
-
-pyinstaller LegionController.py --workpath /home/nutsu7/LegionController/build/temp --distpath=/home/nutsu7/LegionController/build/App --collect-all="customtkinter" --collect-all="PIL" --onefile --add-data="img/main.png:img" --add-data="img/perf.png:img" --add-data="img/balanced.png:img" --add-data="img/quiet.png:img" --add-data="img/save.png:img" --add-data="img/settings.png:img" --add-data="/home/nutsu7/LegionController/Module/LegionController.ko:Module"
